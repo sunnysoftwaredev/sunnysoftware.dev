@@ -1,6 +1,0 @@
-{
-  "extends": [
-    "principled/typescript",
-    "principled/react"
-  ]
-}
