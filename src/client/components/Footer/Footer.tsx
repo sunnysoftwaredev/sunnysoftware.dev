@@ -1,13 +1,11 @@
 import React from 'react';
-import "./Footer.scss";
+import './Footer.scss';
 
-const Footer = () => {
-  return (
-    <footer>
-      <i>Sunny Software, LLC </i>
-      <i>Sunnyvale, California</i>
-    </footer>
-  );
-};
+const Footer = () => (
+  <footer>
+    <i>Sunny Software, LLC </i>
+    <i>Sunnyvale, California</i>
+  </footer>
+);
 
 export default Footer;
