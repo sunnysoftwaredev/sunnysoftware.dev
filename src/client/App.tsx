@@ -1,8 +1,6 @@
 import React from 'react';
+import type { FunctionComponent } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import './App.scss';
-
-// Import Pages
 import LandingPage from './pages/LandingPage/LandingPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import ContactUsPage from './pages/ContactUs/ContactUsPage';
@@ -12,12 +10,11 @@ import WorkPortalPage from './pages/WorkPortalPage/WorkPortalPage';
 import AboutUsPage from './pages/AboutUsPage/AboutUsPage';
 import ServicesPage from './pages/ServicesPage/ServicesPage';
 import PortfolioPage from './pages/PortfolioPage/PortfolioPage';
-
-// Components
 import NavBar from './components/NavBar/NavBar';
 import Footer from './components/Footer/Footer';
+import './App.scss';
 
-const App = () => (
+const App: FunctionComponent = () => (
   <div>
     <NavBar />
     <Routes>
