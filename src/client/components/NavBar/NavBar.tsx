@@ -1,6 +1,7 @@
 import React from 'react';
+import type { FunctionComponent } from 'react';
 
-const Navbar = () => (
+const Navbar: FunctionComponent = () => (
   <nav className="navbar navbar-expand-md bg-light navbar-light">
     <div className="container-fluid">
       <ul className="navbar-nav">

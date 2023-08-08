@@ -1,7 +1,8 @@
 import React from 'react';
+import type { FunctionComponent } from 'react';
 import './Hero.scss';
 
-const Hero = () => (
+const Hero: FunctionComponent = () => (
   <div className="hero">
     <div className="heroLeftPlaceholder" />
     <div className="heroRightSide">

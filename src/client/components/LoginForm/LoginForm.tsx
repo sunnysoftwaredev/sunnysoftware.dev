@@ -1,6 +1,7 @@
 import React from 'react';
+import type { FunctionComponent } from 'react';
 
-const LoginForm = () => (
+const LoginForm: FunctionComponent = () => (
   <form>
     <div className="form-outline mb-4">
       <input type="email" id="emailBox" className="form-control" />
@@ -28,8 +29,6 @@ const LoginForm = () => (
 
     <div className="text-center">
       <p>
-        Don't have a login? Sign up here:
-        {' '}
         <a href="#!">Create an account</a>
       </p>
 
