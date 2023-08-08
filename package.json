@@ -1,44 +1,70 @@
 {
-  "name": "sunny_software_website",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "bootstrap": "^5.3.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.14.2",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+  "name": "sunnysoftware.dev",
+  "version": "1.0.0",
+  "description": "The website of Sunny Software, LLC (https://sunnysoftware.dev)",
+  "keywords": [
+    "sunny",
+    "software",
+    "website"
+  ],
+  "homepage": "https://github.com/sunnysoftwaredev/sunnysoftware.dev#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sunnysoftwaredev/sunnysoftware.dev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sunnysoftwaredev/sunnysoftware.dev/issues"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "lint": "eslint src --ext .ts,.tsx",
+    "build": "webpack",
+    "start": "node dist",
+    "dev": "webpack serve"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "engines": {
+    "node": "18.17.0",
+    "npm": "9.6.7"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "author": {
+    "name": "Sunny Software, LLC",
+    "url": "https://sunnysoftware.dev"
+  },
+  "contributors": [
+    "Trevin Hofmann <trevinhofmann@gmail.com>"
+  ],
+  "license": "Unlicense",
+  "dependencies": {
+    "eleventh": "1.1.0",
+    "express": "4.18.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-helmet": "6.1.0",
+    "react-router-dom": "6.14.2"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "typescript": "^5.1.6"
+    "@types/react": "18.2.18",
+    "@types/react-dom": "18.2.7",
+    "@typescript-eslint/eslint-plugin": "4.33.0",
+    "@typescript-eslint/parser": "4.33.0",
+    "clean-webpack-plugin": "4.0.0",
+    "copy-webpack-plugin": "11.0.0",
+    "css-loader": "6.8.1",
+    "eslint": "7.32.0",
+    "eslint-config-principled": "1.1.0",
+    "eslint-plugin-import": "2.28.0",
+    "eslint-plugin-jest": "24.1.5",
+    "eslint-plugin-react": "7.33.1",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "file-loader": "6.2.0",
+    "html-webpack-plugin": "5.5.3",
+    "mini-css-extract-plugin": "2.7.6",
+    "sass": "1.64.2",
+    "sass-loader": "13.3.2",
+    "ts-loader": "9.4.4",
+    "typescript": "5.1.6",
+    "webpack": "5.88.2",
+    "webpack-cli": "5.1.4",
+    "webpack-dev-server": "4.15.1",
+    "webpack-node-externals": "3.0.0"
   }
 }
