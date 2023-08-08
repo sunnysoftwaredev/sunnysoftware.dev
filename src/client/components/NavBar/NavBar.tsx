@@ -1,12 +1,12 @@
-import React from 'react';
-import type { FunctionComponent } from 'react';
+import React from "react";
+import type { FunctionComponent } from "react";
 
 const Navbar: FunctionComponent = () => (
   <nav className="navbar navbar-expand-md bg-light navbar-light">
     <div className="container-fluid">
       <ul className="navbar-nav">
         <li className="nav-item">
-          <a className="nav-link active" href="/about-us">
+          <a className="nav-link active" href="/">
             Home
           </a>
         </li>
