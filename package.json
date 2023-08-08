@@ -17,6 +17,7 @@
   },
   "scripts": {
     "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "build": "webpack",
     "start": "node dist",
     "dev": "webpack serve"

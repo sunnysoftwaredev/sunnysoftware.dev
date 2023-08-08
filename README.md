@@ -12,6 +12,14 @@ Install the project's dependencies using npm:
 npm install
 ```
 
+### Linting
+
+Use ESLint for static analysis:
+
+```
+npm run lint
+```
+
 ### Development Server
 
 Run the Webpack development server:
