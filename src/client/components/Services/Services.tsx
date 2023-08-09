@@ -7,7 +7,7 @@ const Services: FunctionComponent = () => (
     <div className="servicesPanel">
       <h3>Web Sites & Web Apps</h3>
       <div className="divider" />
-      <img>Picture Here</img>
+      <div className="picPlaceholder" />
       <p>
         Custom functionality and styling, with optimization for search to get
         you the page you want
@@ -16,7 +16,7 @@ const Services: FunctionComponent = () => (
     <div className="servicesPanel">
       <h3>Mobile Apps</h3>
       <div className="divider" />
-      <img>Picture Here</img>
+      <div className="picPlaceholder" />
       <p>
         With more and more market share going to smartphones, having a
         dedicated mobile app built by professionals pays off
@@ -25,7 +25,7 @@ const Services: FunctionComponent = () => (
     <div className="servicesPanel">
       <h3>Desktop Apps</h3>
       <div className="divider" />
-      <img>Picture Here</img>
+      <div className="picPlaceholder" />
       <p>
         Many people switch back and forth between mobile and desktop, and we
         have all of your bases covered
@@ -34,7 +34,7 @@ const Services: FunctionComponent = () => (
     <div className="servicesPanel">
       <h3>Blockchain Solutions</h3>
       <div className="divider" />
-      <img>Picture Here</img>
+      <div className="picPlaceholder" />
       <p>
         Take advantage of emerging technology to ensure the integrity and
         security of your products and data

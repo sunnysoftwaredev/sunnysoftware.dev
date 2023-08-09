@@ -2,6 +2,7 @@ import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import Hero from '../../components/Hero/Hero';
+import Services from '../../components/Services/Services';
 
 const LandingPage: FunctionComponent = () => (
   <div>
@@ -14,6 +15,7 @@ const LandingPage: FunctionComponent = () => (
     <h1 className="landingPage">LandingPage</h1>
     <p>Sunny Software</p>
     <Hero />
+    <Services />
   </div>
 );
 
