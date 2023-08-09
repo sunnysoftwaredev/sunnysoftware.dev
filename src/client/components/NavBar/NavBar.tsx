@@ -1,6 +1,6 @@
-import React from "react";
-import type { FunctionComponent } from "react";
-import "./NavBar.scss";
+import React from 'react';
+import type { FunctionComponent } from 'react';
+import './NavBar.scss';
 
 const Navbar: FunctionComponent = () => (
   <nav className="navbar">

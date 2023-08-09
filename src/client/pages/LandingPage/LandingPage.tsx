@@ -1,7 +1,7 @@
-import React from "react";
-import type { FunctionComponent } from "react";
-import Hero from "../../components/Hero/Hero";
-import { Helmet } from "react-helmet";
+import React from 'react';
+import type { FunctionComponent } from 'react';
+import { Helmet } from 'react-helmet';
+import Hero from '../../components/Hero/Hero';
 
 const LandingPage: FunctionComponent = () => (
   <div>
