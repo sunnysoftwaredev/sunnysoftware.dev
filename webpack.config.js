@@ -3,5 +3,5 @@ const server = require('./webpack.server.config');
 
 module.exports = [
   client,
-  // server,
+  server,
 ];
