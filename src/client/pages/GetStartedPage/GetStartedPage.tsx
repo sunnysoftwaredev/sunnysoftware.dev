@@ -1,6 +1,6 @@
-import React from "react";
-import type { FunctionComponent } from "react";
-import { Helmet } from "react-helmet";
+import React from 'react';
+import type { FunctionComponent } from 'react';
+import { Helmet } from 'react-helmet';
 
 const GetStartedPage: FunctionComponent = () => (
   <div>

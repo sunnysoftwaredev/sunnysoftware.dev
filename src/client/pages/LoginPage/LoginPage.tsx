@@ -1,7 +1,7 @@
-import React from "react";
-import { Helmet } from "react-helmet";
-import type { FunctionComponent } from "react";
-import LoginForm from "../../components/LoginForm/LoginForm";
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import type { FunctionComponent } from 'react';
+import LoginForm from '../../components/LoginForm/LoginForm';
 
 const LoginPage: FunctionComponent = () => (
   <div>
