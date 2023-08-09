@@ -1,0 +1,28 @@
+$textColor: white;
+$backgroundColor: black;
+
+* {
+  margin: 0;
+}
+
+.navbar {
+  font-family: Verdana;
+  font-size: 20px;
+  color: white;
+}
+
+ul {
+  display: flex;
+  background: $backgroundColor;
+  padding: 1rem;
+  li {
+    a {
+      color: $textColor;
+      text-decoration: none;
+      padding: 1rem;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
