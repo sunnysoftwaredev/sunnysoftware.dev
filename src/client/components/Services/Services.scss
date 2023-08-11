@@ -1,15 +1,33 @@
-div{
-  background-color: blue;
+// .servicesContainer{
+//   color: rgb(26, 2, 2);
+// }
+
+// .divider{
+//   background-color: beige;
+// }
+
+// div{
+//   background-color: blue;
+// }
+
+.servicesContainer{
+  display: flex;
+  flex-direction: row;
 }
 
+.servicesPanel{
+  border: 3px solid black;
+  margin: 1rem;
+}
 
+.divider {
+  border-top: 3px solid black;
+}
 
-// .servicesContainer{
-//   border: solid black 3px;
-//   background-color: blue;
-//     .servicesPanel{
-//       border: 3px solid black;
-//       background-color: blue;
-//     .divider {
-//       border-top: 3px solid black;
-// }}}
+.picPlaceholder{
+  display: inline-block;
+  width: 100%;
+  height: 100px;
+  background-color: red;
+  font-size: larger;
+}

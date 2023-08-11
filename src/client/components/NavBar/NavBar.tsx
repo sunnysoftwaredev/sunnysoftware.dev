@@ -1,10 +1,10 @@
 import React from 'react';
 import type { FunctionComponent } from 'react';
-import './NavBar.scss';
+import styles from './NavBar.scss';
 
 const Navbar: FunctionComponent = () => (
-  <nav className="navbar">
-    <ul className="navbarUL">
+  <nav>
+    <ul className={styles.navbarUL}>
       <li className="nav-item">
         <a className="nav-link active" href="/">
           Home
