@@ -5,13 +5,9 @@ $backgroundColor: black;
   margin: 0;
 }
 
-.navbar {
-  font-family: Verdana;
-  font-size: 20px;
-  color: white;
-}
 
-ul {
+
+.navbarUL {
   display: flex;
   background: $backgroundColor;
   padding: 1rem;
