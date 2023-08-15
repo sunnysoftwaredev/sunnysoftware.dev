@@ -37,8 +37,10 @@
   ],
   "license": "Unlicense",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "eleventh": "1.1.0",
     "express": "4.18.2",
+    "postgres": "^3.3.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-helmet": "^6.1.0",
