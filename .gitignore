@@ -4,8 +4,8 @@ node_modules
 # Build
 dist
 
-# misc
+# Miscellaneous
 .DS_Store
 
-# DB information
+# Environment variables
 .env
