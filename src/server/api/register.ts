@@ -1,6 +1,5 @@
 import { Router as createRouter } from 'express';
 import logger from '../logger';
-import sql from '../db';
 
 const router = createRouter();
 
