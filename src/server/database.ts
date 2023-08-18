@@ -29,6 +29,7 @@ export const getUser = async(id: string): Promise<User> => {
     'SELECT username, email FROM Users WHERE id=$1',
     [id],
   );
+
   const { rows } = result;
   if (rows.length !== 1) {
     throw new Error('Unable to select the user.');
@@ -51,3 +52,17 @@ export const getUser = async(id: string): Promise<User> => {
     email,
   };
 };
+
+export const insertUser = async(
+  id: string, username: string,
+  email: string
+): Promise<User> => {
+  await client.query(`INSERT INTO "Users" (id, username, email)
+           VALUES ($1, $2, $3)`, [id, username, email]);
+  return {
+    id,
+    username,
+    email,
+  };
+};
+
