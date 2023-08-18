@@ -10,5 +10,5 @@ const main = async(): Promise<void> => {
 main()
   .catch((e) => {
     logger.fatal('Error during server startup.');
-    console.log('e', e);
+    logger.info(e);
   });
