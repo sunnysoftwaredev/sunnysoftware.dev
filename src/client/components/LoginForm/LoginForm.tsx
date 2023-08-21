@@ -1,56 +1,73 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import type { FunctionComponent } from 'react';
 
-const LoginForm: FunctionComponent = () => (
-  <form>
-    <div className="form-outline mb-4">
-      <input type="email" id="emailBox" className="form-control" />
-      <label className="form-label" htmlFor="emailBox">
-        Email address
-      </label>
-    </div>
+const LoginForm: FunctionComponent = () => {
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const handleUsernameChange = useCallback((event:
+  ChangeEventHandler<HTMLInputElement>):
+  void => setUsername(event.value), [setUsername]);
+  const handlePasswordChange = useCallback((newValue: string):
+  void => setPassword(newValue), [setPassword]);
 
-    <div className="form-outline mb-4">
-      <input type="password" id="passwordBox" className="form-control" />
-      <label className="form-label" htmlFor="passwordBox">
-        Password
-      </label>
-    </div>
+  const handleSubmit = useCallback(async() => {
+    try {
+      const response = await fetch('http://127.0.0.1/3000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
 
-    <div className="row mb-4">
-      <div className="col">
-        <a href="#">Forgot password?</a>
+      const result = await response.json();
+    } catch (error) {
+
+    }
+  }, [username, password]);
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="form-outline mb-4">
+        <input
+          type="email" id="username" className="form-control"
+          onChange={handleUsernameChange}
+        />
+        <label className="form-label" htmlFor="username">
+          Username
+        </label>
       </div>
-    </div>
 
-    <button type="button" className="btn btn-primary btn-block mb-4">
-      Sign in
-    </button>
+      <div className="form-outline mb-4">
+        <input
+          type="password" id="passwordBox" className="form-control"
+          onChange={handlePasswordChange}
+        />
+        <label className="form-label" htmlFor="passwordBox">
+          Password
+        </label>
+      </div>
 
-    <div className="text-center">
-      <p>
-        <a href="#!">Create an account</a>
-      </p>
+      <div className="row mb-4">
+        <div className="col">
+          <a href="#">Forgot password?</a>
+        </div>
+      </div>
 
-      {/* maybe something to implement in the future?  */}
-      {/* <p>or sign up with:</p>
-        <button type="button" className="btn btn-link btn-floating mx-1">
-          <i className="fab fa-facebook-f"></i>
-        </button>
+      <button type="button" className="btn btn-primary btn-block mb-4">
+        Sign in
+      </button>
 
-        <button type="button" className="btn btn-link btn-floating mx-1">
-          <i className="fab fa-google"></i>
-        </button>
+      <div className="text-center">
+        <p>
+          <a href="#!">Create an account</a>
+        </p>
 
-        <button type="button" className="btn btn-link btn-floating mx-1">
-          <i className="fab fa-twitter"></i>
-        </button>
-
-        <button type="button" className="btn btn-link btn-floating mx-1">
-          <i className="fab fa-github"></i>
-        </button> */}
-    </div>
-  </form>
-);
-
+      </div>
+    </form>
+  );
+};
 export default LoginForm;

@@ -2,7 +2,8 @@ import { Client } from 'pg';
 import config from './config';
 import logger from './logger';
 
-const client = new Client({
+// Added export
+export const client = new Client({
   host: config.pg.host,
   port: config.pg.port,
   database: config.pg.database,
@@ -24,6 +25,7 @@ type User = {
   email: string;
   password: string;
 };
+export type { User };
 
 export const getUser = async(id: string): Promise<User> => {
   const result = await client.query(
@@ -38,7 +40,7 @@ export const getUser = async(id: string): Promise<User> => {
   const row: unknown = rows[0];
   if (!Array.isArray(row)) {
     throw new Error('Unable to select the user.');
-  }
+  } // Below be sure to change to correct rows and rm password after test
   const username: unknown = row[0];
   if (typeof username !== 'string') {
     throw new Error('Unable to select the user.');
