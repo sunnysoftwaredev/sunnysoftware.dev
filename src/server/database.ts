@@ -22,6 +22,7 @@ type User = {
   id: string;
   username: string;
   email: string;
+  password: string;
 };
 
 export const getUser = async(id: string): Promise<User> => {
@@ -46,23 +47,29 @@ export const getUser = async(id: string): Promise<User> => {
   if (typeof email !== 'string') {
     throw new Error('Unable to select the user.');
   }
+  const password: unknown = row[0];
+  if (typeof password !== 'string') {
+    throw new Error('Unable to select the user.');
+  }
   return {
     id,
     username,
     email,
+    password,
   };
 };
 
 export const insertUser = async(
   id: string, username: string,
-  email: string
+  email: string, password: string,
 ): Promise<User> => {
-  await client.query(`INSERT INTO "Users" (id, username, email)
-           VALUES ($1, $2, $3)`, [id, username, email]);
+  await client.query(`INSERT INTO "Users" (id, username, email, password)
+           VALUES ($1, $2, $3, $4)`, [id, username, email, password]);
   return {
     id,
     username,
     email,
+    password,
   };
 };
 
