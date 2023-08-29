@@ -14,6 +14,8 @@ export const initializeServer = async(): Promise<void> => (
 
     app.use(express.static(clientDirectory));
 
+    app.use(express.json());
+
     app.use('/api', api);
 
     app.get('*', (req, res) => {

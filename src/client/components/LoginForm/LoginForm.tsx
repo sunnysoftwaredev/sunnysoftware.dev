@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { redirect } from 'react-router-dom';
 import type { FunctionComponent, ChangeEvent } from 'react';
-import { isObjectRecord } from '../../../server/database';
+import { isObjectRecord } from '../../../server/common/utilities/types';
 
 const LoginForm: FunctionComponent = () => {
   // check if user logged in already
@@ -41,6 +41,8 @@ const LoginForm: FunctionComponent = () => {
       });
 
       const result: unknown = await response.json();
+      console.log('tsx file made it here, result type is: ', typeof (result));
+
       if (!isObjectRecord(result)) {
         throw new Error('Unexpected body type: LoginForm.tsx');
       }
@@ -59,6 +61,7 @@ const LoginForm: FunctionComponent = () => {
           localStorage.setItem('user', JSON.stringify(response.body));
           redirect('/http://127.0.0.1/3000/');
         } else {
+          redirect('/http://127.0.0.1/3000/contact-us');
           // setError('username or password does not match in LoginForm.tsx');
           // commented out error variable not used
         }
@@ -92,13 +95,13 @@ const LoginForm: FunctionComponent = () => {
         </label>
       </div>
 
+      <button type="submit" className="loginButton">
+        Sign in
+      </button>
+
       <div className="forgotPassword">
         <a href="#">Forgot password?</a>
       </div>
-
-      <button type="button" className="loginButton">
-        Sign in
-      </button>
 
       <div className="createAccount">
         <a href="#!">Create an account</a>

@@ -19,13 +19,6 @@ export const initializeDatabase = async(): Promise<void> => {
   logger.info('Database initialized successfully.');
 };
 
-export const isObjectRecord
-= (value: unknown): value is Record<string, unknown> => (
-  typeof value === 'object'
-  && value !== null
-  && !Array.isArray(value)
-);
-
 type User = {
   id: string;
   username: string;
@@ -85,7 +78,7 @@ export const insertUser = async(
 export const userExists = async(username: string, password: string):
 Promise<boolean> => {
   const result = await client.query(
-    'SELECT id FROM Users WHERE username=$1 AND password=$2',
+    'SELECT id FROM "Users" WHERE username=$1 AND password=$2',
     [username, password],
   );
 

@@ -1,14 +1,15 @@
 import { Router as createRouter } from 'express';
 import logger from '../logger';
-import { isObjectRecord, userExists } from '../database';
+import { userExists } from '../database';
+import { isObjectRecord } from '../common/utilities/types';
 
 const router = createRouter();
-// for route: '/api/login'
 
 router.post('/', (req, res) => {
   (async(): Promise<void> => {
     if (!isObjectRecord(req.body)) {
-      throw new Error('Unexpected body type');
+      console.log('req.body is of type', typeof (req.body));
+      throw new Error('api/login: req.body is not object');
     }
     const user = req.body.username;
     const { password } = req.body; // automatic destructuring?
@@ -28,6 +29,7 @@ router.post('/', (req, res) => {
       success: true,
       isloggedin: result,
     });
+    logger.info('res.json success in login.ts');
   })().catch((e: Error) => {
     res.json({
       success: false,
