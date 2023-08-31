@@ -1,13 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { redirect } from 'react-router-dom';
-import type { FunctionComponent, ChangeEvent } from 'react';
+import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
 import { isObjectRecord } from '../../../server/common/utilities/types';
 
 const LoginForm: FunctionComponent = () => {
   // check if user logged in already
   const user = localStorage.getItem('user');
   if (user !== null) {
-    redirect('/http://127.0.0.1/3000/');
+    redirect('http://127.0.0.1/3000/');
   }
 
   // const [error, setError] = useState<string | undefined>(undefined);
@@ -27,9 +27,11 @@ const LoginForm: FunctionComponent = () => {
     [setPassword],
   );
 
-  const handleSubmit = useCallback(async() => {
+  const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
-      const response = await fetch('http://127.0.0.1/3000/api/login', {
+      e.preventDefault();
+      console.log('trying fetch in tsx file...');
+      const response = await fetch('http://localhost:3000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,6 +44,7 @@ const LoginForm: FunctionComponent = () => {
 
       const result: unknown = await response.json();
       console.log('tsx file made it here, result type is: ', typeof (result));
+      console.log(result);
 
       if (!isObjectRecord(result)) {
         throw new Error('Unexpected body type: LoginForm.tsx');
@@ -53,22 +56,20 @@ const LoginForm: FunctionComponent = () => {
         throw new Error('isloggedin variable not type boolean: LoginForm.tsx');
       }
       // store string in localStorage
-      if (typeof result.username !== 'string') {
-        throw new Error('username variable not type string: LoginForm.tsx');
-      }
+      // if (typeof result.username !== 'string') {
+      //   throw new Error('username variable not type string: LoginForm.tsx');
+      // }
       if (result.success) {
         if (result.isloggedin) {
-          localStorage.setItem('user', JSON.stringify(response.body));
+          localStorage.setItem('user', JSON.stringify(result.isloggedin));
           redirect('/http://127.0.0.1/3000/');
         } else {
           redirect('/http://127.0.0.1/3000/contact-us');
-          // setError('username or password does not match in LoginForm.tsx');
-          // commented out error variable not used
         }
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        // something here
+        console.log(err);
       }
     }
   }, [username, password]);
