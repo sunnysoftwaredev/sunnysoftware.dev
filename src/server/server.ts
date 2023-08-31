@@ -1,5 +1,6 @@
 import path from 'path';
 import express from 'express';
+import cors from 'cors';
 import logger from './logger';
 import api from './api';
 
@@ -13,6 +14,14 @@ export const initializeServer = async(): Promise<void> => (
     const indexPage = path.join(clientDirectory, 'index.html');
 
     app.use(express.static(clientDirectory));
+
+    // CORS options
+    const allowedOrigins = ['localhost:3000'];
+    const options: cors.CorsOptions = {
+      origin: allowedOrigins,
+    };
+
+    app.use(cors(options));
 
     app.use(express.json());
 

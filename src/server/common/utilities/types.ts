@@ -5,9 +5,3 @@ export const isObjectRecord
   && !Array.isArray(value)
 );
 
-// export const isRequest = (value: unknown): value is Request<{}, any, any,
-// QueryString.ParsedQs, Record<string, any>> => (
-//   typeof value === 'object'
-//   && value !== null
-//   && !Array.isArray(value)
-// );
