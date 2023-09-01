@@ -30,7 +30,6 @@ const LoginForm: FunctionComponent = () => {
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
-      console.log('trying fetch in tsx file...');
       const response = await fetch('http://localhost:3000/api/login', {
         method: 'POST',
         headers: {
@@ -43,7 +42,6 @@ const LoginForm: FunctionComponent = () => {
       });
 
       const result: unknown = await response.json();
-      console.log('tsx file made it here, result type is: ', typeof (result));
       console.log(result);
 
       if (!isObjectRecord(result)) {
@@ -55,10 +53,7 @@ const LoginForm: FunctionComponent = () => {
       if (typeof result.isloggedin !== 'boolean') {
         throw new Error('isloggedin variable not type boolean: LoginForm.tsx');
       }
-      // store string in localStorage
-      // if (typeof result.username !== 'string') {
-      //   throw new Error('username variable not type string: LoginForm.tsx');
-      // }
+      // store in localStorage
       if (result.success) {
         if (result.isloggedin) {
           localStorage.setItem('user', JSON.stringify(result.isloggedin));
@@ -73,6 +68,17 @@ const LoginForm: FunctionComponent = () => {
       }
     }
   }, [username, password]);
+
+  // Alt display if logged in
+  if (user !== null) {
+    return (
+      <div>
+        {user}
+        {' '}
+        is logged in
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit}>
