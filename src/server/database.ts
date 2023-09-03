@@ -20,16 +20,16 @@ export const initializeDatabase = async(): Promise<void> => {
 };
 
 type User = {
-  id: string;
   username: string;
   email: string;
   password: string;
+  role: string;
 };
 export type { User };
 
 export const getUser = async(id: string): Promise<User> => {
   const result = await client.query(
-    'SELECT username, email FROM Users WHERE id=$1',
+    'SELECT username, email, role FROM Users WHERE id=$1',
     [id],
   );
 
@@ -53,25 +53,29 @@ export const getUser = async(id: string): Promise<User> => {
   if (typeof password !== 'string') {
     throw new Error('Unable to select the user.');
   }
+  const role: unknown = row[0];
+  if (typeof role !== 'string') {
+    throw new Error('Unable to select the user.');
+  }
   return {
-    id,
     username,
     email,
     password,
+    role,
   };
 };
 
 export const insertUser = async(
-  id: string, username: string,
-  email: string, password: string,
+  username: string, email: string,
+  password: string, role: string
 ): Promise<User> => {
-  await client.query(`INSERT INTO "Users" (id, username, email, password)
-           VALUES ($1, $2, $3, $4)`, [id, username, email, password]);
+  await client.query(`INSERT INTO "Users" (username, email, password, role)
+           VALUES ($1, $2, $3, $4)`, [username, email, password, role]);
   return {
-    id,
     username,
     email,
     password,
+    role,
   };
 };
 

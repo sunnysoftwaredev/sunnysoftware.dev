@@ -2,9 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import type { FunctionComponent } from 'react';
-import LoginForm from '../../components/LoginForm/LoginForm';
+import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
 
-const LoginPage: FunctionComponent = () => {
+const RegisterPage: FunctionComponent = () => {
   const navigate = useNavigate();
   // check if user logged in already
   const user = localStorage.getItem('user');
@@ -15,15 +15,14 @@ const LoginPage: FunctionComponent = () => {
     <div>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Login-Sunny Software</title>
-        <link rel="canonical" href="https://sunnysoftware.dev/login" />
-        <meta name="description" content="The login page" />
+        <title>Register-Sunny Software</title>
+        <link rel="canonical" href="https://sunnysoftware.dev/register" />
+        <meta name="description" content="The registration page" />
       </Helmet>
-      <h1 className="LoginPage">LoginPage</h1>
-      <p>Login to Sunny Software</p>
-      <LoginForm />
+      <RegistrationForm />
+
     </div>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

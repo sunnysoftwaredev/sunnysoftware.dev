@@ -1,9 +1,10 @@
 import React, { useCallback, useRef } from 'react';
 import type { FunctionComponent } from 'react';
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from './NavBar.scss';
 
 const Navbar: FunctionComponent = () => {
+  const navigate = useNavigate();
   // check if user logged in already
   const user = localStorage.getItem('user');
   const loggedIn = useRef(false);
@@ -15,12 +16,15 @@ const Navbar: FunctionComponent = () => {
   void => {
     e.preventDefault();
     if (loggedIn.current) {
+      window.location.reload();
       localStorage.removeItem('user');
       loggedIn.current = false;
+      navigate('/portal');
     } else {
-      redirect('http://localhost:3000/login');
+      navigate('/login');
+      window.location.reload();
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <nav>
