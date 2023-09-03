@@ -1,13 +1,14 @@
 import React, { useState, useCallback } from 'react';
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
-import { isObjectRecord } from '../../../server/common/utilities/types';
+import { isObjectRecord } from '../../common/utilities/types';
 
 const LoginForm: FunctionComponent = () => {
+  const navigate = useNavigate();
   // check if user logged in already
   const user = localStorage.getItem('user');
   if (user !== null) {
-    redirect('http://127.0.0.1/3000/');
+    navigate('/');
   }
 
   // const [error, setError] = useState<string | undefined>(undefined);
@@ -57,9 +58,9 @@ const LoginForm: FunctionComponent = () => {
       if (result.success) {
         if (result.isloggedin) {
           localStorage.setItem('user', JSON.stringify(result.isloggedin));
-          redirect('/http://127.0.0.1/3000/');
+          navigate('/');
         } else {
-          redirect('/http://127.0.0.1/3000/contact-us');
+          navigate('/contact-us');
         }
       }
     } catch (err: unknown) {
@@ -67,7 +68,7 @@ const LoginForm: FunctionComponent = () => {
         console.log(err);
       }
     }
-  }, [username, password]);
+  }, [username, password, navigate]);
 
   // Alt display if logged in
   if (user !== null) {
@@ -111,7 +112,7 @@ const LoginForm: FunctionComponent = () => {
       </div>
 
       <div className="createAccount">
-        <a href="#!">Create an account</a>
+        <a href="/register">Create an account</a>
       </div>
     </form>
   );

@@ -3,6 +3,7 @@ import type { FunctionComponent } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage/LandingPage';
 import LoginPage from './pages/LoginPage/LoginPage';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
 import ContactUsPage from './pages/ContactUs/ContactUsPage';
 import GetStartedPage from './pages/GetStartedPage/GetStartedPage';
 import ClientPortalPage from './pages/ClientPortalPage/ClientPortalPage';
@@ -20,6 +21,7 @@ const App: FunctionComponent = () => (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="login" element={<LoginPage />} />
+      <Route path="register" element={<RegisterPage />} />
       <Route path="contact-us" element={<ContactUsPage />} />
       <Route path="get-started" element={<GetStartedPage />} />
       <Route path="portal" element={<ClientPortalPage />} />
