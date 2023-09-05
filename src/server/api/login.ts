@@ -1,7 +1,8 @@
 import { Router as createRouter } from 'express';
 import logger from '../logger';
-import { userExists } from '../database';
+import { getUserByUsername } from '../database';
 import { isObjectRecord } from '../common/utilities/types';
+import { saltAndHash } from '../common/utilities/crypto';
 
 const router = createRouter();
 
@@ -10,21 +11,37 @@ router.post('/', (req, res) => {
     if (!isObjectRecord(req.body)) {
       throw new Error('api/login: req.body is not object');
     }
-    const user = req.body.username;
-    const { password } = req.body; // automatic destructuring?
+    const { username, password } = req.body;
 
-    if (typeof user !== 'string') {
-      throw new Error('user not type string');
+    if (typeof username !== 'string') {
+      throw new Error('api/login: user not type string');
     }
     if (typeof password !== 'string') {
-      throw new Error('password not type string');
+      throw new Error('api/login: password not type string');
     }
 
-    const result = await userExists(user, password);
+    const userObject = await getUserByUsername(username);
+
+    const { username: usernameDB, password: passwordDB, salt: saltDB }
+     = userObject;
+
+    const saltedAndHashedPassword: Buffer = saltAndHash(
+      password,
+      Buffer.from(saltDB)
+    );
+    if (saltedAndHashedPassword.toString() === passwordDB) {
+      console.log('Check on passwords is true');
+    } else {
+      console.log('Passwords not the same');
+    }
+    const finalPasswordString = saltedAndHashedPassword.toString();
+    const saltString = salt.toString();
+
+    console.log(userObject);
+    // console.log(userPassword);
 
     res.json({
       success: true,
-      isloggedin: result,
     });
     logger.info('res.json success in login.ts');
   })().catch((e: Error) => {

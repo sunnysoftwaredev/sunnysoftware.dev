@@ -10,6 +10,7 @@ const RegistrationForm: FunctionComponent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
+  const [salt, setSalt] = useState(''); // necessary?
 
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
@@ -41,7 +42,7 @@ const RegistrationForm: FunctionComponent = () => {
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
-      if (username === '' || email === '' || password === '') {
+      if (username === '' || email === '' || password === '' || salt === '') {
         setError(true);
         return;
       }
@@ -57,11 +58,11 @@ const RegistrationForm: FunctionComponent = () => {
           email,
           password,
           role,
+          salt,
         }),
       });
 
       const result: unknown = await response.json();
-      console.log(result);
 
       if (!isObjectRecord(result)) {
         throw new Error('Unexpected body type: RegistrationForm.tsx');
@@ -81,7 +82,7 @@ const RegistrationForm: FunctionComponent = () => {
         console.log(err);
       }
     }
-  }, [username, email, password, navigate]);
+  }, [username, email, password, role, navigate, salt]);
 
   // Showing success message
   const successMessage = (): React.JSX.Element => (

@@ -2,6 +2,7 @@ import { Router as createRouter } from 'express';
 import logger from '../logger';
 import { isObjectRecord } from '../common/utilities/types';
 import { insertUser } from '../database';
+import { generateSalt, saltAndHash } from '../common/utilities/crypto';
 
 const router = createRouter();
 
@@ -12,7 +13,6 @@ router.post('/', (req, res) => {
     }
     const { username } = req.body;
     const { email } = req.body;
-    // hash password here
     const { password } = req.body;
     const { role } = req.body;
 
@@ -29,7 +29,18 @@ router.post('/', (req, res) => {
       throw new Error('role not type string');
     }
 
-    const result = await insertUser(username, email, password, role);
+    const salt = await generateSalt();
+    const saltedAndHashedPassword = saltAndHash(password, salt);
+    const finalPasswordString = saltedAndHashedPassword.toString();
+    const saltString = salt.toString();
+
+    const result = await insertUser(
+      username,
+      email,
+      finalPasswordString,
+      role,
+      saltString
+    );
 
     res.json({
       success: true,
