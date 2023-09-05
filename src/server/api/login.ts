@@ -22,23 +22,23 @@ router.post('/', (req, res) => {
 
     const userObject = await getUserByUsername(username);
 
-    const { username: usernameDB, password: passwordDB, salt: saltDB }
+    const { password: passwordDB, salt: saltDB }
      = userObject;
 
-    const saltedAndHashedPassword: Buffer = saltAndHash(
+    const saltedAndHashedLoginPassword: Buffer = saltAndHash(
       password,
-      Buffer.from(saltDB)
+      Buffer.from(saltDB, 'hex')
     );
-    if (saltedAndHashedPassword.toString() === passwordDB) {
-      console.log('Check on passwords is true');
-    } else {
-      console.log('Passwords not the same');
-    }
-    const finalPasswordString = saltedAndHashedPassword.toString();
-    const saltString = salt.toString();
+    const checkPassword = saltedAndHashedLoginPassword.toString('hex');
 
-    console.log(userObject);
-    // console.log(userPassword);
+    if (checkPassword === passwordDB) {
+      logger.info('Check: passwords are the same!');
+      // const tokenHashing = crypt.hmac('sha256', key);
+      // tokenValue = encodeToken();
+      // localStorage.setItem('token', JSON.stringify(token));
+    } else {
+      logger.info('FAILURE: Passwords not the same');
+    }
 
     res.json({
       success: true,
