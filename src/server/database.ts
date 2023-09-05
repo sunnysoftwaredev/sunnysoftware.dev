@@ -1,8 +1,8 @@
+import type { QueryResult } from 'pg';
 import { Client } from 'pg';
 import config from './config';
 import logger from './logger';
 
-// Added export
 export const client = new Client({
   host: config.pg.host,
   port: config.pg.port,
@@ -24,68 +24,80 @@ type User = {
   email: string;
   password: string;
   role: string;
+  salt: string;
 };
 export type { User };
 
-export const getUser = async(id: string): Promise<User> => {
-  const result = await client.query(
-    'SELECT username, email, role FROM Users WHERE id=$1',
-    [id],
+export const getUserByUsername = async(usernameInput: string):
+Promise<User> => {
+  const result: QueryResult<User> = await client.query(
+    'SELECT username, email, password, role, salt FROM "Users" WHERE username=$1',
+    [usernameInput],
   );
 
   const { rows } = result;
   if (rows.length !== 1) {
     throw new Error('Unable to select the user.');
   }
-  const row: unknown = rows[0];
-  if (!Array.isArray(row)) {
-    throw new Error('Unable to select the user.');
-  } // Below be sure to change to correct rows and rm password after test
-  const username: unknown = row[0];
-  if (typeof username !== 'string') {
-    throw new Error('Unable to select the user.');
-  }
-  const email: unknown = row[0];
-  if (typeof email !== 'string') {
-    throw new Error('Unable to select the user.');
-  }
-  const password: unknown = row[0];
-  if (typeof password !== 'string') {
-    throw new Error('Unable to select the user.');
-  }
-  const role: unknown = row[0];
-  if (typeof role !== 'string') {
-    throw new Error('Unable to select the user.');
-  }
+  const user: User = rows[0];
+  const { username, email, password, role, salt } = user;
+
   return {
     username,
     email,
     password,
     role,
+    salt,
   };
 };
 
 export const insertUser = async(
   username: string, email: string,
-  password: string, role: string
+  password: string, role: string,
+  salt: string
 ): Promise<User> => {
-  await client.query(`INSERT INTO "Users" (username, email, password, role)
-           VALUES ($1, $2, $3, $4)`, [username, email, password, role]);
+  await client.query(`INSERT INTO "Users" (username, email, password, role, salt)
+           VALUES ($1, $2, $3, $4, $5)`, [username, email, password, role, salt]);
   return {
     username,
     email,
     password,
     role,
+    salt,
   };
 };
 
-export const userExists = async(username: string, password: string):
-Promise<boolean> => {
-  const result = await client.query(
-    'SELECT id FROM "Users" WHERE username=$1 AND password=$2',
-    [username, password],
-  );
+// userExists types and function
 
-  const { rows } = result;
-  return rows.length > 0;
-};
+// type userIDExists = {
+//   id: number;
+//   exists: boolean;
+// };
+// export type { userIDExists };
+
+// type idObject = {
+//   id: number;
+// };
+
+// export const userExists = async(username: string, password: string):
+// Promise<userIDExists> => {
+//   const result = await client.query(
+//     'SELECT id FROM "Users" WHERE username=$1 AND password=$2',
+//     [username, password],
+//   );
+
+//   const { rows } = result;
+//   if (typeof rows[0] !== 'object') {
+//     throw new Error('userExists:  idObject not returned');
+//   }
+//   const returnObject: idObject = rows[0]; // unsafe assignment of 'any' value
+//   const { id } = returnObject;
+//   if (typeof (id) !== 'number') {
+//     throw new Error('userExists: id not returned as number');
+//   }
+//   const exists = rows.length > 0;
+//   return {
+//     id,
+//     exists,
+//   };
+// };
