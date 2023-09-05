@@ -7,10 +7,10 @@ export const hash = (input: Buffer): Buffer => {
   const result = crypt.createHash('sha256').update(input).digest();
   return result;
 };
-
+// changed from 256
 export const generateSalt
 = async(): Promise<Buffer> => new Promise((resolve, reject) => {
-  crypt.randomBytes(256, (err, buf) => {
+  crypt.randomBytes(20, (err, buf) => {
     if (err !== null) {
       reject(err);
     }

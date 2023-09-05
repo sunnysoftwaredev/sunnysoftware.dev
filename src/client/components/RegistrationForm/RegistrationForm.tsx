@@ -10,7 +10,6 @@ const RegistrationForm: FunctionComponent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
-  const [salt, setSalt] = useState(''); // necessary?
 
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
@@ -42,7 +41,7 @@ const RegistrationForm: FunctionComponent = () => {
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
-      if (username === '' || email === '' || password === '' || salt === '') {
+      if (username === '' || email === '' || password === '') {
         setError(true);
         return;
       }
@@ -58,7 +57,6 @@ const RegistrationForm: FunctionComponent = () => {
           email,
           password,
           role,
-          salt,
         }),
       });
 
@@ -73,7 +71,9 @@ const RegistrationForm: FunctionComponent = () => {
       // store in localStorage
       if (result.success) {
         localStorage.setItem('user', JSON.stringify(result.isloggedin));
-        navigate('/');
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
       } else {
         navigate('/contact-us');
       }
@@ -82,7 +82,7 @@ const RegistrationForm: FunctionComponent = () => {
         console.log(err);
       }
     }
-  }, [username, email, password, role, navigate, salt]);
+  }, [username, email, password, role, navigate]);
 
   // Showing success message
   const successMessage = (): React.JSX.Element => (
