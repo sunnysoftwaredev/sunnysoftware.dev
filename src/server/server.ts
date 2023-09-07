@@ -1,6 +1,7 @@
 import path from 'path';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import logger from './logger';
 import api from './api';
 
@@ -22,6 +23,8 @@ export const initializeServer = async(): Promise<void> => (
     };
 
     app.use(cors(options));
+
+    app.use(cookieParser());
 
     app.use(express.json());
 

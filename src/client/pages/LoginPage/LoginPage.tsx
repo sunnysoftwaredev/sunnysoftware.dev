@@ -20,7 +20,6 @@ const LoginPage: FunctionComponent = () => {
         <meta name="description" content="The login page" />
       </Helmet>
       <h1 className="LoginPage">LoginPage</h1>
-      <p>Login to Sunny Software</p>
       <LoginForm />
     </div>
   );

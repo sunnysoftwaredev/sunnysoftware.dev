@@ -28,10 +28,20 @@ type User = {
 };
 export type { User };
 
+type UserWithId = {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  role: string;
+  salt: string;
+};
+export type { UserWithId };
+
 export const getUserByUsername = async(usernameInput: string):
-Promise<User> => {
-  const result: QueryResult<User> = await client.query(
-    'SELECT username, email, password, role, salt FROM "Users" WHERE username=$1',
+Promise<UserWithId> => {
+  const result: QueryResult<UserWithId> = await client.query(
+    'SELECT id, username, email, password, role, salt FROM "Users" WHERE username=$1',
     [usernameInput],
   );
 
@@ -39,10 +49,11 @@ Promise<User> => {
   if (rows.length !== 1) {
     throw new Error('Unable to select the user.');
   }
-  const user: User = rows[0];
-  const { username, email, password, role, salt } = user;
+  const user: UserWithId = rows[0];
+  const { id, username, email, password, role, salt } = user;
 
   return {
+    id,
     username,
     email,
     password,
@@ -67,6 +78,24 @@ export const insertUser = async(
   };
 };
 
+export const insertToken = async(
+  foreignKey: number,
+  token: string, expirationDate: Date
+): Promise<string> => {
+  await client.query(`INSERT INTO "AuthenticationTokens"
+   (user_id, token, expiration)
+  VALUES ($1, $2, $3)`, [foreignKey, token, expirationDate]);
+  return token;
+};
+
+// delete token, get from local machine, compare and delete
+// WIP
+
+export const deleteToken = async(localToken: string): Promise<boolean> => {
+  await client.query(`DELETE FROM "AuthenticationTokens"
+   WHERE token=$1`, [localToken]);
+  return true;
+};
 // userExists types and function
 
 // type userIDExists = {

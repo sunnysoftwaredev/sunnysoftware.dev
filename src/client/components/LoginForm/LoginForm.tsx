@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
-import { isObjectRecord } from '../../common/utilities/types';
+import { isObjectRecord } from '../../../common/utilities/types';
+import { getLocalCookieValue } from '../../../common/utilities/functions';
 
 const LoginForm: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -12,8 +13,19 @@ const LoginForm: FunctionComponent = () => {
   }
 
   // const [error, setError] = useState<string | undefined>(undefined);
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [token, getToken] = useState('');
+
+  useEffect(() => {
+    const t = getLocalCookieValue();
+    if (typeof t === 'undefined') {
+      getToken('');
+    } else {
+      getToken(t);
+    }
+  }, []);
+
   const handleUsernameChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setUsername(e.target.value);
@@ -62,6 +74,9 @@ const LoginForm: FunctionComponent = () => {
         } else {
           navigate('/contact-us');
         }
+      } else {
+        // something else in future
+        console.log('Login not successful');
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -83,6 +98,11 @@ const LoginForm: FunctionComponent = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <div>
+        Cookie is
+        {' '}
+        {token}
+      </div>
       <div className="usernameBox">
         <input
           type="text" id="username" className="usernameBox"
