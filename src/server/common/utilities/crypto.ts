@@ -1,16 +1,16 @@
 import crypt from 'crypto';
 
 // TODO: determine an appropriate number
-const HASH_ROUNDS = 3;
+const HASH_ROUNDS = 500;
 
 export const hash = (input: Buffer): Buffer => {
   const result = crypt.createHash('sha256').update(input).digest();
   return result;
 };
-// changed from 256
+// changed from 256 to 128: salt.toString(hex) returns 512 char
 export const generateSalt
 = async(): Promise<Buffer> => new Promise((resolve, reject) => {
-  crypt.randomBytes(256, (err, buf) => {
+  crypt.randomBytes(128, (err, buf) => {
     if (err !== null) {
       reject(err);
     }

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { isObjectRecord } from '../../common/utilities/types';
+import { isObjectRecord } from '../../../common/utilities/types';
 
 const RegistrationForm: FunctionComponent = () => {
   const navigate = useNavigate();

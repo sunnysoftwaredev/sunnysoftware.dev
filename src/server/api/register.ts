@@ -1,6 +1,6 @@
 import { Router as createRouter } from 'express';
 import logger from '../logger';
-import { isObjectRecord } from '../common/utilities/types';
+import { isObjectRecord } from '../../common/utilities/types';
 import { insertUser } from '../database';
 import { generateSalt, saltAndHash } from '../common/utilities/crypto';
 
@@ -33,6 +33,8 @@ router.post('/', (req, res) => {
     const saltedAndHashedPassword = saltAndHash(password, salt);
     const finalPasswordString = saltedAndHashedPassword.toString('hex');
     const saltString = salt.toString('hex');
+    // console.log('String length is: ');
+    // console.log(finalPasswordString.length);
 
     const result = await insertUser(
       username,
