@@ -88,45 +88,54 @@ export const insertToken = async(
   return token;
 };
 
-// delete token, get from local machine, compare and delete
-// WIP
+type ActiveStatus = {
+  active: boolean;
+};
+export type { ActiveStatus };
 
-export const deleteToken = async(localToken: string): Promise<boolean> => {
-  await client.query(`DELETE FROM "AuthenticationTokens"
+export const compareTokens = async(localToken: string):
+Promise<boolean> => {
+  const result: QueryResult<ActiveStatus> = await client.query(
+    'SELECT active FROM "AuthenticationTokens" WHERE token=$1',
+    [localToken],
+  );
+  const { rows } = result;
+  if (rows.length !== 1) {
+    return false;
+  }
+
+  if (typeof rows[0].active !== 'boolean') {
+    return false;
+  }
+
+  return rows[0].active;
+};
+
+export const markTokenInactive
+= async(localToken: string): Promise<boolean> => {
+  await client.query(`UPDATE "AuthenticationTokens"
+  SET active = false
    WHERE token=$1`, [localToken]);
   return true;
 };
-// userExists types and function
 
-// type userIDExists = {
-//   id: number;
-//   exists: boolean;
-// };
-// export type { userIDExists };
+type roleObject = {
+  role: string;
+};
 
-// type idObject = {
-//   id: number;
-// };
+export const getUserRole = async(localToken: string): Promise<string> => {
+  const result: QueryResult<roleObject> = await client.query(`SELECT "Users".role
+  FROM "Users"
+  JOIN "AuthenticationTokens"
+  ON "AuthenticationTokens".user_id="Users".id
+  WHERE "AuthenticationTokens".token=$1`, [localToken]);
 
-// export const userExists = async(username: string, password: string):
-// Promise<userIDExists> => {
-//   const result = await client.query(
-//     'SELECT id FROM "Users" WHERE username=$1 AND password=$2',
-//     [username, password],
-//   );
+  const { rows } = result;
+  if (rows.length !== 1) {
+    throw new Error('Unable to select user role.');
+  }
+  const roleJSON: roleObject = rows[0];
+  const { role } = roleJSON;
 
-//   const { rows } = result;
-//   if (typeof rows[0] !== 'object') {
-//     throw new Error('userExists:  idObject not returned');
-//   }
-//   const returnObject: idObject = rows[0]; // unsafe assignment of 'any' value
-//   const { id } = returnObject;
-//   if (typeof (id) !== 'number') {
-//     throw new Error('userExists: id not returned as number');
-//   }
-//   const exists = rows.length > 0;
-//   return {
-//     id,
-//     exists,
-//   };
-// };
+  return role;
+};
