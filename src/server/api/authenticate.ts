@@ -1,25 +1,31 @@
 import { Router as createRouter } from 'express';
-import { markTokenInactive } from '../database';
 import { isObjectRecord } from '../../common/utilities/types';
+import { compareTokens, getUserRole } from '../database';
 
 const router = createRouter();
 
-router.get('/', (req, res) => {
+router.post('/', (req, res) => {
   (async(): Promise<void> => {
     if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/login: req.body is not object');
+      throw new Error('api/authenticate: req.cookies is not object');
     }
     const { authenticationToken } = req.cookies;
     if (typeof authenticationToken !== 'string') {
       throw new Error('api/logout: userToken not type string');
     }
-    const result = await markTokenInactive(authenticationToken);
-    // clear cookie locally
-    res.clearCookie('authenticationToken');
-    // redirect to home page after logout
-    res.redirect('/');
+
+    const tokensSame = await compareTokens(authenticationToken);
+
+    if (!tokensSame) {
+      throw new Error('User authentication has failed');
+    }
+
+    const role = await getUserRole(authenticationToken);
+
     res.json({
-      success: result,
+      success: tokensSame,
+      userRole: role,
+      tokenValue: tokensSame,
     });
   })().catch((e: Error) => {
     res.json({
@@ -30,3 +36,4 @@ router.get('/', (req, res) => {
 });
 
 export default router;
+

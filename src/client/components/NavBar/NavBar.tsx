@@ -1,30 +1,44 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import type { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getLocalCookieValue } from '../../../common/utilities/functions';
 import styles from './NavBar.scss';
 
 const Navbar: FunctionComponent = () => {
   const navigate = useNavigate();
-  // check if user logged in already
-  const user = localStorage.getItem('user');
-  const loggedIn = useRef(false);
-  if (user !== null) {
-    loggedIn.current = true;
-  }
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>):
-  void => {
+  // const authData = useCallback(async() => {
+  //   const response = await fetch('http://localhost:3000/api/authenticate');
+  // });
+
+  // useEffect(() => {
+  //   const authData = async () => {
+  //     const fetchData = async () => {
+  //       const data = await fetch('http://localhost:3000/api/authenticate');
+  //       // convert the data to json
+  //       const json = Response.json;
+  //   };
+
+  //   const userCookie = getLocalCookieValue();
+  //   if (userCookie !== undefined) {
+  //     setLoggedIn(true);
+  //   }
+  // }, [loggedIn]);
+
+  const handleSubmit = useCallback(async(e: React.FormEvent<HTMLFormElement>):
+  Promise<void> => {
     e.preventDefault();
-    if (loggedIn.current) {
+    if (loggedIn) {
       window.location.reload();
-      localStorage.removeItem('user');
-      loggedIn.current = false;
+      const response = await fetch('http://localhost:3000/api/logout');
+      console.log('response returned in logout', response);
       navigate('/portal');
     } else {
       navigate('/login');
       window.location.reload();
     }
-  }, [navigate]);
+  }, [navigate, loggedIn]);
 
   return (
     <nav>
@@ -74,7 +88,7 @@ const Navbar: FunctionComponent = () => {
             Portfolio
           </a>
         </li>
-        {loggedIn.current
+        {loggedIn
           ? (
             <form onSubmit={handleSubmit}>
               <button type="submit" className="loginButton">

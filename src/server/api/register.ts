@@ -33,8 +33,6 @@ router.post('/', (req, res) => {
     const saltedAndHashedPassword = saltAndHash(password, salt);
     const finalPasswordString = saltedAndHashedPassword.toString('hex');
     const saltString = salt.toString('hex');
-    // console.log('String length is: ');
-    // console.log(finalPasswordString.length);
 
     const result = await insertUser(
       username,
