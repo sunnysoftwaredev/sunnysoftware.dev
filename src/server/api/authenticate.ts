@@ -1,6 +1,6 @@
 import { Router as createRouter } from 'express';
 import { isObjectRecord } from '../../common/utilities/types';
-import { compareTokens, getUserRole } from '../database';
+import { checkActiveToken, getUsernameAndRole } from '../database';
 
 const router = createRouter();
 
@@ -14,18 +14,18 @@ router.post('/', (req, res) => {
       throw new Error('api/logout: userToken not type string');
     }
 
-    const tokensSame = await compareTokens(authenticationToken);
+    const tokenActive = await checkActiveToken(authenticationToken);
 
-    if (!tokensSame) {
+    if (!tokenActive) {
       throw new Error('User authentication has failed');
     }
 
-    const role = await getUserRole(authenticationToken);
+    const { username, role } = await getUsernameAndRole(authenticationToken);
 
     res.json({
-      success: tokensSame,
-      userRole: role,
-      tokenValue: tokensSame,
+      username,
+      role,
+      tokenValue: tokenActive,
     });
   })().catch((e: Error) => {
     res.json({

@@ -1,6 +1,7 @@
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import App from './App';
 import './index.scss';
 
@@ -14,7 +15,10 @@ const root = ReactDOM.createRoot(rootElement);
 root.render((
   <StrictMode>
     <Router>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+
     </Router>
   </StrictMode>
 ));
