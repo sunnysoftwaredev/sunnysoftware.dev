@@ -90,13 +90,14 @@ export const insertToken = async(
 
 type ActiveStatus = {
   active: boolean;
+  expiration: Date;
 };
 export type { ActiveStatus };
 
-export const compareTokens = async(localToken: string):
+export const checkActiveToken = async(localToken: string):
 Promise<boolean> => {
   const result: QueryResult<ActiveStatus> = await client.query(
-    'SELECT active FROM "AuthenticationTokens" WHERE token=$1',
+    'SELECT active, expiration FROM "AuthenticationTokens" WHERE token=$1',
     [localToken],
   );
   const { rows } = result;
@@ -106,6 +107,19 @@ Promise<boolean> => {
 
   if (typeof rows[0].active !== 'boolean') {
     return false;
+  }
+
+  // check for expiration
+  if (rows[0].active) {
+    const databaseDate = rows[0].expiration;
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate());
+    if (databaseDate < currentDate) {
+      // set token inactive
+      await client.query(`UPDATE "AuthenticationTokens"
+      SET active = true WHERE token=$1`, [localToken]);
+      return false;
+    }
   }
 
   return rows[0].active;
@@ -119,12 +133,15 @@ export const markTokenInactive
   return true;
 };
 
-type roleObject = {
+type nameRoleObject = {
+  username: string;
   role: string;
 };
 
-export const getUserRole = async(localToken: string): Promise<string> => {
-  const result: QueryResult<roleObject> = await client.query(`SELECT "Users".role
+export const getUsernameAndRole
+= async(localToken: string): Promise<nameRoleObject> => {
+  const result: QueryResult<nameRoleObject> = await client.query(`SELECT
+  "Users".username, "Users".role
   FROM "Users"
   JOIN "AuthenticationTokens"
   ON "AuthenticationTokens".user_id="Users".id
@@ -134,8 +151,11 @@ export const getUserRole = async(localToken: string): Promise<string> => {
   if (rows.length !== 1) {
     throw new Error('Unable to select user role.');
   }
-  const roleJSON: roleObject = rows[0];
-  const { role } = roleJSON;
+  const roleJSON: nameRoleObject = rows[0];
+  const { username, role } = roleJSON;
 
-  return role;
+  return {
+    username,
+    role,
+  };
 };
