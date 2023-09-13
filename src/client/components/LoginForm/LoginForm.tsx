@@ -1,36 +1,59 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
 import { isObjectRecord } from '../../../common/utilities/types';
-import { getLocalCookieValue } from '../../../common/utilities/functions';
+import AuthContext from '../../context/AuthContext';
 
 const LoginForm: FunctionComponent = () => {
+  const [inputName, setInputName] = useState('');
+  const [password, setPassword] = useState('');
+  // const [username, setUsername] = useState('');
+  // const [role, setRole] = useState('');
+  // const [active, setActive] = useState(false);
+
+  const { username, role, active }
+  = useContext(AuthContext) ?? { username: '', role: '', active: false };
+
+  // useEffect(() => {
+  //   setUsername(rawContext.username);
+  //   setRole(rawContext.role);
+  //   setActive(rawContext.active);
+  // }, [rawContext.username, rawContext.role, rawContext.active]);
+
   const navigate = useNavigate();
+
+  // const contextObject: nameRoleToken = {
+  //   username: '',
+  //   role: '',
+  //   active: false,
+  // };
+
+  // console.log(contextObject);
+
+  // ({username, role, active} = contextObject);
   // check if user logged in already
-  const user = localStorage.getItem('user');
-  if (user !== null) {
-    navigate('/');
-  }
+
+  // doesn't work have to retrieve cookie if even needed
+  // const user = localStorage.getItem('authenticationToken');
+  // if (user !== null) {
+  //   navigate('/');
+  // }
 
   // const [error, setError] = useState<string | undefined>(undefined);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [token, getToken] = useState('');
+  // const [token, getToken] = useState('');
 
-  useEffect(() => {
-    const t = getLocalCookieValue();
-    if (typeof t === 'undefined') {
-      getToken('');
-    } else {
-      getToken(t);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const rawContext = useContext(AuthContext);
+  //   if (typeof rawContext !== 'undefined') {
+  //     ({ username, role, active }) = rawContext;
+  //   }
+  // }, [username, role, active]);
 
   const handleUsernameChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setUsername(e.target.value);
+      setInputName(e.target.value);
     },
-    [setUsername],
+    [setInputName],
   );
 
   const handlePasswordChange = useCallback(
@@ -49,7 +72,7 @@ const LoginForm: FunctionComponent = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username,
+          inputName,
           password,
         }),
       });
@@ -83,26 +106,44 @@ const LoginForm: FunctionComponent = () => {
         console.log(err);
       }
     }
-  }, [username, password, navigate]);
+  }, [inputName, password, navigate]);
 
   // Alt display if logged in
-  if (user !== null) {
-    return (
-      <div>
-        {user}
-        {' '}
-        is logged in
-      </div>
-    );
-  }
+  // if (username !== '') {
+  //   return (
+  //     <div>
+  //       {username}
+  //       {' '}
+  //       is logged in
+  //     </div>
+  //   );
+  // }
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
+      {/* <div>
         Cookie is
         {' '}
         {token}
+      </div> */}
+      {/* <div>
+        context object is
+        {' '}
+        {active}
+      </div> */}
+      <div>
+        Username is
+        {' '}
+        {username}
+        , role is
+        {' '}
+        {role}
+        {' '}
+        and active is
+        {' '}
+        {active}
       </div>
+      {active ? <div>true</div> : <div>false</div>}
       <div className="usernameBox">
         <input
           type="text" id="username" className="usernameBox"

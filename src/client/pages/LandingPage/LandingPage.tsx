@@ -3,6 +3,7 @@ import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import Hero from '../../components/Hero/Hero';
 import Services from '../../components/Services/Services';
+import CallToAction from '../../components/CallToAction/CallToAction';
 
 const LandingPage: FunctionComponent = () => (
   <div>
@@ -12,10 +13,9 @@ const LandingPage: FunctionComponent = () => (
       <link rel="canonical" href="https://sunnysoftware.dev/" />
       <meta name="description" content="Home/Landing page" />
     </Helmet>
-    <h1 className="landingPage">LandingPage</h1>
-    <p>Sunny Software</p>
     <Hero />
     <Services />
+    <CallToAction />
   </div>
 );
 
