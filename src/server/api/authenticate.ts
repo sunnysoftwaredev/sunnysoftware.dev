@@ -25,7 +25,7 @@ router.post('/', (req, res) => {
     res.json({
       username,
       role,
-      tokenValue: tokenActive,
+      active: tokenActive,
     });
   })().catch((e: Error) => {
     res.json({
