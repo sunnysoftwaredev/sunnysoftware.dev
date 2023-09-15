@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     }
     const { authenticationToken } = req.cookies;
     if (typeof authenticationToken !== 'string') {
-      throw new Error('api/logout: userToken not type string');
+      throw new Error('api/authenticate: userToken not type string');
     }
 
     const tokenActive = await checkActiveToken(authenticationToken);

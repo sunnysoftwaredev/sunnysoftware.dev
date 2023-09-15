@@ -1,13 +1,12 @@
-import React, { useState, useEffect, createContext, useCallback } from 'react';
+import React, { useState, useEffect, createContext, useCallback, useMemo } from 'react';
 import { isObjectRecord } from '../../common/utilities/types';
-import logger from '../../server/logger';
+import { getLocalCookieValue } from '../../common/utilities/functions';
 
 type nameRoleToken = {
   username: string;
   role: string;
   active: boolean;
 };
-export type { nameRoleToken };
 
 interface IProps {
   children: React.ReactNode;
@@ -21,15 +20,20 @@ export const AuthProvider = ({ children }: IProps): React.JSX.Element => {
 
   const fetchAuthData = useCallback(async() => {
     try {
+      if (typeof getLocalCookieValue() !== 'string') {
+        return <div />;
+      }
+      console.log('typeof cookie value: ', typeof getLocalCookieValue());
       const response = await fetch('http://localhost:3000/api/authenticate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'same-origin', // if not working try "include"
+        credentials: 'same-origin',
       });
 
       const result: unknown = await response.json();
+      console.log('result in AuthContext: ', result);
       if (!isObjectRecord(result)) {
         throw new Error('Unexpected body type: AuthContext.tsx');
       }
@@ -44,8 +48,6 @@ export const AuthProvider = ({ children }: IProps): React.JSX.Element => {
       }
 
       const { username, role, active } = result;
-
-      console.log('result in auth: ', result);
 
       setContextData({ username, role, active });
     } catch (err: unknown) {

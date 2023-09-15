@@ -1,6 +1,7 @@
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import EmployeePrivateRoute from './components/PrivateRoutes/EmployeePrivateRoute';
 import LandingPage from './pages/LandingPage/LandingPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
@@ -26,7 +27,14 @@ const App: FunctionComponent = () => (
       <Route path="get-started" element={<GetStartedPage />} />
       <Route path="portal" element={<ClientPortalPage />} />
       {/* Separating two types of portal pages for now  */}
-      <Route path="work-portal" element={<WorkPortalPage />} />
+      <Route
+        path="work-portal" element={(
+          <EmployeePrivateRoute>
+
+            <WorkPortalPage />
+          </EmployeePrivateRoute>
+        )}
+      />
       <Route path="about-us" element={<AboutUsPage />} />
       <Route path="services" element={<ServicesPage />} />
       <Route path="portfolio" element={<PortfolioPage />} />

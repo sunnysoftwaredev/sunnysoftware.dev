@@ -83,8 +83,8 @@ export const insertToken = async(
   token: string, expirationDate: Date
 ): Promise<string> => {
   await client.query(`INSERT INTO "AuthenticationTokens"
-   (user_id, token, expiration)
-  VALUES ($1, $2, $3)`, [foreignKey, token, expirationDate]);
+   (user_id, token, expiration, active)
+  VALUES ($1, $2, $3, $4)`, [foreignKey, token, expirationDate, true]);
   return token;
 };
 
