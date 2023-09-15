@@ -21,8 +21,8 @@ const CallToAction: FunctionComponent = () => {
     <div className={style.cta}>
       <img src={background} className={style.ctaImage} />
       <p className={style.ctaBlurb}>
-        Get in contact and see how our experienced
-        engineers can start bringing you solutions
+        See how our experienced
+        engineers can bring your business value and efficiency
 
       </p>
       <button

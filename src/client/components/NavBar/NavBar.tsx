@@ -1,44 +1,45 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext } from 'react';
 import type { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getLocalCookieValue } from '../../../common/utilities/functions';
+import AuthContext from '../../context/AuthContext';
 import styles from './NavBar.scss';
 
 const Navbar: FunctionComponent = () => {
   const navigate = useNavigate();
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  // const authData = useCallback(async() => {
-  //   const response = await fetch('http://localhost:3000/api/authenticate');
-  // });
-
-  // useEffect(() => {
-  //   const authData = async () => {
-  //     const fetchData = async () => {
-  //       const data = await fetch('http://localhost:3000/api/authenticate');
-  //       // convert the data to json
-  //       const json = Response.json;
-  //   };
-
-  //   const userCookie = getLocalCookieValue();
-  //   if (userCookie !== undefined) {
-  //     setLoggedIn(true);
-  //   }
-  // }, [loggedIn]);
+  const { active } = useContext(AuthContext) ?? { active: false };
 
   const handleSubmit = useCallback(async(e: React.FormEvent<HTMLFormElement>):
   Promise<void> => {
     e.preventDefault();
-    if (loggedIn) {
-      window.location.reload();
-      const response = await fetch('http://localhost:3000/api/logout');
+    if (active) {
+      // window.location.reload();
+      const response = await fetch('http://localhost:3000/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin',
+      });
       console.log('response returned in logout', response);
-      navigate('/portal');
+      // navigate('/portal');
     } else {
       navigate('/login');
       window.location.reload();
     }
-  }, [navigate, loggedIn]);
+  }, [navigate, active]);
+
+  // const response = await fetch('http://localhost:3000/api/register', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         username,
+  //         email,
+  //         password,
+  //         role,
+  //       }),
+  //     });
 
   return (
     <nav>
@@ -88,7 +89,7 @@ const Navbar: FunctionComponent = () => {
             Portfolio
           </a>
         </li>
-        {loggedIn
+        {active
           ? (
             <form onSubmit={handleSubmit}>
               <button type="submit" className="loginButton">

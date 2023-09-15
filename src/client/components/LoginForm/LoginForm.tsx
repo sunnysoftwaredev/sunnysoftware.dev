@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
 import { isObjectRecord } from '../../../common/utilities/types';
@@ -7,47 +7,15 @@ import AuthContext from '../../context/AuthContext';
 const LoginForm: FunctionComponent = () => {
   const [inputName, setInputName] = useState('');
   const [password, setPassword] = useState('');
-  // const [username, setUsername] = useState('');
-  // const [role, setRole] = useState('');
-  // const [active, setActive] = useState(false);
-
-  const { username, role, active }
-  = useContext(AuthContext) ?? { username: '', role: '', active: false };
-
-  // useEffect(() => {
-  //   setUsername(rawContext.username);
-  //   setRole(rawContext.role);
-  //   setActive(rawContext.active);
-  // }, [rawContext.username, rawContext.role, rawContext.active]);
 
   const navigate = useNavigate();
 
-  // const contextObject: nameRoleToken = {
-  //   username: '',
-  //   role: '',
-  //   active: false,
-  // };
+  const { active }
+  = useContext(AuthContext) ?? { active: false };
 
-  // console.log(contextObject);
-
-  // ({username, role, active} = contextObject);
-  // check if user logged in already
-
-  // doesn't work have to retrieve cookie if even needed
-  // const user = localStorage.getItem('authenticationToken');
-  // if (user !== null) {
-  //   navigate('/');
-  // }
-
-  // const [error, setError] = useState<string | undefined>(undefined);
-  // const [token, getToken] = useState('');
-
-  // useEffect(() => {
-  //   const rawContext = useContext(AuthContext);
-  //   if (typeof rawContext !== 'undefined') {
-  //     ({ username, role, active }) = rawContext;
-  //   }
-  // }, [username, role, active]);
+  if (active) {
+    navigate('/');
+  }
 
   const handleUsernameChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +46,6 @@ const LoginForm: FunctionComponent = () => {
       });
 
       const result: unknown = await response.json();
-      console.log(result);
 
       if (!isObjectRecord(result)) {
         throw new Error('Unexpected body type: LoginForm.tsx');
@@ -86,20 +53,16 @@ const LoginForm: FunctionComponent = () => {
       if (typeof result.success !== 'boolean') {
         throw new Error('success variable not type boolean: LoginForm.tsx');
       }
-      if (typeof result.isloggedin !== 'boolean') {
-        throw new Error('isloggedin variable not type boolean: LoginForm.tsx');
+      console.log('result in loginform: ', result);
+      console.log('boolean in loginform: ', result.success);
+      if (typeof result.success !== 'boolean') {
+        throw new Error('success variable not type boolean: LoginForm.tsx');
       }
       // store in localStorage
       if (result.success) {
-        if (result.isloggedin) {
-          localStorage.setItem('user', JSON.stringify(result.isloggedin));
-          navigate('/');
-        } else {
-          navigate('/contact-us');
-        }
+        navigate('/');
       } else {
-        // something else in future
-        console.log('Login not successful');
+        navigate('/contact-us');
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -108,42 +71,8 @@ const LoginForm: FunctionComponent = () => {
     }
   }, [inputName, password, navigate]);
 
-  // Alt display if logged in
-  // if (username !== '') {
-  //   return (
-  //     <div>
-  //       {username}
-  //       {' '}
-  //       is logged in
-  //     </div>
-  //   );
-  // }
-
   return (
     <form onSubmit={handleSubmit}>
-      {/* <div>
-        Cookie is
-        {' '}
-        {token}
-      </div> */}
-      {/* <div>
-        context object is
-        {' '}
-        {active}
-      </div> */}
-      <div>
-        Username is
-        {' '}
-        {username}
-        , role is
-        {' '}
-        {role}
-        {' '}
-        and active is
-        {' '}
-        {active}
-      </div>
-      {active ? <div>true</div> : <div>false</div>}
       <div className="usernameBox">
         <input
           type="text" id="username" className="usernameBox"
