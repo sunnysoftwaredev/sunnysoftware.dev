@@ -6,13 +6,12 @@ import styles from './NavBar.scss';
 
 const Navbar: FunctionComponent = () => {
   const navigate = useNavigate();
-  const { active } = useContext(AuthContext) ?? { active: false };
+  const { active, role } = useContext(AuthContext) ?? { active: false, role: '' };
 
   const handleSubmit = useCallback(async(e: React.FormEvent<HTMLFormElement>):
   Promise<void> => {
     e.preventDefault();
     if (active) {
-      // window.location.reload();
       await fetch('http://localhost:3000/api/logout', {
         method: 'POST',
         headers: {
@@ -36,11 +35,13 @@ const Navbar: FunctionComponent = () => {
             Home
           </a>
         </li>
-        <li className="nav-item">
-          <a className="nav-link active" href="/login">
-            Login
-          </a>
-        </li>
+        {!active && (
+          <li className="nav-item">
+            <a className="nav-link active" href="/login">
+              Login
+            </a>
+          </li>
+        )}
         <li className="nav-item">
           <a className="nav-link active" href="/contact-us">
             Contact Us
@@ -51,16 +52,20 @@ const Navbar: FunctionComponent = () => {
             Get Started
           </a>
         </li>
-        <li className="nav-item">
-          <a className="nav-link active" href="/portal">
-            Client Portal
-          </a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link active" href="/work-portal">
-            Work Portal
-          </a>
-        </li>
+        {role === 'client' && (
+          <li className="nav-item">
+            <a className="nav-link active" href="/portal">
+              Client Portal
+            </a>
+          </li>
+        )}
+        {role === 'employee' && (
+          <li className="nav-item">
+            <a className="nav-link active" href="/work-portal">
+              Work Portal
+            </a>
+          </li>
+        )}
         <li className="nav-item">
           <a className="nav-link active" href="/about-us">
             About Us
@@ -71,11 +76,13 @@ const Navbar: FunctionComponent = () => {
             Services
           </a>
         </li>
-        <li className="nav-item">
-          <a className="nav-link active" href="/portfolio">
-            Portfolio
-          </a>
-        </li>
+        {role === 'employee' && (
+          <li className="nav-item">
+            <a className="nav-link active" href="/portfolio">
+              Portfolio
+            </a>
+          </li>
+        )}
         {active
           ? (
             <form onSubmit={handleSubmit}>
