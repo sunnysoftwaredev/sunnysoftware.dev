@@ -58,9 +58,9 @@ const LoginForm: FunctionComponent = () => {
       if (typeof result.success !== 'boolean') {
         throw new Error('success variable not type boolean: LoginForm.tsx');
       }
-      // store in localStorage
       if (result.success) {
         navigate('/');
+        window.location.reload();
       } else {
         navigate('/contact-us');
       }
