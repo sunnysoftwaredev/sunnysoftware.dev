@@ -2,6 +2,7 @@ import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import EmployeePrivateRoute from './components/PrivateRoutes/EmployeePrivateRoute';
+import ClientPrivateRoute from './components/PrivateRoutes/ClientPrivateRoute';
 import LandingPage from './pages/LandingPage/LandingPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
@@ -25,8 +26,13 @@ const App: FunctionComponent = () => (
       <Route path="register" element={<RegisterPage />} />
       <Route path="contact-us" element={<ContactUsPage />} />
       <Route path="get-started" element={<GetStartedPage />} />
-      <Route path="portal" element={<ClientPortalPage />} />
-      {/* Separating two types of portal pages for now  */}
+      <Route
+        path="portal" element={(
+          <ClientPrivateRoute>
+            <ClientPortalPage />
+          </ClientPrivateRoute>
+        )}
+      />
       <Route
         path="work-portal" element={(
           <EmployeePrivateRoute>
@@ -37,7 +43,13 @@ const App: FunctionComponent = () => (
       />
       <Route path="about-us" element={<AboutUsPage />} />
       <Route path="services" element={<ServicesPage />} />
-      <Route path="portfolio" element={<PortfolioPage />} />
+      <Route
+        path="portfolio" element={(
+          <EmployeePrivateRoute>
+            <PortfolioPage />
+          </EmployeePrivateRoute>
+        )}
+      />
       <Route path="*" element={<b>404 That page does not exist!</b>} />
     </Routes>
     <Footer />

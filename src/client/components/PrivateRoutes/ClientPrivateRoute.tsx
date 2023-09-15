@@ -7,8 +7,13 @@ interface IProps {
 }
 
 const ClientPrivateRoute = ({ children }: IProps): React.JSX.Element => {
-  const { role } = useContext(AuthContext) ?? { role: '' };
-  if (role === 'employee') {
+  const { role, load } = useContext(AuthContext) ?? { role: '', load: false };
+
+  if (!load) {
+    return <div>LOADING...</div>;
+  }
+
+  if (role === 'client') {
     return children;
   }
   return <Navigate to="/login" />;
