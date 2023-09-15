@@ -13,33 +13,20 @@ const Navbar: FunctionComponent = () => {
     e.preventDefault();
     if (active) {
       // window.location.reload();
-      const response = await fetch('http://localhost:3000/api/logout', {
+      await fetch('http://localhost:3000/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'same-origin',
       });
-      console.log('response returned in logout', response);
-      // navigate('/portal');
+      navigate('/');
+      window.location.reload();
     } else {
       navigate('/login');
       window.location.reload();
     }
   }, [navigate, active]);
-
-  // const response = await fetch('http://localhost:3000/api/register', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         username,
-  //         email,
-  //         password,
-  //         role,
-  //       }),
-  //     });
 
   return (
     <nav>

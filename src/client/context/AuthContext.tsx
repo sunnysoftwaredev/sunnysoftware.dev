@@ -1,29 +1,30 @@
-import React, { useState, useEffect, createContext, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, createContext, useCallback } from 'react';
 import { isObjectRecord } from '../../common/utilities/types';
 import { getLocalCookieValue } from '../../common/utilities/functions';
 
-type nameRoleToken = {
+type nameRoleTokenLoad = {
   username: string;
   role: string;
   active: boolean;
+  load: boolean;
 };
 
 interface IProps {
   children: React.ReactNode;
 }
 
-const AuthContext = createContext<nameRoleToken | undefined>(undefined);
+const AuthContext = createContext<nameRoleTokenLoad | undefined>(undefined);
 
 export const AuthProvider = ({ children }: IProps): React.JSX.Element => {
   const [contextData, setContextData]
-  = useState<nameRoleToken | undefined>(undefined);
+  = useState<nameRoleTokenLoad | undefined>(undefined);
+  const [load, setLoad] = useState(false);
 
   const fetchAuthData = useCallback(async() => {
     try {
       if (typeof getLocalCookieValue() !== 'string') {
         return <div />;
       }
-      console.log('typeof cookie value: ', typeof getLocalCookieValue());
       const response = await fetch('http://localhost:3000/api/authenticate', {
         method: 'POST',
         headers: {
@@ -33,7 +34,6 @@ export const AuthProvider = ({ children }: IProps): React.JSX.Element => {
       });
 
       const result: unknown = await response.json();
-      console.log('result in AuthContext: ', result);
       if (!isObjectRecord(result)) {
         throw new Error('Unexpected body type: AuthContext.tsx');
       }
@@ -48,14 +48,15 @@ export const AuthProvider = ({ children }: IProps): React.JSX.Element => {
       }
 
       const { username, role, active } = result;
+      setLoad(true);
 
-      setContextData({ username, role, active });
+      setContextData({ username, role, active, load });
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.log(err);
       }
     }
-  }, []);
+  }, [load]);
 
   useEffect(() => {
     fetchAuthData().catch((err) => {

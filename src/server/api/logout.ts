@@ -14,12 +14,9 @@ router.post('/', (req, res) => {
       throw new Error('api/logout: userToken not type string');
     }
     const result = await markTokenInactive(authenticationToken);
-    // This file seems to be causing a [1] Error [ERR_HTTP_HEADERS_SENT]:
-    // Cannot set headers after they are sent to the client
-    // clear cookie locally; cause may be resending a response?
-    res.clearCookie('authenticationToken');
-    // redirect to home page after logout
-    res.redirect('/');
+
+    res.clearCookie('authenticationToken', { sameSite: 'lax' });
+
     res.json({
       success: result,
     });
