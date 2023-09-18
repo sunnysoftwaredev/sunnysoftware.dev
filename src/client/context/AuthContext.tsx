@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext, useCallback } from 'react';
 import { isObjectRecord } from '../../common/utilities/types';
 import { getLocalCookieValue } from '../../common/utilities/functions';
+import logger from '../../server/logger';
 
 type nameRoleTokenLoad = {
   username: string;
@@ -53,14 +54,16 @@ export const AuthProvider = ({ children }: IProps): React.JSX.Element => {
       setContextData({ username, role, active, load });
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.log(err);
+        logger.error(err.message);
       }
     }
   }, [load]);
 
   useEffect(() => {
     fetchAuthData().catch((err) => {
-      console.log(err);
+      if (err instanceof Error) {
+        logger.error(err.message);
+      }
     });
   }, [fetchAuthData]);
 

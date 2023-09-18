@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import type { FunctionComponent, SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logger from '../../../server/logger';
 import style from './CallToAction.scss';
 import background from './unsplashWhiteboard.png';
 
@@ -13,7 +14,7 @@ const CallToAction: FunctionComponent = () => {
       navigate('/contact-us');
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.log(err);
+        logger.error(err.message);
       }
     }
   }, [navigate]);

@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isObjectRecord } from '../../../common/utilities/types';
+import logger from '../../../server/logger';
 
 const RegistrationForm: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -10,6 +11,9 @@ const RegistrationForm: FunctionComponent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
+
+  // temporary
+  setRole('employee');
 
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
@@ -79,7 +83,7 @@ const RegistrationForm: FunctionComponent = () => {
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.log(err);
+        logger.error(err.message);
       }
     }
   }, [username, email, password, role, navigate]);

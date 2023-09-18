@@ -117,7 +117,7 @@ Promise<boolean> => {
     if (databaseDate < currentDate) {
       // set token inactive
       await client.query(`UPDATE "AuthenticationTokens"
-      SET active = true WHERE token=$1`, [localToken]);
+      SET active = false WHERE token=$1`, [localToken]);
       return false;
     }
   }

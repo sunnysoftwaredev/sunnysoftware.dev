@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
 import { isObjectRecord } from '../../../common/utilities/types';
 import AuthContext from '../../context/AuthContext';
+import logger from '../../../server/logger';
 
 const LoginForm: FunctionComponent = () => {
   const [inputName, setInputName] = useState('');
@@ -53,8 +54,7 @@ const LoginForm: FunctionComponent = () => {
       if (typeof result.success !== 'boolean') {
         throw new Error('success variable not type boolean: LoginForm.tsx');
       }
-      console.log('result in loginform: ', result);
-      console.log('boolean in loginform: ', result.success);
+
       if (typeof result.success !== 'boolean') {
         throw new Error('success variable not type boolean: LoginForm.tsx');
       }
@@ -66,7 +66,7 @@ const LoginForm: FunctionComponent = () => {
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.log(err);
+        logger.error(err.message);
       }
     }
   }, [inputName, password, navigate]);
