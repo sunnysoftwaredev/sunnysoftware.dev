@@ -1,12 +1,48 @@
-.weekBody{
-  border-color: black;
+
+.week {
+  width: 80%;
+  padding: 0.7rem;
+  margin-left: 1rem;
+  border: 1px solid blue;
 }
 
-.weekDay {
-  border-color: black;
-  height: 20px;
-  width: 20px;
+.weekHeader {
+  display: flex;
+  margin-bottom: 0.7rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.header button {
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.headerDays{
   display: grid;
-  grid-template-columns: (7, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 5px;
+}
+.body {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+.box {
+  height: 10rem;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.box:hover{
+  background-color: antiquewhite;
+}
+.boxOther {
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }

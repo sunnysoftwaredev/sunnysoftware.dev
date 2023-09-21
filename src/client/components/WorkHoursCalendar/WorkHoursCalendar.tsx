@@ -36,8 +36,11 @@ const WorkHoursCalendar: FunctionComponent = () => {
     });
   }, []);
 
-  const handleDateClick = useCallback((date: Date): void => {
-    setSelectedDate(date);
+  const handleDateClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    (date: Date): void => {
+      setSelectedDate(date);
+    };
   }, []);
 
   const showCalendar = (): React.ReactElement[] => {
@@ -132,7 +135,7 @@ const WorkHoursCalendar: FunctionComponent = () => {
 
       </div>
       <div className={styles.week}>
-        <HoursCalendarWeek selectedDate={selectedDate} />
+        <HoursCalendarWeek />
       </div>
     </div>
   );
