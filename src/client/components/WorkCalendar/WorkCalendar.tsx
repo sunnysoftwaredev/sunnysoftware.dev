@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 import React, { useCallback, useContext, useState } from 'react';
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
-import styles from './HoursCalendarWeek.scss';
+import styles from './WorkCalendar.scss';
 
 const HoursCalendarWeek: FunctionComponent = () => {
   const { username } = useContext(AuthContext) ?? { username: 'loading' };

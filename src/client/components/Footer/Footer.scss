@@ -1,7 +1,7 @@
 footer {
   display: flex;
   flex-direction: column;
-  position: absolute;
+  position: relative;
   bottom: 0;
   font-size: 1.2rem;
   left: 0;
@@ -9,4 +9,5 @@ footer {
   text-align: center;
   width: 100%;
   background-color: rgb(245, 242, 239);
+  margin-top: 2rem;
 }
