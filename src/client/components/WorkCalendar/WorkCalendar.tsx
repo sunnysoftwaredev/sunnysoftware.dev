@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useContext, useState } from 'react';
+import WorkCalendarModal from '../WorkCalendarModal/WorkCalendarModal';
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
 import styles from './WorkCalendar.scss';
@@ -49,6 +50,8 @@ const HoursCalendarWeek: FunctionComponent = () => {
        setClickedDate(dayString);
      } else {
        logger.info('type error in handleDateClick');
+       console.log('type of target: ', typeof target);
+       console.log('target: ', target);
      }
    }, []);
 
@@ -57,13 +60,15 @@ const HoursCalendarWeek: FunctionComponent = () => {
     for (let i = 0; i < 7; i++) {
       const rawDate = daysInWeek[i];
       const day: string = rawDate.toString().slice(0, 10);
-      dayObjects.push(<div
-        key={`day-${i}`}
-        className={styles.box}
-        onClick={handleDateClick}
-      >
-        {day}
-                      </div>);
+      dayObjects.push((
+        <div
+          key={`day-${i}`}
+          className={styles.box}
+          onClick={handleDateClick}
+        >
+          {day}
+        </div>
+      ));
     }
     return dayObjects;
   };
@@ -75,7 +80,6 @@ const HoursCalendarWeek: FunctionComponent = () => {
         {' '}
         {username}
         {' '}
-
       </h3>
 
       <div className={styles.week}>
@@ -123,6 +127,11 @@ const HoursCalendarWeek: FunctionComponent = () => {
           <p>{clickedDate}</p>
         </div>
 
+      </div>
+      <div>
+        <WorkCalendarModal
+          clickedDate={clickedDate}
+        />
       </div>
     </div>
   );
