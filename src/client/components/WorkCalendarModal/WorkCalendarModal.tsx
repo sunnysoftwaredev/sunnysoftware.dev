@@ -1,34 +1,30 @@
 import type { FunctionComponent } from 'react';
-import React, { useCallback, useState } from 'react';
-import TimePicker from 'react-time-picker';
-import DateTimePicker from 'react-datetime-picker';
+import React, { useState } from 'react';
+import { TimePicker } from 'react-time-picker';
+// import { DateTimePicker } from 'react-datetime-picker';
 import styles from './WorkCalendarModal.scss';
 
 type Props = {
-  clickedDate: Date;
+  clickedDate: string;
 };
 
 const WorkCalendarModal: FunctionComponent<Props> = (props) => {
-  const [time, setTime] = useState(null);
+  const [time, setTime] = useState<string | null>(null);
 
   const { clickedDate } = props;
-
-  const handleTimeChange = useCallback((newTime) => {
-    setTime(newTime);
-  }, []);
 
   return (
     <div className={styles.modal}>
       <h1>
         Hours for
         {' '}
-        {clickedDate.toString()}
+        {clickedDate}
         {' '}
       </h1>
       <div className={styles.timePicker}>
         <TimePicker
           className={styles.timePicker}
-          onChange={handleTimeChange}
+          onChange={setTime}
           value={time}
         />
 
