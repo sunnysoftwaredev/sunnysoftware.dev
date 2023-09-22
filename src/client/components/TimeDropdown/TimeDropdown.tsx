@@ -156,9 +156,6 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
 
       // 'valid' used for message in component
       const check = validUnixTimes(unixStart, unixEnd);
-      console.log('unixStart: ', unixStart);
-      console.log('unixEnd: ', unixEnd);
-      console.log('check', check);
       setValid(check);
       if (!check) {
         return;
@@ -175,8 +172,6 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
       });
 
       const result: unknown = await response.json();
-
-      console.log(result);
 
       if (!isObjectRecord(result)) {
         throw new Error('Unexpected body type: LoginForm.tsx');
