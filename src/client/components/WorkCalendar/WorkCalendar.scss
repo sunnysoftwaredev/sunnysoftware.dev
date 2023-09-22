@@ -1,6 +1,12 @@
-
+// @media only screen and (max-width: 1111px) {
+//   .body {
+//     display: grid;
+//     grid-template-columns: repeat(4, 1fr);
+//     gap: 5px;
+//   }
+// }
 .week {
-  width: 80%;
+  width: 90%;
   padding: 0.7rem;
   margin-left: 1rem;
   border: 1px solid blue;
@@ -16,24 +22,31 @@
   font-size: 1.4rem;
   cursor: pointer;
 }
-.headerDays{
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
-}
+// .headerDays{
+//   display: grid;
+//   grid-template-columns: repeat(7, 1fr);
+//   gap: 5px;
+// }
 .body {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  // grid-template-columns: repeat(7, 1fr);
   gap: 5px;
+  margin-left: auto;
+  margin-right: auto;
+
 }
 .box {
-  height: 10rem;
+  height: 15rem;
   background-color: #f0f0f0;
   border: 1px solid #ccc;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   cursor: pointer;
+  gap: 8px;
 }
 .box:hover{
   background-color: antiquewhite;

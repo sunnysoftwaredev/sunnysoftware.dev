@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import type { FunctionComponent } from 'react';
 import logger from '../../../server/logger';
+import styles from './TimeDropdown.scss';
 
 const TimeDropdown: FunctionComponent = () => {
   const [hour, setHour] = React.useState(6);
@@ -69,7 +70,7 @@ const TimeDropdown: FunctionComponent = () => {
 
   return (
 
-    <div>
+    <div className={styles.timeDropdownContainer}>
 
       <label>
 
@@ -124,7 +125,7 @@ const TimeDropdown: FunctionComponent = () => {
         </select>
       </label>
 
-      <p>
+      {/* <p>
         Hour is
         {' '}
         {hour}
@@ -138,7 +139,7 @@ const TimeDropdown: FunctionComponent = () => {
         Meridiem is
         {' '}
         {meridiem}
-      </p>
+      </p> */}
 
     </div>
 
