@@ -1,12 +1,25 @@
-import React, { useCallback } from 'react';
-import type { FunctionComponent } from 'react';
+import React, { useState, useCallback } from 'react';
+import type { FunctionComponent, SyntheticEvent } from 'react';
 import logger from '../../../server/logger';
+import { isObjectRecord } from '../../../common/utilities/types';
 import styles from './TimeDropdown.scss';
 
-const TimeDropdown: FunctionComponent = () => {
-  const [hour, setHour] = React.useState(6);
-  const [minute, setMinute] = React.useState(0);
-  const [meridiem, setMeridiem] = React.useState('--');
+type Props = {
+  propsDate: Date;
+};
+
+const TimeDropdown: FunctionComponent<Props> = (props) => {
+  const [startHour, setStartHour] = useState('6');
+  const [startMinute, setStartMinute] = useState('0');
+  const [startMeridiem, setStartMeridiem] = useState('--');
+  const [endHour, setEndtHour] = useState('5');
+  const [endMinute, setEndtMinute] = useState('0');
+  const [endMeridiem, setEndtMeridiem] = useState('--');
+
+  const [valid, setValid] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
+
+  const { propsDate } = props;
 
   const hourOptions = [
     { label: '6', value: '6' },
@@ -37,110 +50,249 @@ const TimeDropdown: FunctionComponent = () => {
     { label: 'PM', value: 'PM' },
   ];
 
-  const handleHourChange
+  // abstract out with function setter as param
+  // start time
+  const handleStartHourChange
    = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
      e.preventDefault();
      const { target } = e;
      if (target instanceof HTMLSelectElement) {
-       setHour(Number(e.target.value));
+       setStartHour(e.target.value);
      } else {
-       logger.info('type error in TimeDropdown: handleHourChange');
+       logger.info('type error in TimeDropdown: handleStartHourChange');
      }
    }, []);
-  const handleMinuteChange
+  const handleStartMinuteChange
    = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
      e.preventDefault();
      const { target } = e;
      if (target instanceof HTMLSelectElement) {
-       setMinute(Number(e.target.value));
+       setStartMinute(e.target.value);
      } else {
-       logger.info('type error in TimeDropdown: handleMinuteChange');
+       logger.info('type error in TimeDropdown: handleStartMinuteChange');
      }
    }, []);
-  const handleMeridiemChange
+  const handleStartMeridiemChange
    = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
      e.preventDefault();
      const { target } = e;
      if (target instanceof HTMLSelectElement) {
-       setMeridiem(e.target.value);
+       setStartMeridiem(e.target.value);
      } else {
-       logger.info('type error in TimeDropdown: handleMeridiemChange');
+       logger.info('type error in TimeDropdown: handleStartMeridiemChange');
      }
    }, []);
+
+  // end time
+  const handleEndHourChange
+   = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
+     e.preventDefault();
+     const { target } = e;
+     if (target instanceof HTMLSelectElement) {
+       setEndtHour(e.target.value);
+     } else {
+       logger.info('type error in TimeDropdown: handleEndHourChange');
+     }
+   }, []);
+  const handleEndMinuteChange
+   = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
+     e.preventDefault();
+     const { target } = e;
+     if (target instanceof HTMLSelectElement) {
+       setEndtMinute(e.target.value);
+     } else {
+       logger.info('type error in TimeDropdown: handleEndMinuteChange');
+     }
+   }, []);
+  const handleEndMeridiemChange
+   = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
+     e.preventDefault();
+     const { target } = e;
+     if (target instanceof HTMLSelectElement) {
+       setEndtMeridiem(e.target.value);
+     } else {
+       logger.info('type error in TimeDropdown: handleEndMeridiemChange');
+     }
+   }, []);
+
+  const convertStringTimesToUnix = (
+    date: Date, hour: string,
+    minute: string, meridiem: string
+  ): number => {
+    if (meridiem === 'PM') {
+      hour = (Number(hour) + 12).toString();
+    }
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+    const timeInMS = Date.parse(`${month}/${day}/${year} ${hour}:${minute}`);
+    const roundedSeconds = Math.floor(timeInMS / 1000);
+    return roundedSeconds;
+  };
+
+  const validUnixTimes = (start: number, end: number): boolean => {
+    if (end < start) {
+      return false;
+    }
+    return true;
+  };
+
+  const saveTime = useCallback(async(e: SyntheticEvent) => {
+    try {
+      e.preventDefault();
+      setSubmitted(false);
+      const unixStart = convertStringTimesToUnix(
+        propsDate,
+        startHour,
+        startMinute,
+        startMeridiem
+      );
+      const unixEnd = convertStringTimesToUnix(
+        propsDate,
+        endHour,
+        endMinute,
+        endMeridiem
+      );
+
+      // 'valid' used for message in component
+      const check = validUnixTimes(unixStart, unixEnd);
+      console.log('unixStart: ', unixStart);
+      console.log('unixEnd: ', unixEnd);
+      console.log('check', check);
+      setValid(check);
+      if (!check) {
+        return;
+      }
+      const response = await fetch('http://localhost:3000/api/workLogs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          unixStart,
+          unixEnd,
+        }),
+      });
+
+      const result: unknown = await response.json();
+
+      console.log(result);
+
+      if (!isObjectRecord(result)) {
+        throw new Error('Unexpected body type: LoginForm.tsx');
+      }
+      if (typeof result.success !== 'boolean') {
+        throw new Error('success variable not type boolean: LoginForm.tsx');
+      }
+
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        logger.info('else in fetch');
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        logger.error(err.message);
+      }
+    }
+  }, [propsDate,
+    startHour,
+    startMinute,
+    startMeridiem,
+    endHour,
+    endMinute,
+    endMeridiem]);
 
   return (
 
-    <div className={styles.timeDropdownContainer}>
+    <div className={styles.timeDropdownContainer} onSubmit={saveTime}>
+      <div className="containerOne">
+        <label>Start</label>
 
-      <label>
-
-        <select value={hour} onChange={handleHourChange}>
-
+        <select value={startHour} onChange={handleStartHourChange}>
           {hourOptions.map(option => (
-
             <option
               key={option.value}
               value={option.value}
             >
               {option.label}
-
             </option>
-
           ))}
         </select>
-      </label>
 
-      <label>
-        <select value={minute} onChange={handleMinuteChange}>
-
+        <select value={startMinute} onChange={handleStartMinuteChange}>
           {minuteOptions.map(option => (
-
             <option
               key={option.value}
               value={option.value}
             >
               {option.label}
-
             </option>
-
           ))}
-
         </select>
-      </label>
-      <label>
-        <select value={meridiem} onChange={handleMeridiemChange}>
 
+        <select value={startMeridiem} onChange={handleStartMeridiemChange}>
           {meridiemOptions.map(option => (
-
             <option
               key={option.value}
               value={option.value}
             >
               {option.label}
-
             </option>
-
           ))}
-
         </select>
-      </label>
+      </div>
+      <div>
 
+        <label>End</label>
+        <select value={endHour} onChange={handleEndHourChange}>
+          {hourOptions.map(option => (
+            <option
+              key={option.value}
+              value={option.value}
+            >
+              {option.label}
+            </option>
+          ))}
+        </select>
+
+        <select value={endMinute} onChange={handleEndMinuteChange}>
+          {minuteOptions.map(option => (
+            <option
+              key={option.value}
+              value={option.value}
+            >
+              {option.label}
+            </option>
+          ))}
+        </select>
+
+        <select value={endMeridiem} onChange={handleEndMeridiemChange}>
+          {meridiemOptions.map(option => (
+            <option
+              key={option.value}
+              value={option.value}
+            >
+              {option.label}
+            </option>
+          ))}
+        </select>
+
+      </div>
+      <button type="button" onClick={saveTime}>
+        Save
+      </button>
+      {!valid && <h2>Invalid Input!</h2>}
+      {submitted && <h2>Log saved!</h2>}
       {/* <p>
-        Hour is
+        Output is
         {' '}
-        {hour}
-      </p>
-      <p>
-        Minute is
+        {unixStart}
         {' '}
-        {minute}
-      </p>
-      <p>
-        Meridiem is
+        and
         {' '}
-        {meridiem}
+        {unixEnd}
       </p> */}
-
     </div>
 
   );

@@ -1,6 +1,5 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useContext, useState } from 'react';
-// import WorkCalendarModal from '../WorkCalendarModal/WorkCalendarModal';
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
 import TimeDropdown from '../TimeDropdown/TimeDropdown';
@@ -56,35 +55,38 @@ const HoursCalendarWeek: FunctionComponent = () => {
      }
    }, []);
 
-  //  const convertStringToUnix = (hour: string,
-  //   minute: string, meridiem: string): number => {
+  // const convertDateStringToUnix = (date: string): number => {
+  //   const timeInMS = Date.parse(date);
+  //   const roundedSeconds = Math.floor(timeInMS / 1000);
+  //   return roundedSeconds;
+  // };
 
-  // }
+  // const getUnixDayStart = (date: Date): number => {
+  //   date.setHours(0);
+  //   date.setMinutes(0);
+  //   date.setSeconds(0);
+  //   date.setMilliseconds(0);
 
-  // const toTimeStamp = (strDate) => {
-  //   const dt = Date.parse(strDate);
-  //   return dt / 1000;
-  // }
-
-  // console.log(toTimeStamp('02/02/2022 23:31:30'));
+  //   return date.getTime();
+  // };
 
   const displayWeek = (): React.ReactElement[] => {
-    const dayObjects: React.ReactElement[] = [];
+    const dayDivs: React.ReactElement[] = [];
     for (let i = 0; i < 7; i++) {
       const rawDate = daysInWeek[i];
       const day: string = rawDate.toString().slice(0, 10);
-      dayObjects.push((
+      dayDivs.push((
         <div
           key={`day-${i}`}
           className={styles.box}
           onClick={handleDateClick}
         >
           {day}
-          <TimeDropdown />
+          <TimeDropdown propsDate={rawDate} />
         </div>
       ));
     }
-    return dayObjects;
+    return dayDivs;
   };
 
   return (
