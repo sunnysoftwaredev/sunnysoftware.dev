@@ -1,8 +1,9 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useContext, useState } from 'react';
-import WorkCalendarModal from '../WorkCalendarModal/WorkCalendarModal';
+// import WorkCalendarModal from '../WorkCalendarModal/WorkCalendarModal';
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
+import TimeDropdown from '../TimeDropdown/TimeDropdown';
 import styles from './WorkCalendar.scss';
 
 const HoursCalendarWeek: FunctionComponent = () => {
@@ -48,10 +49,24 @@ const HoursCalendarWeek: FunctionComponent = () => {
      if (target instanceof HTMLDivElement) {
        const dayString: string = target.innerText;
        setClickedDate(dayString);
+     } else if (target instanceof Object) {
+       logger.info('selected dropdown, WIP');
      } else {
        logger.info('type error in handleDateClick');
      }
    }, []);
+
+  //  const convertStringToUnix = (hour: string,
+  //   minute: string, meridiem: string): number => {
+
+  // }
+
+  // const toTimeStamp = (strDate) => {
+  //   const dt = Date.parse(strDate);
+  //   return dt / 1000;
+  // }
+
+  // console.log(toTimeStamp('02/02/2022 23:31:30'));
 
   const displayWeek = (): React.ReactElement[] => {
     const dayObjects: React.ReactElement[] = [];
@@ -65,6 +80,7 @@ const HoursCalendarWeek: FunctionComponent = () => {
           onClick={handleDateClick}
         >
           {day}
+          <TimeDropdown />
         </div>
       ));
     }
@@ -105,7 +121,7 @@ const HoursCalendarWeek: FunctionComponent = () => {
           </h2>
           <button type="button" onClick={changeToNextWeek}> NEXT </button>
         </div>
-        <div className={styles.headerDays}>
+        {/* <div className={styles.headerDays}>
           <div>Su</div>
           <div>Mo</div>
           <div>Tu</div>
@@ -113,7 +129,7 @@ const HoursCalendarWeek: FunctionComponent = () => {
           <div>Th</div>
           <div>Fr</div>
           <div>Sa</div>
-        </div>
+        </div> */}
         <div className={styles.body}>
           {displayWeek()}
           {' '}
@@ -126,11 +142,11 @@ const HoursCalendarWeek: FunctionComponent = () => {
         </div>
 
       </div>
-      <div>
+      {/* <div>
         <WorkCalendarModal
           clickedDate={clickedDate}
         />
-      </div>
+      </div> */}
     </div>
   );
 };
