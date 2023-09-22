@@ -50,8 +50,6 @@ const HoursCalendarWeek: FunctionComponent = () => {
        setClickedDate(dayString);
      } else {
        logger.info('type error in handleDateClick');
-       console.log('type of target: ', typeof target);
-       console.log('target: ', target);
      }
    }, []);
 
@@ -83,7 +81,7 @@ const HoursCalendarWeek: FunctionComponent = () => {
       </h3>
 
       <div className={styles.week}>
-        <div className={styles.header}>
+        <div className={styles.weekHeader}>
           <button type="button" onClick={changeToPrevWeek}> BACK </button>
           <h2>
             Week of
