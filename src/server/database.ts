@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import type { QueryResult } from 'pg';
 import { Client } from 'pg';
 import config from './config';
@@ -158,4 +159,56 @@ export const getUsernameAndRole
     username,
     role,
   };
+};
+
+type workLog = {
+  unixStart: number;
+  unixEnd: number;
+  submitted: boolean;
+  invoiced: boolean;
+  paid: boolean;
+};
+
+export const postWorkLog = async(
+  id: number,
+  unixStart: number, unixEnd: number,
+):
+Promise<workLog> => {
+  await client.query(`INSERT INTO "WorkLogs" (user_id, unix_start,
+     unix_end, submitted, invoiced, paid)
+           VALUES ($1, $2, $3, $4, $5, $6)`, [id, unixStart, unixEnd, false, false, false]);
+  return {
+    unixStart,
+    unixEnd,
+    submitted: false,
+    invoiced: false,
+    paid: false,
+  };
+};
+
+type ID = {
+  user_id: number;
+};
+
+export const getIDWithToken = async(token: string):
+Promise<number> => {
+  const result: QueryResult<ID> = await client.query(
+    'SELECT user_id FROM "AuthenticationTokens" WHERE token=$1',
+    [token],
+  );
+
+  const { rows } = result;
+  if (rows.length !== 1) {
+    throw new Error('Unable to select user_id.');
+  }
+
+  const idObject: ID = rows[0];
+
+  if (typeof idObject.user_id !== 'number') {
+    throw new Error('Unable to get user_id from row');
+  }
+
+  const id = idObject.user_id;
+
+  return id;
 };
