@@ -212,3 +212,32 @@ Promise<number> => {
 
   return id;
 };
+
+export const getWeeklyLogs = async(
+  id: number,
+  unixWeekStart: number, unixWeekEnd: number
+):
+Promise<QueryResult> => {
+  const result: QueryResult<ID> = await client.query(
+    `SELECT unix_start, unix_end FROM "WorkLogs"
+    WHERE user_id=$1 and unix_start >= $2 and unix_end <= $3`,
+    [id, unixWeekStart, unixWeekEnd],
+  );
+
+  // const { rows } = result;
+  // if (rows.length !== 1) {
+  //   throw new Error('Unable to select user_id.');
+  // }
+
+  // const idObject: ID = rows[0];
+
+  // if (typeof idObject.user_id !== 'number') {
+  //   throw new Error('Unable to get user_id from row');
+  // }
+
+  // const id = idObject.user_id;
+
+  console.log('query result in database: ', result);
+
+  return result;
+};

@@ -8,15 +8,15 @@ const router = createRouter();
 router.post('/', (req, res) => {
   (async(): Promise<void> => {
     if (!isObjectRecord(req.body)) {
-      throw new Error('api/workHours: req.body is not object');
+      throw new Error('api/workLogs: req.body is not object');
     }
     if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/authenticate: req.cookies is not object');
+      throw new Error('api/workLogs: req.cookies is not object');
     }
 
     const { authenticationToken } = req.cookies;
     if (typeof authenticationToken !== 'string') {
-      throw new Error('api/authenticate: userToken not type string');
+      throw new Error('api/workLogs: userToken not type string');
     }
 
     const idResult = getIDWithToken(authenticationToken);
@@ -25,10 +25,10 @@ router.post('/', (req, res) => {
     const { unixEnd } = req.body;
 
     if (typeof unixStart !== 'number') {
-      throw new Error('api/workHours: unixStart is not number');
+      throw new Error('api/workLogs.post: unixStart is not number');
     }
     if (typeof unixEnd !== 'number') {
-      throw new Error('api/workHours: unixEnd is not number');
+      throw new Error('api/workLogs.post: unixEnd is not number');
     }
 
     const result = await postWorkLog(
@@ -41,7 +41,7 @@ router.post('/', (req, res) => {
       success: true,
       createdWorkLog: result,
     });
-    logger.info('res.json success in workLogs.ts');
+    logger.info('res.json success in workLogs.ts post');
   })().catch((e: Error) => {
     res.json({
       success: false,

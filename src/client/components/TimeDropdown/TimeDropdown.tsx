@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import type { FunctionComponent, SyntheticEvent } from 'react';
+import type { FunctionComponent, SyntheticEvent, Dispatch, SetStateAction, ChangeEventHandler } from 'react';
 import logger from '../../../server/logger';
 import { isObjectRecord } from '../../../common/utilities/types';
 import styles from './TimeDropdown.scss';
@@ -51,7 +51,22 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
   ];
 
   // abstract out with function setter as param
-  // start time
+  // const handleValueChange
+  // = useCallback((
+  //   e: React.ChangeEvent<HTMLSelectElement>,
+  //   callbackFN: Dispatch<SetStateAction<string>>
+  // ): ChangeEventHandler<HTMLSelectElement> => {
+  //   e.preventDefault();
+  //   const { target } = e;
+  //   if (target instanceof HTMLSelectElement) {
+  //     callbackFN(e.target.value);
+  //   } else {
+  //     logger.info('type error in TimeDropdown: handleStartHourChange');
+  //   }
+  // }, []);
+
+  // const handleStartHourChange = handleValueChange(e, setStartHour);
+
   const handleStartHourChange
    = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
      e.preventDefault();
