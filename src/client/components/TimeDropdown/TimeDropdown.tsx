@@ -1,11 +1,27 @@
 import React, { useState, useCallback } from 'react';
-import type { FunctionComponent, SyntheticEvent, Dispatch, SetStateAction, ChangeEventHandler } from 'react';
+import type { FunctionComponent, SyntheticEvent } from 'react';
 import logger from '../../../server/logger';
 import { isObjectRecord } from '../../../common/utilities/types';
 import styles from './TimeDropdown.scss';
 
 type Props = {
   propsDate: Date;
+};
+
+type SetterCallback = (value: string) => void;
+type ChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => void;
+
+const useChangeHandler = (setterCallback: SetterCallback): ChangeHandler => {
+  const changeHandler: ChangeHandler = (e) => {
+    e.preventDefault();
+    const { target } = e;
+    if (target instanceof HTMLSelectElement) {
+      setterCallback(e.target.value);
+    } else {
+      logger.info('type error in TimeDropdown: handleValueChange');
+    }
+  };
+  return useCallback(changeHandler, [setterCallback]);
 };
 
 const TimeDropdown: FunctionComponent<Props> = (props) => {
@@ -18,6 +34,13 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
 
   const [valid, setValid] = useState(true);
   const [submitted, setSubmitted] = useState(false);
+
+  const handleStartHourChange = useChangeHandler(setStartHour);
+  const handleStartMinuteChange = useChangeHandler(setStartMinute);
+  const handleStartMeridiemChange = useChangeHandler(setStartMeridiem);
+  const handleEndHourChange = useChangeHandler(setEndtHour);
+  const handleEndMinuteChange = useChangeHandler(setEndtMinute);
+  const handleEndMeridiemChange = useChangeHandler(setEndtMeridiem);
 
   const { propsDate } = props;
 
@@ -49,86 +72,6 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
     { label: 'AM', value: 'AM' },
     { label: 'PM', value: 'PM' },
   ];
-
-  // abstract out with function setter as param
-  // const handleValueChange
-  // = useCallback((
-  //   e: React.ChangeEvent<HTMLSelectElement>,
-  //   callbackFN: Dispatch<SetStateAction<string>>
-  // ): ChangeEventHandler<HTMLSelectElement> => {
-  //   e.preventDefault();
-  //   const { target } = e;
-  //   if (target instanceof HTMLSelectElement) {
-  //     callbackFN(e.target.value);
-  //   } else {
-  //     logger.info('type error in TimeDropdown: handleStartHourChange');
-  //   }
-  // }, []);
-
-  // const handleStartHourChange = handleValueChange(e, setStartHour);
-
-  const handleStartHourChange
-   = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
-     e.preventDefault();
-     const { target } = e;
-     if (target instanceof HTMLSelectElement) {
-       setStartHour(e.target.value);
-     } else {
-       logger.info('type error in TimeDropdown: handleStartHourChange');
-     }
-   }, []);
-  const handleStartMinuteChange
-   = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
-     e.preventDefault();
-     const { target } = e;
-     if (target instanceof HTMLSelectElement) {
-       setStartMinute(e.target.value);
-     } else {
-       logger.info('type error in TimeDropdown: handleStartMinuteChange');
-     }
-   }, []);
-  const handleStartMeridiemChange
-   = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
-     e.preventDefault();
-     const { target } = e;
-     if (target instanceof HTMLSelectElement) {
-       setStartMeridiem(e.target.value);
-     } else {
-       logger.info('type error in TimeDropdown: handleStartMeridiemChange');
-     }
-   }, []);
-
-  // end time
-  const handleEndHourChange
-   = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
-     e.preventDefault();
-     const { target } = e;
-     if (target instanceof HTMLSelectElement) {
-       setEndtHour(e.target.value);
-     } else {
-       logger.info('type error in TimeDropdown: handleEndHourChange');
-     }
-   }, []);
-  const handleEndMinuteChange
-   = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
-     e.preventDefault();
-     const { target } = e;
-     if (target instanceof HTMLSelectElement) {
-       setEndtMinute(e.target.value);
-     } else {
-       logger.info('type error in TimeDropdown: handleEndMinuteChange');
-     }
-   }, []);
-  const handleEndMeridiemChange
-   = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
-     e.preventDefault();
-     const { target } = e;
-     if (target instanceof HTMLSelectElement) {
-       setEndtMeridiem(e.target.value);
-     } else {
-       logger.info('type error in TimeDropdown: handleEndMeridiemChange');
-     }
-   }, []);
 
   const convertStringTimesToUnix = (
     date: Date, hour: string,
