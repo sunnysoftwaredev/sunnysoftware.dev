@@ -1,8 +1,10 @@
-import type { FunctionComponent } from 'react';
-import React, { useCallback, useContext, useState } from 'react';
+import type { FunctionComponent, MutableRefObject } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
 import TimeDropdown from '../TimeDropdown/TimeDropdown';
+// import { getLocalCookieValue } from '../../../common/utilities/functions';
+import { isObjectRecord } from '../../../common/utilities/types';
 import styles from './WorkCalendar.scss';
 
 const HoursCalendarWeek: FunctionComponent = () => {
@@ -20,8 +22,89 @@ const HoursCalendarWeek: FunctionComponent = () => {
     }
     return days;
   };
-
   const daysInWeek = getDaysInWeek();
+
+  const getUnixDayStart = (date: Date): number => {
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+
+    return Math.floor(date.getTime() / 1000);
+  };
+
+  const getUnixDayEnd = (date: Date): number => {
+    date.setHours(23);
+    date.setMinutes(59);
+    date.setSeconds(59);
+    date.setMilliseconds(999);
+
+    return Math.floor(date.getTime() / 1000);
+  };
+
+  const fetchWeekLogs = useCallback(async() => {
+    try {
+      const unixWeekStart = getUnixDayStart(daysInWeek[0]);
+      const unixWeekEnd = getUnixDayEnd(daysInWeek[6]);
+      const response = await fetch('http://localhost:3000/api/weeklyLogs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ unixWeekStart, unixWeekEnd }),
+        credentials: 'same-origin',
+      });
+
+      const result: unknown = await response.json();
+      if (!isObjectRecord(result)) {
+        throw new Error('Unexpected body type: AuthContext.tsx');
+      }
+
+      console.log('result in frontend: ', result);
+
+      // if (typeof result.username !== 'string') {
+      // throw new Error('username variable not type string: AuthContext.tsx');
+      // }
+      return result;
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        logger.error(err.message);
+      }
+    }
+  }, [daysInWeek]);
+
+  // const unixTimesForWeek = fetchWeekLogs();
+  // .catch((err) => {
+  //   logger.error(err);
+  // });
+
+  const unixTimesForWeek: MutableRefObject<string | unknown> = useRef();
+
+  useEffect(() => {
+    fetchWeekLogs()
+      .then((result) => {
+        if (typeof result !== 'undefined') {
+          unixTimesForWeek.current = result;
+        }
+      })
+      .catch((err) => {
+        logger.error(err);
+      });
+  }, [fetchWeekLogs]);
+
+  console.log('unixTimesForWeek: ', unixTimesForWeek);
+  // errors below
+  // useEffect(() => {
+  //   const result = fetchWeekLogs().catch((err) => {
+  //     if (err instanceof Error) {
+  //       logger.error(err.message);
+  //     }
+  //   });
+  //   if (typeof result !== 'object') {
+  //     throw new Error();
+  //   }
+  //   unixTimesForWeek = result;
+  // }, [fetchWeekLogs]);
 
   const changeToPrevWeek = useCallback((): void => {
     setCurrentDate((currDate: Date): Date => {
@@ -59,15 +142,6 @@ const HoursCalendarWeek: FunctionComponent = () => {
   //   const timeInMS = Date.parse(date);
   //   const roundedSeconds = Math.floor(timeInMS / 1000);
   //   return roundedSeconds;
-  // };
-
-  // const getUnixDayStart = (date: Date): number => {
-  //   date.setHours(0);
-  //   date.setMinutes(0);
-  //   date.setSeconds(0);
-  //   date.setMilliseconds(0);
-
-  //   return date.getTime();
   // };
 
   const displayWeek = (): React.ReactElement[] => {
