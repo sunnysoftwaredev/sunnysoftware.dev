@@ -59,3 +59,11 @@
   align-items: center;
   cursor: pointer;
 }
+
+.dateLogs {
+  display: flex;
+  font-size: small;
+  justify-content: flex-start;
+  list-style-type: none;
+  gap: 1rem;
+}

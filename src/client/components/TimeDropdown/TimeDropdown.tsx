@@ -66,12 +66,11 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
       hour = (Number(hour) + 12).toString();
     }
     const year = date.getFullYear();
-    const month = date.getMonth();
+    const month = date.getMonth() + 1;
     const day = date.getDate();
-    console.log('day in TimeDrowpown: ', day);
     const timeInMS = Date.parse(`${month}/${day}/${year} ${hour}:${minute}`);
     const roundedSeconds = Math.floor(timeInMS / 1000);
-    console.log('rounded seconds in TimeDropdown: ', roundedSeconds);
+
     return roundedSeconds;
   };
 
@@ -224,15 +223,6 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
       </button>
       {!valid && <h2>Invalid Input!</h2>}
       {submitted && <h2>Log saved!</h2>}
-      {/* <p>
-        Output is
-        {' '}
-        {unixStart}
-        {' '}
-        and
-        {' '}
-        {unixEnd}
-      </p> */}
     </div>
 
   );
