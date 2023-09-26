@@ -1,17 +1,19 @@
-import type { FunctionComponent, MutableRefObject } from 'react';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
 import TimeDropdown from '../TimeDropdown/TimeDropdown';
 import { isObjectRecord } from '../../../common/utilities/types';
+import type { timeObject } from '../../../server/database';
 import styles from './WorkCalendar.scss';
 
 const WorkCalendar: FunctionComponent = () => {
   const { username } = useContext(AuthContext) ?? { username: 'loading' };
   const [currentDate, setCurrentDate] = useState(new Date());
   const [clickedDate, setClickedDate] = useState('');
+  const [weeklyLogs, setWeeklyLogs] = useState<timeObject[]>();
 
-  const getDaysInWeek = (): Date[] => {
+  const getDaysInWeek = useCallback((): Date[] => {
     const days: Date[] = [];
     for (let i = 0; i < 7; i++) {
       const first = currentDate.getDate() - currentDate.getDay() + i;
@@ -20,8 +22,9 @@ const WorkCalendar: FunctionComponent = () => {
       days.push(day);
     }
     return days;
-  };
-  const daysInWeek = getDaysInWeek();
+  }, [currentDate]);
+
+  const daysInWeek = useMemo(() => getDaysInWeek(), [getDaysInWeek]);
 
   const getUnixDayStart = (date: Date): number => {
     date.setHours(0);
@@ -43,19 +46,8 @@ const WorkCalendar: FunctionComponent = () => {
 
   const fetchWeekLogs = useCallback(async() => {
     try {
-      console.log('first day: ', daysInWeek[0]);
-      console.log('last day: ', daysInWeek[6]);
-      console.log('unix time first day: ', Math.floor(daysInWeek[0].getTime() / 1000));
-      console.log('unix time last day: ', Math.floor(daysInWeek[6].getTime() / 1000));
       const unixWeekStart = getUnixDayStart(daysInWeek[0]);
       const unixWeekEnd = getUnixDayEnd(daysInWeek[6]);
-      console.log('function time first day: ', unixWeekStart);
-      console.log('function time last day: ', unixWeekEnd);
-
-      console.log(' ');
-      console.log(' ');
-      console.log('new date first: ', new Date(1695531600 * 1000));
-      console.log('new date last: ', new Date(1696136399 * 1000));
 
       const response = await fetch('http://localhost:3000/api/weeklyLogs', {
         method: 'POST',
@@ -71,12 +63,7 @@ const WorkCalendar: FunctionComponent = () => {
         throw new Error('Unexpected body type: AuthContext.tsx');
       }
 
-      console.log('result in frontend: ', result);
-
-      // if (typeof result.username !== 'string') {
-      // throw new Error('username variable not type string: AuthContext.tsx');
-      // }
-      return result;
+      return result.listResult;
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
@@ -84,26 +71,17 @@ const WorkCalendar: FunctionComponent = () => {
     }
   }, [daysInWeek]);
 
-  // const unixTimesForWeek = fetchWeekLogs();
-  // .catch((err) => {
-  //   logger.error(err);
-  // });
-
-  const unixTimesForWeek: MutableRefObject<string | unknown> = useRef();
-
   useEffect(() => {
     fetchWeekLogs()
-      .then((result) => {
+      .then((result: timeObject[]) => {
         if (typeof result !== 'undefined') {
-          unixTimesForWeek.current = result;
+          setWeeklyLogs(result);
         }
       })
       .catch((err) => {
         logger.error(err);
       });
   }, [fetchWeekLogs]);
-
-  console.log('unixTimesForWeek: ', unixTimesForWeek);
 
   const changeToPrevWeek = useCallback((): void => {
     setCurrentDate((currDate: Date): Date => {
@@ -130,23 +108,41 @@ const WorkCalendar: FunctionComponent = () => {
      if (target instanceof HTMLDivElement) {
        const dayString: string = target.innerText;
        setClickedDate(dayString);
-     } else if (target instanceof Object) {
-       logger.info('selected dropdown, WIP');
      } else {
        logger.info('type error in handleDateClick');
      }
    }, []);
 
-  // const convertDateStringToUnix = (date: string): number => {
-  //   const timeInMS = Date.parse(date);
-  //   const roundedSeconds = Math.floor(timeInMS / 1000);
-  //   return roundedSeconds;
-  // };
+  const unixToTimeString = (unix: number): string => new Date(unix
+      * 1000).toLocaleString('default', {
+    hour: 'numeric',
+    minute: 'numeric',
+  });
+
+  const displayDayLogs = (dayLogs: timeObject[] | undefined):
+  React.ReactElement => {
+    const resultDiv: React.ReactElement[] = [];
+    if (typeof dayLogs === 'undefined') {
+      return <div />;
+    }
+    for (const log of dayLogs) {
+      resultDiv.push((<div key={log.unix_start} className={styles.dateLogs}>
+        <li>{unixToTimeString(log.unix_start)}</li>
+        <h4>-</h4>
+        <li>{unixToTimeString(log.unix_end)}</li>
+      </div>));
+    }
+    return resultDiv;
+  };
 
   const displayWeek = (): React.ReactElement[] => {
     const dayDivs: React.ReactElement[] = [];
     for (let i = 0; i < 7; i++) {
       const rawDate = daysInWeek[i];
+      const rawDateStart = getUnixDayStart(rawDate);
+      const rawDateEnd = getUnixDayEnd(rawDate);
+      const dayLogs = weeklyLogs?.filter(log => (log.unix_start
+         >= rawDateStart && log.unix_end <= rawDateEnd));
       const day: string = rawDate.toString().slice(0, 10);
       dayDivs.push((
         <div
@@ -156,6 +152,7 @@ const WorkCalendar: FunctionComponent = () => {
         >
           {day}
           <TimeDropdown propsDate={rawDate} />
+          {displayDayLogs(dayLogs)}
         </div>
       ));
     }
@@ -209,6 +206,22 @@ const WorkCalendar: FunctionComponent = () => {
         </div>
 
       </div>
+      {/* {weeklyLogs?.map(log => (
+        <div key={log.unix_start}>
+          <li >
+            {new Date(log.unix_start
+           * 1000).toLocaleString()}
+
+          </li>
+          <li >
+            {new Date(log.unix_end
+           * 1000).toLocaleString()}
+
+          </li>
+
+        </div>
+
+      ))} */}
     </div>
   );
 };

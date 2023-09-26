@@ -213,37 +213,22 @@ Promise<number> => {
   return id;
 };
 
+export type timeObject = {
+  unix_start: number;
+  unix_end: number;
+};
+
 export const getWeeklyLogs = async(
   id: number,
   unixWeekStart: number, unixWeekEnd: number
 ):
-Promise<QueryResult> => {
-  console.log('unixWeekStart: ', unixWeekStart);
-  console.log('unixWeekEnd: ', unixWeekEnd);
-  const result = await client.query(
+Promise<timeObject[]> => {
+  const result: QueryResult<timeObject> = await client.query(
     `SELECT unix_start, unix_end FROM "WorkLogs"
     WHERE user_id=$1 and unix_start >= $2 and unix_end <= $3`,
     [id, unixWeekStart, unixWeekEnd],
   );
 
   const { rows } = result;
-  if (typeof rows !== 'object') {
-    throw new Error('getWeeklyLogs incorrect result');
-  }
-  console.log('query rows: ', rows);
-  // const returnObject = [];
-
-  // for (let i = 0; i < rows.length; i++) {
-  //   returnObject.push(rows[i]);
-  // }
-
-  // const idObject: ID = rows[0];
-
-  // if (typeof idObject.user_id !== 'number') {
-  //   throw new Error('Unable to get user_id from row');
-  // }
-
-  // const id = idObject.user_id;
-
-  return result;
+  return rows;
 };

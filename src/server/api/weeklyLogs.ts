@@ -13,6 +13,7 @@ router.post('/', (req, res) => {
     if (!isObjectRecord(req.cookies)) {
       throw new Error('api/weeklyLogs: req.cookies is not object');
     }
+
     const { authenticationToken } = req.cookies;
     if (typeof authenticationToken !== 'string') {
       throw new Error('api/weeklyLogs: userToken not type string');
@@ -37,18 +38,12 @@ router.post('/', (req, res) => {
       unixWeekEnd,
     );
 
-    // if (typeof result.rows === 'undefined') {
-    //   throw new Error('weeklyLogs result is undefined');
-    // }
-
-    console.log('result in weeklyLogs: ', result);
-
     res.json({
       success: true,
-      listResult: result.rows,
+      listResult: result,
     });
+
     logger.info('res.json success in weeklyLogs.ts post');
-    return result.rows;
   })().catch((e: Error) => {
     res.json({
       success: false,
