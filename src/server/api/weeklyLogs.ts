@@ -8,14 +8,14 @@ const router = createRouter();
 router.post('/', (req, res) => {
   (async(): Promise<void> => {
     if (!isObjectRecord(req.body)) {
-      throw new Error('api/weeklyLogs.get: req.body is not object');
+      throw new Error('api/weeklyLogs: req.body is not object');
     }
     if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/weeklyLogs.get: req.cookies is not object');
+      throw new Error('api/weeklyLogs: req.cookies is not object');
     }
     const { authenticationToken } = req.cookies;
     if (typeof authenticationToken !== 'string') {
-      throw new Error('api/weeklyLogs.get: userToken not type string');
+      throw new Error('api/weeklyLogs: userToken not type string');
     }
 
     const idResult = getIDWithToken(authenticationToken);
@@ -37,13 +37,18 @@ router.post('/', (req, res) => {
       unixWeekEnd,
     );
 
+    // if (typeof result.rows === 'undefined') {
+    //   throw new Error('weeklyLogs result is undefined');
+    // }
+
     console.log('result in weeklyLogs: ', result);
 
     res.json({
       success: true,
-      listResult: result,
+      listResult: result.rows,
     });
-    logger.info('res.json success in workLogs.ts get');
+    logger.info('res.json success in weeklyLogs.ts post');
+    return result.rows;
   })().catch((e: Error) => {
     res.json({
       success: false,

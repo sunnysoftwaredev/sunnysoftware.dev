@@ -68,8 +68,10 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
     const year = date.getFullYear();
     const month = date.getMonth();
     const day = date.getDate();
+    console.log('day in TimeDrowpown: ', day);
     const timeInMS = Date.parse(`${month}/${day}/${year} ${hour}:${minute}`);
     const roundedSeconds = Math.floor(timeInMS / 1000);
+    console.log('rounded seconds in TimeDropdown: ', roundedSeconds);
     return roundedSeconds;
   };
 
