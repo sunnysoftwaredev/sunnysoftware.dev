@@ -63,14 +63,6 @@ module.exports = () => {
           {
             from: 'src/client/static',
           },
-          // {
-          //   from: 'node_modules/react-time-picker/dist/TimePicker.css',
-          //   to: 'TimePicker.css',
-          // },
-          // {
-          //   from: 'node_modules/react-clock/dist/Clock.css',
-          //   to: 'Clock.css',
-          // },
         ],
       }),
     ],

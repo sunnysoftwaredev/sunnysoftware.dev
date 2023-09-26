@@ -31,6 +31,7 @@ router.post('/', (req, res) => {
       throw new Error('api/workLogs.post: unixEnd is not number');
     }
 
+    console.log('unixStart workLogs: ', unixStart);
     const result = await postWorkLog(
       id,
       unixStart,
