@@ -3,19 +3,21 @@ import type { FunctionComponent, SyntheticEvent } from 'react';
 import logger from '../../../server/logger';
 import { isObjectRecord } from '../../../common/utilities/types';
 import useChangeHandler from '../../hooks/useChangeHandler';
+import type { timeObject } from '../../../server/database';
 import styles from './TimeDropdown.scss';
 
 type Props = {
   propsDate: Date;
+  dayLogs: timeObject[];
 };
 
 const TimeDropdown: FunctionComponent<Props> = (props) => {
   const [startHour, setStartHour] = useState('6');
   const [startMinute, setStartMinute] = useState('0');
   const [startMeridiem, setStartMeridiem] = useState('--');
-  const [endHour, setEndtHour] = useState('5');
-  const [endMinute, setEndtMinute] = useState('0');
-  const [endMeridiem, setEndtMeridiem] = useState('--');
+  const [endHour, setEndHour] = useState('5');
+  const [endMinute, setEndMinute] = useState('0');
+  const [endMeridiem, setEndMeridiem] = useState('--');
 
   const [valid, setValid] = useState(true);
   const [submitted, setSubmitted] = useState(false);
@@ -23,11 +25,12 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
   const handleStartHourChange = useChangeHandler(setStartHour);
   const handleStartMinuteChange = useChangeHandler(setStartMinute);
   const handleStartMeridiemChange = useChangeHandler(setStartMeridiem);
-  const handleEndHourChange = useChangeHandler(setEndtHour);
-  const handleEndMinuteChange = useChangeHandler(setEndtMinute);
-  const handleEndMeridiemChange = useChangeHandler(setEndtMeridiem);
+  const handleEndHourChange = useChangeHandler(setEndHour);
+  const handleEndMinuteChange = useChangeHandler(setEndMinute);
+  const handleEndMeridiemChange = useChangeHandler(setEndMeridiem);
 
   const { propsDate } = props;
+  const { dayLogs } = props;
 
   const hourOptions = [
     { label: '6', value: '6' },
@@ -62,8 +65,11 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
     date: Date, hour: string,
     minute: string, meridiem: string
   ): number => {
-    if (meridiem === 'PM') {
+    if (meridiem === 'PM' && hour !== '12') {
       hour = (Number(hour) + 12).toString();
+    }
+    if (meridiem === 'AM' && hour === '12') {
+      hour = '0';
     }
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
@@ -74,32 +80,75 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
     return roundedSeconds;
   };
 
-  const validUnixTimes = (start: number, end: number): boolean => {
+  const midnightNextDay = (date: Date): number => {
+    date.setHours(24);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+
+    return Math.floor(date.getTime() / 1000);
+  };
+
+  const validUnixTimes = useCallback((
+    start: number, end: number,
+    date: Date
+  ): boolean => {
     if (end < start) {
       return false;
     }
+    if (end > midnightNextDay(date)) {
+      return false;
+    }
+    if (typeof dayLogs === 'undefined') {
+      return true;
+    }
+    for (const log of dayLogs) {
+      if (log.unix_start === start || log.unix_end === end) {
+        return false;
+      }
+      if (start > log.unix_start && start < log.unix_end) {
+        return false;
+      }
+      if (end > log.unix_start && end < log.unix_end) {
+        return false;
+      }
+    }
     return true;
-  };
+  }, [dayLogs]);
 
   const saveTime = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
       setSubmitted(false);
+
       const unixStart = convertStringTimesToUnix(
         propsDate,
         startHour,
         startMinute,
         startMeridiem
       );
-      const unixEnd = convertStringTimesToUnix(
-        propsDate,
-        endHour,
-        endMinute,
-        endMeridiem
-      );
 
+      // account for midnight next day
+      let unixEnd;
+      if (endHour === '12' && endMeridiem === 'AM' && endMinute === '0') {
+        unixEnd = midnightNextDay(propsDate);
+      } else {
+        unixEnd = convertStringTimesToUnix(
+          propsDate,
+          endHour,
+          endMinute,
+          endMeridiem
+        );
+      }
+
+      let check = validUnixTimes(unixStart, unixEnd, propsDate);
+      if (startMeridiem === 'PM' && endMeridiem === 'AM' && endHour !== '12') {
+        check = false;
+      }
+      if (endHour === '12' && endMeridiem === 'AM' && endMinute !== '0') {
+        check = false;
+      }
       // 'valid' used for message in component
-      const check = validUnixTimes(unixStart, unixEnd);
       setValid(check);
       if (!check) {
         return;
@@ -140,7 +189,8 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
     startMeridiem,
     endHour,
     endMinute,
-    endMeridiem]);
+    endMeridiem,
+    validUnixTimes]);
 
   return (
 
