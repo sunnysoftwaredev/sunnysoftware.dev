@@ -121,10 +121,10 @@ const WorkCalendar: FunctionComponent = () => {
 
   const displayDayLogs = (dayLogs: timeObject[] | undefined):
   React.ReactElement => {
-    const resultDiv: React.ReactElement[] = [];
     if (typeof dayLogs === 'undefined') {
       return <div />;
     }
+    const resultDiv: React.ReactElement[] = [];
     for (const log of dayLogs) {
       resultDiv.push((<div key={log.unix_start} className={styles.dateLogs}>
         <li>{unixToTimeString(log.unix_start)}</li>
@@ -151,7 +151,7 @@ const WorkCalendar: FunctionComponent = () => {
           onClick={handleDateClick}
         >
           {day}
-          <TimeDropdown propsDate={rawDate} />
+          <TimeDropdown propsDate={rawDate} dayLogs={dayLogs} />
           {displayDayLogs(dayLogs)}
         </div>
       ));
