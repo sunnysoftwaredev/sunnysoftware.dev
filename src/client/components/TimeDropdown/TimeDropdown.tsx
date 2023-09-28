@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import type { FunctionComponent, SyntheticEvent } from 'react';
 import logger from '../../../server/logger';
 import { isObjectRecord } from '../../../common/utilities/types';
@@ -6,21 +6,25 @@ import useChangeHandler from '../../hooks/useChangeHandler';
 import type { timeObject } from '../../../server/database';
 import styles from './TimeDropdown.scss';
 
-type Props = {
+type TimeDropdownProps = {
   propsDate: Date;
-  dayLogs: timeObject[];
+  dayLogs: timeObject[] | undefined;
+  defaultStart: number;
+  defaultEnd: number;
+  updating: boolean;
 };
 
-const TimeDropdown: FunctionComponent<Props> = (props) => {
-  const [startHour, setStartHour] = useState('6');
+const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
+  const [startHour, setStartHour] = useState('8');
   const [startMinute, setStartMinute] = useState('0');
-  const [startMeridiem, setStartMeridiem] = useState('--');
+  const [startMeridiem, setStartMeridiem] = useState('AM');
   const [endHour, setEndHour] = useState('5');
   const [endMinute, setEndMinute] = useState('0');
-  const [endMeridiem, setEndMeridiem] = useState('--');
+  const [endMeridiem, setEndMeridiem] = useState('PM');
 
   const [valid, setValid] = useState(true);
   const [submitted, setSubmitted] = useState(false);
+  // const [updating, setUpdating] = useState(false);
 
   const handleStartHourChange = useChangeHandler(setStartHour);
   const handleStartMinuteChange = useChangeHandler(setStartMinute);
@@ -31,6 +35,36 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
 
   const { propsDate } = props;
   const { dayLogs } = props;
+  const { defaultStart } = props;
+  const { defaultEnd } = props;
+  const { updating } = props;
+
+  // Set default if editing
+  useEffect(() => {
+    if (updating) {
+      const startDate = new Date(defaultStart);
+      const endDate = new Date(defaultEnd);
+      console.log('startDate: ', startDate);
+      console.log('endstartDate: ', endDate);
+      const defaultStartHour = startDate.getHours();
+      setStartHour(defaultStartHour.toString());
+      setStartMinute(startDate.getMinutes.toString());
+      if (defaultStartHour < 12) {
+        setStartMeridiem('AM');
+      } else {
+        setStartMeridiem('PM');
+      }
+
+      const defaultEndHour = endDate.getHours();
+      setEndHour(defaultEndHour.toString());
+      setEndMinute(endDate.getMinutes.toString());
+      if (defaultEndHour < 12) {
+        setStartMeridiem('AM');
+      } else {
+        setStartMeridiem('PM');
+      }
+    }
+  }, [defaultStart, defaultEnd, updating]);
 
   const hourOptions = [
     { label: '6', value: '6' },
@@ -60,6 +94,10 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
     { label: 'AM', value: 'AM' },
     { label: 'PM', value: 'PM' },
   ];
+
+  // const handleUpdateClick = useCallback((): void => {
+  //   setUpdating(!updating);
+  // }, [updating]);
 
   const convertStringTimesToUnix = (
     date: Date, hour: string,
@@ -103,13 +141,13 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
       return true;
     }
     for (const log of dayLogs) {
-      if (log.unix_start === start || log.unix_end === end) {
+      if (log.unixStart === start || log.unixEnd === end) {
         return false;
       }
-      if (start > log.unix_start && start < log.unix_end) {
+      if (start > log.unixStart && start < log.unixEnd) {
         return false;
       }
-      if (end > log.unix_start && end < log.unix_end) {
+      if (end > log.unixStart && end < log.unixEnd) {
         return false;
       }
     }
@@ -167,16 +205,16 @@ const TimeDropdown: FunctionComponent<Props> = (props) => {
       const result: unknown = await response.json();
 
       if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: LoginForm.tsx');
+        throw new Error('Unexpected body type: TimeDropdown.tsx');
       }
       if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: LoginForm.tsx');
+        throw new Error('success variable not type boolean: TimeDropdown.tsx');
       }
 
       if (result.success) {
         setSubmitted(true);
       } else {
-        logger.info('else in fetch');
+        logger.info('unsuccessful database submission in TimeDropdown.tsx');
       }
     } catch (err: unknown) {
       if (err instanceof Error) {

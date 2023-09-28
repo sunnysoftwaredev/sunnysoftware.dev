@@ -1,0 +1,12 @@
+.workLogContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.workLog {
+  display: flex;
+    font-size: small;
+    justify-content: flex-start;
+    list-style-type: none;
+    gap: 1rem;
+}

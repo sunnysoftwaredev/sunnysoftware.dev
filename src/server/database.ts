@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import type { QueryResult } from 'pg';
 import { Client } from 'pg';
 import config from './config';
@@ -98,7 +97,11 @@ export type { ActiveStatus };
 export const checkActiveToken = async(localToken: string):
 Promise<boolean> => {
   const result: QueryResult<ActiveStatus> = await client.query(
-    'SELECT active, expiration FROM "AuthenticationTokens" WHERE token=$1',
+    `SELECT
+    active,
+    expiration
+    FROM "AuthenticationTokens"
+    WHERE token=$1`,
     [localToken],
   );
   const { rows } = result;
@@ -118,7 +121,8 @@ Promise<boolean> => {
     if (databaseDate < currentDate) {
       // set token inactive
       await client.query(`UPDATE "AuthenticationTokens"
-      SET active = false WHERE token=$1`, [localToken]);
+      SET active = false
+      WHERE token=$1`, [localToken]);
       return false;
     }
   }
@@ -187,35 +191,37 @@ Promise<workLog> => {
 };
 
 type ID = {
-  user_id: number;
+  userId: number;
 };
 
 export const getIDWithToken = async(token: string):
 Promise<number> => {
   const result: QueryResult<ID> = await client.query(
-    'SELECT user_id FROM "AuthenticationTokens" WHERE token=$1',
+    `SELECT user_id AS "userId"
+    FROM "AuthenticationTokens"
+    WHERE token=$1`,
     [token],
   );
 
   const { rows } = result;
   if (rows.length !== 1) {
-    throw new Error('Unable to select user_id.');
+    throw new Error('Unable to select userId.');
   }
 
   const idObject: ID = rows[0];
 
-  if (typeof idObject.user_id !== 'number') {
-    throw new Error('Unable to get user_id from row');
+  if (typeof idObject.userId !== 'number') {
+    throw new Error('Unable to get userId from row');
   }
 
-  const id = idObject.user_id;
+  const id = idObject.userId;
 
   return id;
 };
 
 export type timeObject = {
-  unix_start: number;
-  unix_end: number;
+  unixStart: number;
+  unixEnd: number;
 };
 
 export const getWeeklyLogs = async(
@@ -224,7 +230,8 @@ export const getWeeklyLogs = async(
 ):
 Promise<timeObject[]> => {
   const result: QueryResult<timeObject> = await client.query(
-    `SELECT unix_start, unix_end FROM "WorkLogs"
+    `SELECT unix_start AS "unixStart", unix_end AS "unixEnd"
+    FROM "WorkLogs"
     WHERE user_id=$1 and unix_start >= $2 and unix_end <= $3`,
     [id, unixWeekStart, unixWeekEnd],
   );
