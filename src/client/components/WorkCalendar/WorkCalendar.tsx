@@ -5,6 +5,7 @@ import logger from '../../../server/logger';
 import TimeDropdown from '../TimeDropdown/TimeDropdown';
 import { isObjectRecord } from '../../../common/utilities/types';
 import type { timeObject } from '../../../server/database';
+import WorkLog from '../WorkLog/WorkLog';
 import styles from './WorkCalendar.scss';
 
 const WorkCalendar: FunctionComponent = () => {
@@ -12,6 +13,7 @@ const WorkCalendar: FunctionComponent = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [clickedDate, setClickedDate] = useState('');
   const [weeklyLogs, setWeeklyLogs] = useState<timeObject[]>();
+  // const [updating, setUpdating] = useState(false);
 
   const getDaysInWeek = useCallback((): Date[] => {
     const days: Date[] = [];
@@ -60,7 +62,7 @@ const WorkCalendar: FunctionComponent = () => {
 
       const result: unknown = await response.json();
       if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: AuthContext.tsx');
+        throw new Error('Unexpected body type: WorkCalendar.tsx');
       }
 
       return result.listResult;
@@ -73,8 +75,8 @@ const WorkCalendar: FunctionComponent = () => {
 
   useEffect(() => {
     fetchWeekLogs()
-      .then((result: timeObject[]) => {
-        if (typeof result !== 'undefined') {
+      .then((result) => {
+        if (result !== null && result !== 'undefined') {
           setWeeklyLogs(result);
         }
       })
@@ -82,6 +84,8 @@ const WorkCalendar: FunctionComponent = () => {
         logger.error(err);
       });
   }, [fetchWeekLogs]);
+
+  // Object.keys(result).length !== 0 &&
 
   const changeToPrevWeek = useCallback((): void => {
     setCurrentDate((currDate: Date): Date => {
@@ -108,31 +112,34 @@ const WorkCalendar: FunctionComponent = () => {
      if (target instanceof HTMLDivElement) {
        const dayString: string = target.innerText;
        setClickedDate(dayString);
+     } else if (target instanceof Object) {
+       // else if here stops the logger below from continually running
      } else {
        logger.info('type error in handleDateClick');
      }
    }, []);
 
-  const unixToTimeString = (unix: number): string => new Date(unix
-      * 1000).toLocaleString('default', {
-    hour: 'numeric',
-    minute: 'numeric',
-  });
-
   const displayDayLogs = (dayLogs: timeObject[] | undefined):
-  React.ReactElement => {
+  React.JSX.Element[] => {
     if (typeof dayLogs === 'undefined') {
-      return <div />;
+      return [<div key={0} />];
     }
-    const resultDiv: React.ReactElement[] = [];
-    for (const log of dayLogs) {
-      resultDiv.push((<div key={log.unix_start} className={styles.dateLogs}>
-        <li>{unixToTimeString(log.unix_start)}</li>
-        <h4>-</h4>
-        <li>{unixToTimeString(log.unix_end)}</li>
-      </div>));
+    return dayLogs.map(log => (
+      <WorkLog key={log.unixStart} log={log} />
+    ));
+  };
+
+  const compareObjects = (a: timeObject, b: timeObject): number => {
+    const startA = a.unixStart;
+    const startB = b.unixStart;
+
+    let comparison = 0;
+    if (startA > startB) {
+      comparison = 1;
+    } else if (startA < startB) {
+      comparison = -1;
     }
-    return resultDiv;
+    return comparison;
   };
 
   const displayWeek = (): React.ReactElement[] => {
@@ -141,9 +148,10 @@ const WorkCalendar: FunctionComponent = () => {
       const rawDate = daysInWeek[i];
       const rawDateStart = getUnixDayStart(rawDate);
       const rawDateEnd = getUnixDayEnd(rawDate);
-      const dayLogs = weeklyLogs?.filter(log => (log.unix_start
-         >= rawDateStart && log.unix_end <= rawDateEnd));
       const day: string = rawDate.toString().slice(0, 10);
+      const dayLogs = weeklyLogs?.filter(log => (log.unixStart
+         >= rawDateStart && log.unixEnd <= rawDateEnd + 1));
+      dayLogs?.sort(compareObjects);
       dayDivs.push((
         <div
           key={`day-${i}`}
@@ -151,7 +159,11 @@ const WorkCalendar: FunctionComponent = () => {
           onClick={handleDateClick}
         >
           {day}
-          <TimeDropdown propsDate={rawDate} dayLogs={dayLogs} />
+          <TimeDropdown
+            propsDate={rawDate} dayLogs={dayLogs}
+            defaultStart={0} defaultEnd={0}
+            updating={false}
+          />
           {displayDayLogs(dayLogs)}
         </div>
       ));
@@ -204,24 +216,7 @@ const WorkCalendar: FunctionComponent = () => {
           {' '}
           <p>{clickedDate}</p>
         </div>
-
       </div>
-      {/* {weeklyLogs?.map(log => (
-        <div key={log.unix_start}>
-          <li >
-            {new Date(log.unix_start
-           * 1000).toLocaleString()}
-
-          </li>
-          <li >
-            {new Date(log.unix_end
-           * 1000).toLocaleString()}
-
-          </li>
-
-        </div>
-
-      ))} */}
     </div>
   );
 };

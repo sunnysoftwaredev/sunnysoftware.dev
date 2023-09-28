@@ -1,10 +1,4 @@
-// @media only screen and (max-width: 1111px) {
-//   .body {
-//     display: grid;
-//     grid-template-columns: repeat(4, 1fr);
-//     gap: 5px;
-//   }
-// }
+
 .week {
   width: 90%;
   padding: 0.7rem;
@@ -22,11 +16,7 @@
   font-size: 1.4rem;
   cursor: pointer;
 }
-// .headerDays{
-//   display: grid;
-//   grid-template-columns: repeat(7, 1fr);
-//   gap: 5px;
-// }
+
 .body {
   display: flex;
   justify-content: center;
@@ -58,6 +48,11 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+
+.dateLogsContainer {
+  display: flex;
+  flex-direction: column;
 }
 
 .dateLogs {
