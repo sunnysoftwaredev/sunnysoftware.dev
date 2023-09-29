@@ -219,7 +219,7 @@ Promise<number> => {
   return id;
 };
 
-export type timeObject = {
+export type TimeObject = {
   unixStart: number;
   unixEnd: number;
 };
@@ -228,8 +228,8 @@ export const getWeeklyLogs = async(
   id: number,
   unixWeekStart: number, unixWeekEnd: number
 ):
-Promise<timeObject[]> => {
-  const result: QueryResult<timeObject> = await client.query(
+Promise<TimeObject[]> => {
+  const result: QueryResult<TimeObject> = await client.query(
     `SELECT unix_start AS "unixStart", unix_end AS "unixEnd"
     FROM "WorkLogs"
     WHERE user_id=$1 and unix_start >= $2 and unix_end <= $3`,
@@ -239,3 +239,22 @@ Promise<timeObject[]> => {
   const { rows } = result;
   return rows;
 };
+
+export const updateWorkLog = async(
+  id: number,
+  oldUnixStart: number,
+  unixStart: number, unixEnd: number,
+):
+Promise<TimeObject> => {
+  await client.query(
+    `UPDATE "WorkLogs"
+  SET unix_start = $3, unix_end=$4
+  WHERE user_id=$1 AND unix_start =$2`,
+    [id, oldUnixStart, unixStart, unixEnd]
+  );
+  return {
+    unixStart,
+    unixEnd,
+  };
+};
+

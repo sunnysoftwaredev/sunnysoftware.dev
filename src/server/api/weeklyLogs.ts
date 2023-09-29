@@ -1,5 +1,5 @@
 import { Router as createRouter } from 'express';
-import logger from '../logger';
+// import logger from '../logger';
 import { isObjectRecord } from '../../common/utilities/types';
 import { getIDWithToken, getWeeklyLogs } from '../database';
 
@@ -43,7 +43,7 @@ router.post('/', (req, res) => {
       listResult: result,
     });
 
-    logger.info('res.json success in weeklyLogs.ts post');
+    // logger.info('res.json success in weeklyLogs.ts post');
   })().catch((e: Error) => {
     res.json({
       success: false,

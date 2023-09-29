@@ -3,8 +3,8 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
 import TimeDropdown from '../TimeDropdown/TimeDropdown';
-import { isObjectRecord } from '../../../common/utilities/types';
-import type { timeObject } from '../../../server/database';
+import { isObjectRecord, isTimeArray } from '../../../common/utilities/types';
+import type { TimeObject } from '../../../server/database';
 import WorkLog from '../WorkLog/WorkLog';
 import styles from './WorkCalendar.scss';
 
@@ -12,8 +12,7 @@ const WorkCalendar: FunctionComponent = () => {
   const { username } = useContext(AuthContext) ?? { username: 'loading' };
   const [currentDate, setCurrentDate] = useState(new Date());
   const [clickedDate, setClickedDate] = useState('');
-  const [weeklyLogs, setWeeklyLogs] = useState<timeObject[]>();
-  // const [updating, setUpdating] = useState(false);
+  const [weeklyLogs, setWeeklyLogs] = useState<TimeObject[]>();
 
   const getDaysInWeek = useCallback((): Date[] => {
     const days: Date[] = [];
@@ -61,11 +60,15 @@ const WorkCalendar: FunctionComponent = () => {
       });
 
       const result: unknown = await response.json();
+
       if (!isObjectRecord(result)) {
         throw new Error('Unexpected body type: WorkCalendar.tsx');
       }
+      const { listResult } = result;
 
-      return result.listResult;
+      if (isTimeArray(listResult)) {
+        setWeeklyLogs(listResult);
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
@@ -75,17 +78,10 @@ const WorkCalendar: FunctionComponent = () => {
 
   useEffect(() => {
     fetchWeekLogs()
-      .then((result) => {
-        if (result !== null && result !== 'undefined') {
-          setWeeklyLogs(result);
-        }
-      })
       .catch((err) => {
         logger.error(err);
       });
   }, [fetchWeekLogs]);
-
-  // Object.keys(result).length !== 0 &&
 
   const changeToPrevWeek = useCallback((): void => {
     setCurrentDate((currDate: Date): Date => {
@@ -119,7 +115,7 @@ const WorkCalendar: FunctionComponent = () => {
      }
    }, []);
 
-  const displayDayLogs = (dayLogs: timeObject[] | undefined):
+  const displayDayLogs = (dayLogs: TimeObject[] | undefined):
   React.JSX.Element[] => {
     if (typeof dayLogs === 'undefined') {
       return [<div key={0} />];
@@ -129,7 +125,7 @@ const WorkCalendar: FunctionComponent = () => {
     ));
   };
 
-  const compareObjects = (a: timeObject, b: timeObject): number => {
+  const compareObjects = (a: TimeObject, b: TimeObject): number => {
     const startA = a.unixStart;
     const startB = b.unixStart;
 
