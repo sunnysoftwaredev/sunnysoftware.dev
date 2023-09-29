@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import type { FunctionComponent } from 'react';
 import TimeDropdown from '../TimeDropdown/TimeDropdown';
-import type { timeObject } from '../../../server/database';
+import type { TimeObject } from '../../../server/database';
 import styles from './WorkLog.scss';
 
 type WorkLogProps = {
-  log: timeObject;
+  log: TimeObject;
 };
 const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
   const [updating, setUpdating] = useState(false);
@@ -32,7 +32,7 @@ const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
       </div>
       {updating && (
         <TimeDropdown
-          propsDate={new Date(log.unixStart)}
+          propsDate={new Date(log.unixStart * 1000)}
           dayLogs={undefined}
           defaultStart={log.unixStart}
           defaultEnd={log.unixEnd}

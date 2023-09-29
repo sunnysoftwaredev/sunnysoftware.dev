@@ -3,12 +3,12 @@ import type { FunctionComponent, SyntheticEvent } from 'react';
 import logger from '../../../server/logger';
 import { isObjectRecord } from '../../../common/utilities/types';
 import useChangeHandler from '../../hooks/useChangeHandler';
-import type { timeObject } from '../../../server/database';
+import type { TimeObject } from '../../../server/database';
 import styles from './TimeDropdown.scss';
 
 type TimeDropdownProps = {
   propsDate: Date;
-  dayLogs: timeObject[] | undefined;
+  dayLogs: TimeObject[] | undefined;
   defaultStart: number;
   defaultEnd: number;
   updating: boolean;
@@ -24,7 +24,6 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
 
   const [valid, setValid] = useState(true);
   const [submitted, setSubmitted] = useState(false);
-  // const [updating, setUpdating] = useState(false);
 
   const handleStartHourChange = useChangeHandler(setStartHour);
   const handleStartMinuteChange = useChangeHandler(setStartMinute);
@@ -42,26 +41,46 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
   // Set default if editing
   useEffect(() => {
     if (updating) {
-      const startDate = new Date(defaultStart);
-      const endDate = new Date(defaultEnd);
-      console.log('startDate: ', startDate);
-      console.log('endstartDate: ', endDate);
+      const startDate = new Date(defaultStart * 1000);
+      const endDate = new Date(defaultEnd * 1000);
+
       const defaultStartHour = startDate.getHours();
-      setStartHour(defaultStartHour.toString());
-      setStartMinute(startDate.getMinutes.toString());
-      if (defaultStartHour < 12) {
+      const defaultStartMinute = startDate.getMinutes();
+
+      setStartMinute(defaultStartMinute.toString());
+
+      if (defaultStartHour === 0) {
+        setStartHour('12');
         setStartMeridiem('AM');
+      } else if (defaultStartHour < 12) {
+        setStartHour(defaultStartHour.toString());
+        setStartMeridiem('AM');
+      } else if (defaultStartHour === 12) {
+        setStartHour('12');
+        setStartMeridiem('PM');
       } else {
+        const pmHour = defaultStartHour - 12;
+        setStartHour(pmHour.toString());
         setStartMeridiem('PM');
       }
 
       const defaultEndHour = endDate.getHours();
-      setEndHour(defaultEndHour.toString());
-      setEndMinute(endDate.getMinutes.toString());
-      if (defaultEndHour < 12) {
-        setStartMeridiem('AM');
+      const defaultEndMinute = endDate.getMinutes();
+      setEndMinute(defaultEndMinute.toString());
+
+      if (defaultEndHour === 0) {
+        setEndHour('12');
+        setEndMeridiem('AM');
+      } else if (defaultEndHour < 12) {
+        setEndHour(defaultEndHour.toString());
+        setEndMeridiem('AM');
+      } else if (defaultEndHour === 12) {
+        setEndHour(defaultEndHour.toString());
+        setEndMeridiem('PM');
       } else {
-        setStartMeridiem('PM');
+        const pmEnd = defaultEndHour - 12;
+        setEndHour(pmEnd.toString());
+        setEndMeridiem('PM');
       }
     }
   }, [defaultStart, defaultEnd, updating]);
@@ -94,10 +113,6 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
     { label: 'AM', value: 'AM' },
     { label: 'PM', value: 'PM' },
   ];
-
-  // const handleUpdateClick = useCallback((): void => {
-  //   setUpdating(!updating);
-  // }, [updating]);
 
   const convertStringTimesToUnix = (
     date: Date, hour: string,
@@ -159,6 +174,8 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
       e.preventDefault();
       setSubmitted(false);
 
+      const oldUnixStart = defaultStart;
+
       const unixStart = convertStringTimesToUnix(
         propsDate,
         startHour,
@@ -167,17 +184,18 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
       );
 
       // account for midnight next day
-      let unixEnd;
-      if (endHour === '12' && endMeridiem === 'AM' && endMinute === '0') {
-        unixEnd = midnightNextDay(propsDate);
-      } else {
-        unixEnd = convertStringTimesToUnix(
+      const unixEndCheck = (): number => {
+        if (endHour === '12' && endMeridiem === 'AM' && endMinute === '0') {
+          return midnightNextDay(propsDate);
+        }
+        return convertStringTimesToUnix(
           propsDate,
           endHour,
           endMinute,
           endMeridiem
         );
-      }
+      };
+      const unixEnd = unixEndCheck();
 
       let check = validUnixTimes(unixStart, unixEnd, propsDate);
       if (startMeridiem === 'PM' && endMeridiem === 'AM' && endHour !== '12') {
@@ -191,12 +209,23 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
       if (!check) {
         return;
       }
+
+      // check POST or PUT
+      const postOrPut = (checkUpdating: boolean): string => {
+        if (checkUpdating) {
+          return 'PUT';
+        }
+        return 'POST';
+      };
+      const fetchMethod = postOrPut(updating);
+
       const response = await fetch('http://localhost:3000/api/workLogs', {
-        method: 'POST',
+        method: fetchMethod,
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          oldUnixStart,
           unixStart,
           unixEnd,
         }),
@@ -213,8 +242,11 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
 
       if (result.success) {
         setSubmitted(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } else {
-        logger.info('unsuccessful database submission in TimeDropdown.tsx');
+        logger.info('unsuccessful database update in TimeDropdown.tsx');
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -222,13 +254,15 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
       }
     }
   }, [propsDate,
+    defaultStart,
     startHour,
     startMinute,
     startMeridiem,
     endHour,
     endMinute,
     endMeridiem,
-    validUnixTimes]);
+    validUnixTimes,
+    updating]);
 
   return (
 
@@ -307,7 +341,7 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
 
       </div>
       <button type="button" onClick={saveTime}>
-        Save
+        {updating ? <p>Update</p> : <p>Save</p>}
       </button>
       {!valid && <h2>Invalid Input!</h2>}
       {submitted && <h2>Log saved!</h2>}
