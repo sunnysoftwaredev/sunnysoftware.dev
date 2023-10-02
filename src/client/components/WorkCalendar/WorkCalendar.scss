@@ -1,0 +1,64 @@
+
+.week {
+  width: 90%;
+  padding: 0.7rem;
+  margin-left: 1rem;
+  border: 1px solid blue;
+}
+
+.weekHeader {
+  display: flex;
+  margin-bottom: 0.7rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.header button {
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.body {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  // grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+.box {
+  height: 15rem;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  gap: 8px;
+}
+// .box:hover{
+//   background-color: antiquewhite;
+// }
+.boxOther {
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dateLogsContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.dateLogs {
+  display: flex;
+  font-size: small;
+  justify-content: flex-start;
+  list-style-type: none;
+  gap: 1rem;
+}

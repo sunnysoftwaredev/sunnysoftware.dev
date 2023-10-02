@@ -159,3 +159,138 @@ export const getUsernameAndRole
     role,
   };
 };
+
+type workLog = {
+  unixStart: number;
+  unixEnd: number;
+  submitted: boolean;
+  invoiced: boolean;
+  paid: boolean;
+};
+
+export const postWorkLog = async(
+  id: number,
+  unixStart: number, unixEnd: number,
+):
+Promise<workLog> => {
+  await client.query(`INSERT INTO "WorkLogs" (user_id, unix_start,
+     unix_end, submitted, invoiced, paid)
+           VALUES ($1, $2, $3, $4, $5, $6)`, [id, unixStart, unixEnd, false, false, false]);
+  return {
+    unixStart,
+    unixEnd,
+    submitted: false,
+    invoiced: false,
+    paid: false,
+  };
+};
+
+type ID = {
+  userId: number;
+};
+
+export const getIDWithToken = async(token: string):
+Promise<number> => {
+  const result: QueryResult<ID> = await client.query(
+    `SELECT user_id AS "userId"
+    FROM "AuthenticationTokens"
+    WHERE token=$1`,
+    [token],
+  );
+
+  const { rows } = result;
+  if (rows.length !== 1) {
+    throw new Error('Unable to select userId.');
+  }
+
+  const idObject: ID = rows[0];
+
+  if (typeof idObject.userId !== 'number') {
+    throw new Error('Unable to get userId from row');
+  }
+
+  const id = idObject.userId;
+
+  return id;
+};
+
+export type TimeObject = {
+  unixStart: number;
+  unixEnd: number;
+};
+
+export const getWeeklyLogs = async(
+  id: number,
+  unixWeekStart: number, unixWeekEnd: number
+):
+Promise<TimeObject[]> => {
+  const result: QueryResult<TimeObject> = await client.query(
+    `SELECT unix_start AS "unixStart", unix_end AS "unixEnd"
+    FROM "WorkLogs"
+    WHERE user_id=$1 and unix_start >= $2 and unix_end <= $3`,
+    [id, unixWeekStart, unixWeekEnd],
+  );
+
+  const { rows } = result;
+  return rows;
+};
+
+export const updateWorkLog = async(
+  id: number,
+  oldUnixStart: number,
+  unixStart: number, unixEnd: number,
+):
+Promise<TimeObject> => {
+  await client.query(
+    `UPDATE "WorkLogs"
+  SET unix_start = $3, unix_end=$4
+  WHERE user_id=$1 AND unix_start =$2`,
+    [id, oldUnixStart, unixStart, unixEnd]
+  );
+  return {
+    unixStart,
+    unixEnd,
+  };
+};
+
+export const deleteWorkLog = async(
+  id: number,
+  unixStart: number, unixEnd: number,
+):
+Promise<TimeObject> => {
+  await client.query(
+    `DELETE FROM "WorkLogs"
+    WHERE user_id=$1
+      and unix_start=$2
+        and unix_end=$3`,
+    [id, unixStart, unixEnd]
+  );
+  return {
+    unixStart,
+    unixEnd,
+  };
+};
+
+type Contact = {
+  contactName: string;
+  email: string;
+  subject: string;
+  message: string;
+};
+
+// CHANGE TABLE NAME
+export const postContact = async(
+  contactName: string, email: string,
+  subject: string, message: string,
+):
+Promise<Contact> => {
+  await client.query(`INSERT INTO "NEWTABLE" (contactName, email,
+     subject, message)
+           VALUES ($1, $2, $3, $4)`, [contactName, email, subject, message]);
+  return {
+    contactName,
+    email,
+    subject,
+    message,
+  };
+};

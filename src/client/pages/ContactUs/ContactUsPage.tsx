@@ -1,6 +1,8 @@
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
+import ContactForm from '../../components/ContactForm/ContactForm';
+import styles from './ContactUsPage.scss';
 
 const ContactUsPage: FunctionComponent = () => (
   <div>
@@ -14,7 +16,14 @@ const ContactUsPage: FunctionComponent = () => (
       />
     </Helmet>
     <h1>Contact Us </h1>
-    <p>Here you will find email, phone, and contact form</p>
+    <div className={styles.contactInfoContainer}>
+      <h3>Trevin Hoffman - CEO and Lead Engineer</h3>
+      <p>trevinhofmann@gmail.com</p>
+      <p>
+        (715) 350-9696
+      </p>
+    </div>
+    <ContactForm />
   </div>
 );
 
