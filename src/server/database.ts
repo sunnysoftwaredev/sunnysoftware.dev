@@ -258,3 +258,20 @@ Promise<TimeObject> => {
   };
 };
 
+export const deleteWorkLog = async(
+  id: number,
+  unixStart: number, unixEnd: number,
+):
+Promise<TimeObject> => {
+  await client.query(
+    `DELETE FROM "WorkLogs"
+    WHERE user_id=$1
+      and unix_start=$2
+        and unix_end=$3`,
+    [id, unixStart, unixEnd]
+  );
+  return {
+    unixStart,
+    unixEnd,
+  };
+};
