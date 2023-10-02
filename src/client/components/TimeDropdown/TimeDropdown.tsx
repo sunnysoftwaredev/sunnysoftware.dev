@@ -266,7 +266,11 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
 
   return (
 
-    <div className={styles.timeDropdownContainer} onSubmit={saveTime}>
+    <div
+      className={updating
+        ? styles.updatingTimeDropdownContainer
+        : styles.timeDropdownContainer} onSubmit={saveTime}
+    >
       <div className="containerOne">
         <label>Start</label>
 

@@ -275,3 +275,27 @@ Promise<TimeObject> => {
     unixEnd,
   };
 };
+
+type Contact = {
+  contactName: string;
+  email: string;
+  subject: string;
+  message: string;
+};
+
+// CHANGE TABLE NAME
+export const postContact = async(
+  contactName: string, email: string,
+  subject: string, message: string,
+):
+Promise<Contact> => {
+  await client.query(`INSERT INTO "NEWTABLE" (contactName, email,
+     subject, message)
+           VALUES ($1, $2, $3, $4)`, [contactName, email, subject, message]);
+  return {
+    contactName,
+    email,
+    subject,
+    message,
+  };
+};
