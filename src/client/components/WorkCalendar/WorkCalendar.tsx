@@ -11,7 +11,7 @@ import styles from './WorkCalendar.scss';
 const WorkCalendar: FunctionComponent = () => {
   const { username } = useContext(AuthContext) ?? { username: 'loading' };
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [clickedDate, setClickedDate] = useState('');
+  // const [clickedDate, setClickedDate] = useState('');
   const [weeklyLogs, setWeeklyLogs] = useState<TimeObject[]>();
 
   const getDaysInWeek = useCallback((): Date[] => {
@@ -101,19 +101,20 @@ const WorkCalendar: FunctionComponent = () => {
     });
   }, []);
 
-  const handleDateClick
-   = useCallback((e: React.MouseEvent<HTMLDivElement>): void => {
-     e.preventDefault();
-     const { target } = e;
-     if (target instanceof HTMLDivElement) {
-       const dayString: string = target.innerText;
-       setClickedDate(dayString);
-     } else if (target instanceof Object) {
-       // else if here stops the logger below from continually running
-     } else {
-       logger.info('type error in handleDateClick');
-     }
-   }, []);
+  // In case of future use:
+  // const handleDateClick
+  //  = useCallback((e: React.MouseEvent<HTMLDivElement>): void => {
+  //    e.preventDefault();
+  //    const { target } = e;
+  //    if (target instanceof HTMLDivElement) {
+  //      const dayString: string = target.innerText;
+  //      setClickedDate(dayString);
+  //    } else if (target instanceof Object) {
+  //      // else if here stops the logger below from continually running
+  //    } else {
+  //      logger.info('type error in handleDateClick');
+  //    }
+  //  }, []);
 
   const displayDayLogs = (dayLogs: TimeObject[] | undefined):
   React.JSX.Element[] => {
@@ -152,7 +153,7 @@ const WorkCalendar: FunctionComponent = () => {
         <div
           key={`day-${i}`}
           className={styles.box}
-          onClick={handleDateClick}
+          // onClick={handleDateClick}
         >
           {day}
           <TimeDropdown
@@ -207,11 +208,11 @@ const WorkCalendar: FunctionComponent = () => {
           {' '}
         </div>
 
-        <div className={styles.boxSelected}>
+        {/* <div className={styles.boxSelected}>
           Selected Date:
           {' '}
           <p>{clickedDate}</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
