@@ -1,7 +1,7 @@
 import { Router as createRouter } from 'express';
 import logger from '../logger';
 import { isObjectRecord } from '../../common/utilities/types';
-import { insertContact } from '../database';
+import { insertContact, mailgunMessage } from '../database';
 
 const router = createRouter();
 
@@ -28,13 +28,14 @@ router.post('/', (req, res) => {
       throw new Error('api/contacts:message not type string');
     }
 
-    // implement insertContact
     const result = await insertContact(
       contactName,
       email,
       subject,
       message,
     );
+
+    await mailgunMessage(contactName, email, subject, message);
 
     res.json({
       success: true,
