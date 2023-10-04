@@ -1,6 +1,7 @@
 import { Router as createRouter } from 'express';
 import logger from '../logger';
 import { isObjectRecord } from '../../common/utilities/types';
+import { insertContact } from '../database';
 
 const router = createRouter();
 
@@ -37,8 +38,9 @@ router.post('/', (req, res) => {
 
     res.json({
       success: true,
+      result,
     });
-    logger.info('res.json success in register.ts');
+    logger.info('res.json success in contacts.ts');
   })().catch((e: Error) => {
     res.json({
       success: false,

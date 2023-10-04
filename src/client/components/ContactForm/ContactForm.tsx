@@ -36,7 +36,7 @@ const ContactForm: FunctionComponent = () => {
   }, [setSubject]);
 
   const handleMessageChange
-  = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     setSubmitted(false);
   }, [setMessage]);
@@ -50,7 +50,7 @@ const ContactForm: FunctionComponent = () => {
         return;
       }
       setError(false);
-      const response = await fetch('http://localhost:3000/api/register', {
+      const response = await fetch('http://localhost:3000/api/contacts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,16 +66,13 @@ const ContactForm: FunctionComponent = () => {
       const result: unknown = await response.json();
 
       if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: RegistrationForm.tsx');
+        throw new Error('Unexpected body type: ContactForm.tsx');
       }
       if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: RegistrationForm.tsx');
+        throw new Error('success variable not type boolean: ContactForm.tsx');
       }
-      // store in localStorage
       if (result.success) {
         setSubmitted(true);
-      } else {
-        logger.info('Failed to submit contact query');
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -102,7 +99,6 @@ const ContactForm: FunctionComponent = () => {
   // Showing error message if error is true
   const errorMessage = (): React.JSX.Element => (
     <div
-      className="error"
       style={{
         display: error ? '' : 'none',
       }}
@@ -112,9 +108,13 @@ const ContactForm: FunctionComponent = () => {
   );
 
   return (
-    <div className="form">
-      <div>
-        <h1>User Registration</h1>
+    <div >
+      <div
+        className={styles.formHeader} style={{
+          display: error ? 'none' : '',
+        }}
+      >
+        <h1>Send us a message!</h1>
       </div>
 
       {/* Calling to the methods */}
@@ -123,7 +123,7 @@ const ContactForm: FunctionComponent = () => {
         {successMessage()}
       </div>
 
-      <form>
+      <form className={styles.formContainer}>
         <label className="label">Name</label>
         <input
           onChange={handleNameChange} className="input"
@@ -141,10 +141,10 @@ const ContactForm: FunctionComponent = () => {
           onChange={handleSubjectChange} className="input"
           value={subject} type="subject"
         />
-        <label className="label">Message</label>
-        <input
+        <textarea
           onChange={handleMessageChange} className={styles.message}
-          value={message} type="message"
+          value={message}
+          placeholder="Your message here..."
         />
 
         <button
