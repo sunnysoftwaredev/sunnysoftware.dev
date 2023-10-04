@@ -28,4 +28,7 @@ export default {
     user: getEnvironmentVariable('PG_USER'),
     password: getEnvironmentVariable('PG_PASSWORD'),
   },
+  mailgun: {
+    key: getEnvironmentVariable('MAILGUN_API_KEY'),
+  },
 };
