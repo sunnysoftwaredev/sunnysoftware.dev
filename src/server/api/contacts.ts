@@ -1,7 +1,8 @@
 import { Router as createRouter } from 'express';
 import logger from '../logger';
 import { isObjectRecord } from '../../common/utilities/types';
-import { insertContact, mailgunMessage } from '../database';
+import { insertContact } from '../database';
+import { mailgunMessage } from '../mail';
 
 const router = createRouter();
 
