@@ -42,6 +42,13 @@ const Navbar: FunctionComponent = () => {
             </a>
           </li>
         )}
+        {!active && (
+          <li className="nav-item">
+            <a className="nav-link active" href="/register">
+              Register
+            </a>
+          </li>
+        )}
         <li className="nav-item">
           <a className="nav-link active" href="/contact-us">
             Contact Us
@@ -56,6 +63,13 @@ const Navbar: FunctionComponent = () => {
           <li className="nav-item">
             <a className="nav-link active" href="/portal">
               Client Portal
+            </a>
+          </li>
+        )}
+        {role === 'admin' && (
+          <li className="nav-item">
+            <a className="nav-link active" href="/admin-portal">
+              Admin Portal
             </a>
           </li>
         )}
