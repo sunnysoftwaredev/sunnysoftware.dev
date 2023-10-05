@@ -1,52 +1,54 @@
-import React, { useCallback, useEffect } from 'react';
+import React from 'react';
 import type { FunctionComponent } from 'react';
 
-const EmployeeWorkCalendars: FunctionComponent = () => {
-  const x = 3;
-  // const fetchAllWeekLogs = useCallback(async() => {
-  //   try {
-  //     const unixWeekStart = getUnixDayStart(daysInWeek[0]);
-  //     const unixWeekEnd = getUnixDayEnd(daysInWeek[6]);
+const EmployeeWorkCalendars: FunctionComponent = () => <div>TODO</div>;
 
-  //     const response = await fetch('http://localhost:3000/api/weeklyLogs', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ unixWeekStart, unixWeekEnd }),
-  //       credentials: 'same-origin',
-  //     });
+// const EmployeeWorkCalendars: FunctionComponent = () => {
+// const x = 3;
+// const fetchAllWeekLogs = useCallback(async() => {
+//   try {
+//     const unixWeekStart = getUnixDayStart(daysInWeek[0]);
+//     const unixWeekEnd = getUnixDayEnd(daysInWeek[6]);
 
-  //     const result: unknown = await response.json();
+//     const response = await fetch('http://localhost:3000/api/weeklyLogs', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ unixWeekStart, unixWeekEnd }),
+//       credentials: 'same-origin',
+//     });
 
-  //     if (!isObjectRecord(result)) {
-  //       throw new Error('Unexpected body type: WorkCalendar.tsx');
-  //     }
-  //     const { listResult } = result;
+//     const result: unknown = await response.json();
 
-  //     if (isTimeArray(listResult)) {
-  //       setWeeklyLogs(listResult);
-  //     }
-  //   } catch (err: unknown) {
-  //     if (err instanceof Error) {
-  //       logger.error(err.message);
-  //     }
-  //   }
-  // }, [daysInWeek]);
+//     if (!isObjectRecord(result)) {
+//       throw new Error('Unexpected body type: WorkCalendar.tsx');
+//     }
+//     const { listResult } = result;
 
-  // useEffect(() => {
-  //   fetchWeekLogs()
-  //     .catch((err) => {
-  //       logger.error(err);
-  //     });
-  // }, [fetchWeekLogs]);
+//     if (isTimeArray(listResult)) {
+//       setWeeklyLogs(listResult);
+//     }
+//   } catch (err: unknown) {
+//     if (err instanceof Error) {
+//       logger.error(err.message);
+//     }
+//   }
+// }, [daysInWeek]);
 
-  return (
-    <div>
-      <h1>Employee Hours</h1>
-    </div>
-  );
-};
+// useEffect(() => {
+//   fetchWeekLogs()
+//     .catch((err) => {
+//       logger.error(err);
+//     });
+// }, [fetchWeekLogs]);
+
+//   return (
+//     <div>
+//       <h1>Employee Hours</h1>
+//     </div>
+//   );
+// };
 
 export default EmployeeWorkCalendars;
 
