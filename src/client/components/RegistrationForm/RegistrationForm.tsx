@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isObjectRecord } from '../../../common/utilities/types';
@@ -6,14 +6,15 @@ import logger from '../../../server/logger';
 
 const RegistrationForm: FunctionComponent = () => {
   const navigate = useNavigate();
-  // States for registration
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
 
   // temporary
-  setRole('employee');
+  useEffect(() => {
+    setRole('admin');
+  }, []);
 
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
@@ -74,9 +75,9 @@ const RegistrationForm: FunctionComponent = () => {
       }
       // store in localStorage
       if (result.success) {
-        localStorage.setItem('user', JSON.stringify(result.isloggedin));
+        // localStorage.setItem('user', JSON.stringify(result.isloggedin));
         setTimeout(() => {
-          navigate('/');
+          navigate('/login');
         }, 2000);
       } else {
         navigate('/contact-us');

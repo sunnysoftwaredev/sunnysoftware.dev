@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import type { FunctionComponent } from 'react';
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
+import AuthContext from '../../context/AuthContext';
 
 const RegisterPage: FunctionComponent = () => {
   const navigate = useNavigate();
-  // check if user logged in already
-  const user = localStorage.getItem('user');
-  if (user !== null) {
-    navigate('/');
-  }
+  const { load } = useContext(AuthContext) ?? { load: false };
+
+  useEffect(() => {
+    if (!load) {
+      navigate('/');
+    }
+  }, [load, navigate]);
+
   return (
     <div>
       <Helmet>

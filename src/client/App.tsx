@@ -3,12 +3,14 @@ import type { FunctionComponent } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import EmployeePrivateRoute from './components/PrivateRoutes/EmployeePrivateRoute';
 import ClientPrivateRoute from './components/PrivateRoutes/ClientPrivateRoute';
+import AdminPrivateRoute from './components/PrivateRoutes/AdminPrivateRoute';
 import LandingPage from './pages/LandingPage/LandingPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import ContactUsPage from './pages/ContactUs/ContactUsPage';
 import GetStartedPage from './pages/GetStartedPage/GetStartedPage';
 import ClientPortalPage from './pages/ClientPortalPage/ClientPortalPage';
+import AdminPortalPage from './pages/AdminPortal/AdminPortalPage';
 import WorkPortalPage from './pages/WorkPortalPage/WorkPortalPage';
 import AboutUsPage from './pages/AboutUsPage/AboutUsPage';
 import ServicesPage from './pages/ServicesPage/ServicesPage';
@@ -31,6 +33,13 @@ const App: FunctionComponent = () => (
           <ClientPrivateRoute>
             <ClientPortalPage />
           </ClientPrivateRoute>
+        )}
+      />
+      <Route
+        path="admin-portal" element={(
+          <AdminPrivateRoute>
+            <AdminPortalPage />
+          </AdminPrivateRoute>
         )}
       />
       <Route
