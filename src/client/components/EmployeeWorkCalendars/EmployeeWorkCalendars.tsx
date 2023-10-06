@@ -96,7 +96,7 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
     });
   }, []);
 
-  // const sortedByEmployee: AllWeeklyLogs[]
+  // const groupedByEmployee: AllWeeklyLogs[]
   // = Object.groupBy(fetchList, ({ username }) => username);
 
   // type SortedUsers = {
@@ -104,7 +104,7 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
   // };
 
   // if (fetchList !== undefined) {
-  //   const sortedByEmployee: Record<string, AllWeeklyLogs[]>
+  //   const groupedByEmployee: Record<string, AllWeeklyLogs[]>
   //    = fetchList.reduce((group, item) => {
   //      group[item.username] = group[item.username] ?? [];
   //      group[item.username].push(item);
@@ -112,15 +112,29 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
   //    }, []);
   // }
 
-  const sortedByEmployee: Record<string, AllWeeklyLogs[]>
-     = fetchList?.reduce((group, item) => {
-       group[item.username] = group[item.username] ?? [];
-       group[item.username].push(item);
-       return group;
-     }, []);
-  if (sortedByEmployee !== undefined) {
-    console.log('sortedByEmployee', sortedByEmployee);
-    console.log('sortedByEmployee[0]', sortedByEmployee[0]);
+  // const groupedByEmployee: Record<string, AllWeeklyLogs[]>
+  //    = fetchList?.reduce((group, item) => {
+  //      group[item.username] = group[item.username] ?? [];
+  //      group[item.username].push(item);
+  //      return group;
+  //    }, []);
+
+  type GroupedEmployeeLogs = Record<string, AllWeeklyLogs[] | undefined>;
+
+  const initialGroupedLogs: GroupedEmployeeLogs = {};
+
+  const groupedByEmployee = fetchList?.reduce(
+    (group, item) => {
+      group[item.username] ??= [];
+      group[item.username]?.push(item);
+      return group;
+    },
+    initialGroupedLogs,
+  );
+
+  if (groupedByEmployee !== undefined) {
+    console.log('groupedByEmployee', groupedByEmployee);
+    console.log('groupedByEmployee[0]', groupedByEmployee[0]);
   }
 
   return (
