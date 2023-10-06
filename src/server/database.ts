@@ -240,6 +240,33 @@ Promise<TimeObject[]> => {
   return rows;
 };
 
+export type AllWeeklyLogs = {
+  unixStart: number;
+  unixEnd: number;
+  submitted: boolean;
+  invoiced: boolean;
+  paid: boolean;
+  username: string;
+  email: string;
+};
+
+export const getAllWeeklyLogs
+ = async(unixWeekStart: number, unixWeekEnd: number):
+ Promise<AllWeeklyLogs[]> => {
+   const result: QueryResult<AllWeeklyLogs> = await client.query(
+     `SELECT "WorkLogs".unix_start AS "unixStart", "WorkLogs".unix_end AS "unixEnd",
+      "WorkLogs".submitted, "WorkLogs".invoiced, "WorkLogs".paid, "Users".username,
+      "Users".email
+    FROM "WorkLogs"
+    JOIN "Users" ON "WorkLogs".user_id = "Users".id
+    WHERE unix_start >= $1 and unix_end <= $2`,
+     [unixWeekStart, unixWeekEnd],
+   );
+
+   const { rows } = result;
+   return rows;
+ };
+
 export const updateWorkLog = async(
   id: number,
   oldUnixStart: number,

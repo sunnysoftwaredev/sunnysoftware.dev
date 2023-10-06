@@ -6,6 +6,7 @@ import authenticate from './authenticate';
 import workLogs from './workLogs';
 import weeklyLogs from './weeklyLogs';
 import contacts from './contacts';
+import allWeeklyLogs from './allWeeklyLogs';
 
 const router = createRouter();
 
@@ -16,5 +17,6 @@ router.use('/authenticate', authenticate);
 router.use('/workLogs', workLogs);
 router.use('/weeklyLogs', weeklyLogs);
 router.use('/contacts', contacts);
+router.use('/allWeeklyLogs', allWeeklyLogs);
 
 export default router;
