@@ -41,7 +41,7 @@ export type { UserWithId };
 export const getUserByUsername = async(usernameInput: string):
 Promise<UserWithId> => {
   const result: QueryResult<UserWithId> = await client.query(
-    'SELECT id, username, email, password, role, salt FROM "Users" WHERE username=$1',
+    'SELECT id, username, email, password, role, salt FROM users WHERE username=$1',
     [usernameInput],
   );
 
@@ -67,7 +67,7 @@ export const insertUser = async(
   password: string, role: string,
   salt: string
 ): Promise<User> => {
-  await client.query(`INSERT INTO "Users" (username, email, password, role, salt)
+  await client.query(`INSERT INTO users (username, email, password, role, salt)
            VALUES ($1, $2, $3, $4, $5)`, [username, email, password, role, salt]);
   return {
     username,
@@ -82,7 +82,7 @@ export const insertToken = async(
   foreignKey: number,
   token: string, expirationDate: Date
 ): Promise<string> => {
-  await client.query(`INSERT INTO "AuthenticationTokens"
+  await client.query(`INSERT INTO authentication_tokens
    (user_id, token, expiration, active)
   VALUES ($1, $2, $3, $4)`, [foreignKey, token, expirationDate, true]);
   return token;
@@ -100,7 +100,7 @@ Promise<boolean> => {
     `SELECT
     active,
     expiration
-    FROM "AuthenticationTokens"
+    FROM authentication_tokens
     WHERE token=$1`,
     [localToken],
   );
@@ -120,7 +120,7 @@ Promise<boolean> => {
     currentDate.setDate(currentDate.getDate());
     if (databaseDate < currentDate) {
       // set token inactive
-      await client.query(`UPDATE "AuthenticationTokens"
+      await client.query(`UPDATE authentication_tokens
       SET active = false
       WHERE token=$1`, [localToken]);
       return false;
@@ -132,7 +132,7 @@ Promise<boolean> => {
 
 export const markTokenInactive
 = async(localToken: string): Promise<boolean> => {
-  await client.query(`UPDATE "AuthenticationTokens"
+  await client.query(`UPDATE authentication_tokens
   SET active = false
    WHERE token=$1`, [localToken]);
   return true;
@@ -146,11 +146,11 @@ type nameRoleObject = {
 export const getUsernameAndRole
 = async(localToken: string): Promise<nameRoleObject> => {
   const result: QueryResult<nameRoleObject> = await client.query(`SELECT
-  "Users".username, "Users".role
-  FROM "Users"
-  JOIN "AuthenticationTokens"
-  ON "AuthenticationTokens".user_id="Users".id
-  WHERE "AuthenticationTokens".token=$1`, [localToken]);
+  users.username, users.role
+  FROM users
+  JOIN authentication_tokens
+  ON authentication_tokens.user_id=users.id
+  WHERE authentication_tokens.token=$1`, [localToken]);
 
   const { rows } = result;
   if (rows.length !== 1) {
@@ -165,28 +165,22 @@ export const getUsernameAndRole
   };
 };
 
-type workLog = {
+export type TimeObject = {
   unixStart: number;
   unixEnd: number;
-  submitted: boolean;
-  invoiced: boolean;
-  paid: boolean;
 };
 
 export const postWorkLog = async(
   id: number,
   unixStart: number, unixEnd: number,
 ):
-Promise<workLog> => {
-  await client.query(`INSERT INTO "WorkLogs" (user_id, unix_start,
-     unix_end, submitted, invoiced, paid)
-           VALUES ($1, $2, $3, $4, $5, $6)`, [id, unixStart, unixEnd, false, false, false]);
+Promise<TimeObject> => {
+  await client.query(`INSERT INTO work_logs
+  (user_id, unix_start,unix_end)
+    VALUES ($1, $2, $3)`, [id, unixStart, unixEnd]);
   return {
     unixStart,
     unixEnd,
-    submitted: false,
-    invoiced: false,
-    paid: false,
   };
 };
 
@@ -198,7 +192,7 @@ export const getIDWithToken = async(token: string):
 Promise<number> => {
   const result: QueryResult<ID> = await client.query(
     `SELECT user_id AS "userId"
-    FROM "AuthenticationTokens"
+    FROM authentication_tokens
     WHERE token=$1`,
     [token],
   );
@@ -219,11 +213,6 @@ Promise<number> => {
   return id;
 };
 
-export type TimeObject = {
-  unixStart: number;
-  unixEnd: number;
-};
-
 export const getWeeklyLogs = async(
   id: number,
   unixWeekStart: number, unixWeekEnd: number
@@ -231,7 +220,7 @@ export const getWeeklyLogs = async(
 Promise<TimeObject[]> => {
   const result: QueryResult<TimeObject> = await client.query(
     `SELECT unix_start AS "unixStart", unix_end AS "unixEnd"
-    FROM "WorkLogs"
+    FROM work_logs
     WHERE user_id=$1 and unix_start >= $2 and unix_end <= $3`,
     [id, unixWeekStart, unixWeekEnd],
   );
@@ -248,17 +237,19 @@ export type AllWeeklyLogs = {
   paid: boolean;
   username: string;
   email: string;
+  id: number;
 };
 
+// deprecated
 export const getAllWeeklyLogs
  = async(unixWeekStart: number, unixWeekEnd: number):
  Promise<AllWeeklyLogs[]> => {
    const result: QueryResult<AllWeeklyLogs> = await client.query(
-     `SELECT "WorkLogs".unix_start AS "unixStart", "WorkLogs".unix_end AS "unixEnd",
-      "WorkLogs".submitted, "WorkLogs".invoiced, "WorkLogs".paid, "Users".username,
-      "Users".email
-    FROM "WorkLogs"
-    JOIN "Users" ON "WorkLogs".user_id = "Users".id
+     `SELECT work_logs.unix_start AS "unixStart", work_logs.unix_end AS "unixEnd",
+      work_logs.submitted, work_logs.invoiced, work_logs.paid, users.username,
+      users.email, users.id
+    FROM work_logs
+    JOIN users ON work_logs.user_id = users.id
     WHERE unix_start >= $1 and unix_end <= $2`,
      [unixWeekStart, unixWeekEnd],
    );
@@ -274,7 +265,7 @@ export const updateWorkLog = async(
 ):
 Promise<TimeObject> => {
   await client.query(
-    `UPDATE "WorkLogs"
+    `UPDATE work_logs
   SET unix_start = $3, unix_end=$4
   WHERE user_id=$1 AND unix_start =$2`,
     [id, oldUnixStart, unixStart, unixEnd]
@@ -291,7 +282,7 @@ export const deleteWorkLog = async(
 ):
 Promise<TimeObject> => {
   await client.query(
-    `DELETE FROM "WorkLogs"
+    `DELETE FROM work_logs
     WHERE user_id=$1
       and unix_start=$2
         and unix_end=$3`,
@@ -310,13 +301,12 @@ type Contact = {
   message: string;
 };
 
-// CHANGE TABLE NAME
 export const insertContact = async(
   contactName: string, email: string,
   subject: string, message: string,
 ):
 Promise<Contact> => {
-  await client.query(`INSERT INTO "Contacts" (contactName, email,
+  await client.query(`INSERT INTO contacts (contact_name, email,
      subject, message)
            VALUES ($1, $2, $3, $4)`, [contactName, email, subject, message]);
   return {
@@ -325,4 +315,85 @@ Promise<Contact> => {
     subject,
     message,
   };
+};
+
+type IdUserEmail = {
+  id: number;
+  username: string;
+  email: string;
+};
+export const getAllEmployees = async(): Promise<IdUserEmail[]> => {
+  const result: QueryResult<IdUserEmail>
+   = await client.query(`SELECT id, username, email
+  FROM users
+  WHERE role='employee'
+   `);
+
+  const { rows } = result;
+  return rows;
+};
+
+type Timesheet = {
+  unixStart: number;
+  unixEnd: number;
+  submitted: boolean;
+  invoiced: boolean;
+  paid: boolean;
+  userId: number;
+};
+
+type TimesheetWithHours = Timesheet & {
+  hoursTotal: number;
+};
+
+export const checkTimesheet = async(
+  userId: number,
+  weekStart: number, weekEnd: number
+): Promise<boolean> => {
+  const result = await client.query(
+    `SELECT id
+  FROM timesheets
+  WHERE user_id=$1, week_start=$2, week_end=$3`,
+    [userId, weekStart, weekEnd]
+  );
+
+  const { rows } = result;
+  if (rows.length === 1) {
+    return true;
+  }
+  return false;
+};
+
+export const insertTimesheet = async(
+  userId: number,
+  weekStart: number, weekEnd: number
+): Promise<void> => {
+  await client.query(
+    `INSERT INTO timesheets (user_id, week_start, week_end,
+      total_hours, submitted, invoiced, paid)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    [userId,
+      weekStart,
+      weekEnd,
+      0.0,
+      false,
+      false,
+      false]
+  );
+};
+
+export const selectTimesheet = async(
+  userId: number,
+  weekStart: number, weekEnd: number
+): Promise<void> => {
+  await client.query(
+    `SELECT week_start, week_end,
+    total_hours, submitted, invoiced, paid
+    FROM timesheets
+    WHERE user_id=$1, week_start=$2, week_end=$3
+`,
+    [userId,
+      weekStart,
+      weekEnd]
+  );
 };

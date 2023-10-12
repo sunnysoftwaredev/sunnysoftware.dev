@@ -73,7 +73,6 @@ const RegistrationForm: FunctionComponent = () => {
       if (typeof result.success !== 'boolean') {
         throw new Error('success variable not type boolean: RegistrationForm.tsx');
       }
-      // store in localStorage
       if (result.success) {
         // localStorage.setItem('user', JSON.stringify(result.isloggedin));
         setTimeout(() => {
