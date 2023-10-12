@@ -7,6 +7,7 @@ import workLogs from './workLogs';
 import weeklyLogs from './weeklyLogs';
 import contacts from './contacts';
 import allWeeklyLogs from './allWeeklyLogs';
+import allEmployees from './allEmployees';
 
 const router = createRouter();
 
@@ -18,5 +19,6 @@ router.use('/workLogs', workLogs);
 router.use('/weeklyLogs', weeklyLogs);
 router.use('/contacts', contacts);
 router.use('/allWeeklyLogs', allWeeklyLogs);
+router.use('/allEmployees', allEmployees);
 
 export default router;
