@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import type { FunctionComponent } from 'react';
 import logger from '../../../server/logger';
 import { isAllWeeklyLogsArray, isObjectRecord } from '../../../common/utilities/types';
-import type { AllWeeklyLogs } from '../../../server/database';
+import type { AllWeeklyLogs, TimeObject } from '../../../server/database';
 
 const EmployeeWorkCalendars: FunctionComponent = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -96,46 +96,91 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
     });
   }, []);
 
-  // const groupedByEmployee: AllWeeklyLogs[]
-  // = Object.groupBy(fetchList, ({ username }) => username);
+  /*
+  Make a call to get all weekly calendars for the week
+  That function would have to create a row if one didn't exist with
+  the current week and hours, then update the hours based on a call to the db.
+  Then could return the rows for each individual user and display info (can
+    update the paid or invoiced columns later)
+  */
 
-  // type SortedUsers = {
-  //   username: Record<string, unknown>[];
-  // };
+  // type GroupedEmployeeLogs = Record<string, AllWeeklyLogs[] | undefined>;
+  // const initialGroupedLogs: GroupedEmployeeLogs = {};
 
-  // if (fetchList !== undefined) {
-  //   const groupedByEmployee: Record<string, AllWeeklyLogs[]>
-  //    = fetchList.reduce((group, item) => {
-  //      group[item.username] = group[item.username] ?? [];
-  //      group[item.username].push(item);
-  //      return group;
-  //    }, []);
+  // const groupedByEmployee = fetchList?.reduce(
+  //   (group, item) => {
+  //     group[item.id] ??= [];
+  //     group[item.id]?.push(item);
+  //     return group;
+  //   },
+  //   initialGroupedLogs,
+  // );
+
+  // if (groupedByEmployee !== undefined) {
+  //   console.log('groupedByEmployee', groupedByEmployee);
+  //   console.log('groupedByEmployee[23]', groupedByEmployee[23]);
+  //   console.log('groupedByEmployee.[23][0].id', groupedByEmployee[23][0].id);
+  //   console.log('Object.entries(groupByEmployees',
+  // Object.entries(groupedByEmployee));
+  //   console.log('[0][1]', Object.entries(groupedByEmployee)[0][1]);
   // }
 
-  // const groupedByEmployee: Record<string, AllWeeklyLogs[]>
-  //    = fetchList?.reduce((group, item) => {
-  //      group[item.username] = group[item.username] ?? [];
-  //      group[item.username].push(item);
-  //      return group;
-  //    }, []);
+  // const displayAllEmployeeWeeks = (groupedByEmployee:
+  // GroupedEmployeeLogs) => {
+  //   const arrayOfUserArrays = Object.entries(groupedByEmployee);
+  //   for (let i = 0; i < arrayOfUserArrays.length; i++) {
+  //     userObjects = arrayOfUserArrays[i][1];
+  //   }
+  // };
 
-  type GroupedEmployeeLogs = Record<string, AllWeeklyLogs[] | undefined>;
+  // display users with
 
-  const initialGroupedLogs: GroupedEmployeeLogs = {};
+  // const displayDayLogs = (dayLogs: TimeObject[] | undefined):
+  // React.JSX.Element[] => {
+  //   if (typeof dayLogs === 'undefined') {
+  //     return [<div key={0} />];
+  //   }
+  //   return dayLogs.map(log => (
+  //     // <WorkLog key={log.unixStart} log={log} />
+  //   ));
+  // };
 
-  const groupedByEmployee = fetchList?.reduce(
-    (group, item) => {
-      group[item.username] ??= [];
-      group[item.username]?.push(item);
-      return group;
-    },
-    initialGroupedLogs,
-  );
+  // const compareObjects = (a: TimeObject, b: TimeObject): number => {
+  //   const startA = a.unixStart;
+  //   const startB = b.unixStart;
 
-  if (groupedByEmployee !== undefined) {
-    console.log('groupedByEmployee', groupedByEmployee);
-    console.log('groupedByEmployee[0]', groupedByEmployee[0]);
-  }
+  //   let comparison = 0;
+  //   if (startA > startB) {
+  //     comparison = 1;
+  //   } else if (startA < startB) {
+  //     comparison = -1;
+  //   }
+  //   return comparison;
+  // };
+
+  // const displayEmployeeWeek
+  // = (userObjects: AllWeeklyLogs[]): React.ReactElement[] => {
+  //   const dayDivs: React.ReactElement[] = [];
+  //   for (let i = 0; i < 7; i++) {
+  //     const rawDate = daysInWeek[i];
+  //     const rawDateStart = getUnixDayStart(rawDate);
+  //     const rawDateEnd = getUnixDayEnd(rawDate);
+  //     const day: string = rawDate.toString().slice(0, 10);
+  //     const dayLogs = userObjects.filter(log => (log.unixStart
+  //        >= rawDateStart && log.unixEnd <= rawDateEnd + 1));
+  //     dayLogs.sort(compareObjects);
+  //     dayDivs.push((
+  //       <div
+  //         key={`day--${i}`}
+  //         // className={styles.box}
+  //       >
+  //         {day}
+  //         {/* {displayDayLogs(dayLogs)} */}
+  //       </div>
+  //     ));
+  //   }
+  //   return dayDivs;
+  // };
 
   return (
     <div>
@@ -171,10 +216,6 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
 };
 
 export default EmployeeWorkCalendars;
-
-// filter rows by individual and display logs for that week.
-
-// Loop through and display information for each of the worklogs
 
 // Display hours for day, total hours
 
