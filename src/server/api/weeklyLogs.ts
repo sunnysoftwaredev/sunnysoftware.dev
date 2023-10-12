@@ -2,6 +2,8 @@ import { Router as createRouter } from 'express';
 // import logger from '../logger';
 import { isObjectRecord } from '../../common/utilities/types';
 import { getIDWithToken, getWeeklyLogs } from '../database';
+import { createTimesheet } from '../common/utilities/createTimesheet';
+import logger from '../logger';
 
 const router = createRouter();
 
@@ -31,6 +33,12 @@ router.post('/', (req, res) => {
     if (typeof unixWeekEnd !== 'number') {
       throw new Error('api/weeklyLogs.post: unixEnd is not number');
     }
+
+    await createTimesheet(id, unixWeekStart, unixWeekEnd).catch((err) => {
+      if (err instanceof Error) {
+        logger.error(err.message);
+      }
+    });
 
     const result = await getWeeklyLogs(
       id,

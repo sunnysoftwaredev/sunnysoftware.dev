@@ -33,6 +33,8 @@ router.post('/', (req, res) => {
       throw new Error('api/allWeeklyLogs.post: unixEnd is not number');
     }
 
+    // Search weekly_logs
+
     const result = await getAllWeeklyLogs(
       unixWeekStart,
       unixWeekEnd,

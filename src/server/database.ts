@@ -353,12 +353,13 @@ export const checkTimesheet = async(
   const result = await client.query(
     `SELECT id
   FROM timesheets
-  WHERE user_id=$1, week_start=$2, week_end=$3`,
+  WHERE user_id=$1 AND week_start=$2 AND week_end=$3`,
     [userId, weekStart, weekEnd]
   );
 
   const { rows } = result;
-  if (rows.length === 1) {
+  console.log('rows.length in checkTime: ', rows.length);
+  if (rows.length >= 1) {
     return true;
   }
   return false;
@@ -380,6 +381,7 @@ export const insertTimesheet = async(
       false,
       false]
   );
+  console.log('insertTime made here...');
 };
 
 export const selectTimesheet = async(
@@ -390,7 +392,7 @@ export const selectTimesheet = async(
     `SELECT week_start, week_end,
     total_hours, submitted, invoiced, paid
     FROM timesheets
-    WHERE user_id=$1, week_start=$2, week_end=$3
+    WHERE user_id=$1 AND week_start=$2 AND week_end=$3
 `,
     [userId,
       weekStart,
