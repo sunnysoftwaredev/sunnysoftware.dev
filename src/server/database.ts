@@ -1,5 +1,6 @@
 import type { QueryResult } from 'pg';
 import { Client } from 'pg';
+import { isIdArray } from '../common/utilities/types';
 import config from './config';
 import logger from './logger';
 
@@ -213,7 +214,7 @@ Promise<number> => {
   return id;
 };
 
-export const getWeeklyLogs = async(
+export const getWeeklyWorkLogs = async(
   id: number,
   unixWeekStart: number, unixWeekEnd: number
 ):
@@ -229,28 +230,51 @@ Promise<TimeObject[]> => {
   return rows;
 };
 
-export type AllWeeklyLogs = {
-  unixStart: number;
-  unixEnd: number;
+export type Timesheet = {
+  userId: number;
+  weekStart: number;
+  weekEnd: number;
+  totalHours: number;
   submitted: boolean;
   invoiced: boolean;
   paid: boolean;
-  username: string;
-  email: string;
-  id: number;
 };
 
-// deprecated
-export const getAllWeeklyLogs
+// type TimesheetWithHours = Timesheet & {
+//   hoursTotal: number;
+// };
+
+export type EmployeeTimesheet = {
+  username: string;
+  email: string;
+  hours: number;
+  submitted: boolean;
+  invoiced: boolean;
+  paid: boolean;
+};
+
+export const getEmployeeTimesheets
  = async(unixWeekStart: number, unixWeekEnd: number):
- Promise<AllWeeklyLogs[]> => {
-   const result: QueryResult<AllWeeklyLogs> = await client.query(
-     `SELECT work_logs.unix_start AS "unixStart", work_logs.unix_end AS "unixEnd",
-      work_logs.submitted, work_logs.invoiced, work_logs.paid, users.username,
-      users.email, users.id
-    FROM work_logs
-    JOIN users ON work_logs.user_id = users.id
-    WHERE unix_start >= $1 and unix_end <= $2`,
+ Promise<Timesheet[]> => {
+   const result: QueryResult<Timesheet> = await client.query(
+     `SELECT
+     users.username,
+     users.email,
+     (SUM(work_logs.unix_end) - SUM(work_logs.unix_start))/3600 AS hours,
+     timesheets.submitted,
+     timesheets.invoiced,
+     timesheets.paid
+   FROM users
+   INNER JOIN timesheets
+    ON users.id=timesheets.user_id
+    INNER JOIN work_logs
+      ON work_logs.user_id=timesheets.user_id
+   WHERE timesheets.week_start=$1 AND timesheets.week_end=$2 AND
+   work_logs.unix_start>=$1 AND work_logs.unix_end<=$2
+   AND users.role='employee'
+   GROUP BY users.username, users.email,
+   timesheets.submitted, timesheets.invoiced, timesheets.paid;
+`,
      [unixWeekStart, unixWeekEnd],
    );
 
@@ -317,33 +341,24 @@ Promise<Contact> => {
   };
 };
 
-type IdUserEmail = {
+export type IdObject = {
   id: number;
-  username: string;
-  email: string;
 };
-export const getAllEmployees = async(): Promise<IdUserEmail[]> => {
-  const result: QueryResult<IdUserEmail>
-   = await client.query(`SELECT id, username, email
+
+export const getEmployeeIds = async(): Promise<number[] | undefined> => {
+  const result: QueryResult<IdObject[]>
+   = await client.query(`
+   SELECT id
   FROM users
   WHERE role='employee'
    `);
 
   const { rows } = result;
-  return rows;
-};
 
-type Timesheet = {
-  unixStart: number;
-  unixEnd: number;
-  submitted: boolean;
-  invoiced: boolean;
-  paid: boolean;
-  userId: number;
-};
-
-type TimesheetWithHours = Timesheet & {
-  hoursTotal: number;
+  if (isIdArray(rows)) {
+    const numberArray = rows.flat().map(obj => obj.id);
+    return numberArray;
+  }
 };
 
 export const checkTimesheet = async(
@@ -358,7 +373,6 @@ export const checkTimesheet = async(
   );
 
   const { rows } = result;
-  console.log('rows.length in checkTime: ', rows.length);
   if (rows.length >= 1) {
     return true;
   }
@@ -381,7 +395,6 @@ export const insertTimesheet = async(
       false,
       false]
   );
-  console.log('insertTime made here...');
 };
 
 export const selectTimesheet = async(
