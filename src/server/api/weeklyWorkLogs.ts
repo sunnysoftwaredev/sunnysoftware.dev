@@ -2,7 +2,7 @@ import { Router as createRouter } from 'express';
 // import logger from '../logger';
 import { Mutex } from 'async-mutex';
 import { isObjectRecord } from '../../common/utilities/types';
-import { getIDWithToken, getWeeklyLogs } from '../database';
+import { getIDWithToken, getWeeklyWorkLogs } from '../database';
 import { createTimesheet } from '../common/utilities/createTimesheet';
 import logger from '../logger';
 
@@ -44,7 +44,7 @@ router.post('/', (req, res) => {
         }
       });
 
-      const result = await getWeeklyLogs(
+      const result = await getWeeklyWorkLogs(
         userId,
         unixWeekStart,
         unixWeekEnd,
