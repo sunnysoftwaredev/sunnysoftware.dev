@@ -12,7 +12,7 @@ const WorkCalendar: FunctionComponent = () => {
   const { username } = useContext(AuthContext) ?? { username: 'loading' };
   const [currentDate, setCurrentDate] = useState(new Date());
   // const [clickedDate, setClickedDate] = useState('');
-  const [weeklyLogs, setWeeklyLogs] = useState<TimeObject[]>();
+  const [weeklyWorkLogs, setWeeklyWorkLogs] = useState<TimeObject[]>();
 
   const getDaysInWeek = useCallback((): Date[] => {
     const days: Date[] = [];
@@ -50,7 +50,7 @@ const WorkCalendar: FunctionComponent = () => {
       const unixWeekStart = getUnixDayStart(daysInWeek[0]);
       const unixWeekEnd = getUnixDayEnd(daysInWeek[6]);
 
-      const response = await fetch('http://localhost:3000/api/weeklyLogs', {
+      const response = await fetch('http://localhost:3000/api/weeklyWorkLogs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const WorkCalendar: FunctionComponent = () => {
       const { listResult } = result;
 
       if (isTimeArray(listResult)) {
-        setWeeklyLogs(listResult);
+        setWeeklyWorkLogs(listResult);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -146,7 +146,7 @@ const WorkCalendar: FunctionComponent = () => {
       const rawDateStart = getUnixDayStart(rawDate);
       const rawDateEnd = getUnixDayEnd(rawDate);
       const day: string = rawDate.toString().slice(0, 10);
-      const dayLogs = weeklyLogs?.filter(log => (log.unixStart
+      const dayLogs = weeklyWorkLogs?.filter(log => (log.unixStart
          >= rawDateStart && log.unixEnd <= rawDateEnd + 1));
       dayLogs?.sort(compareObjects);
       dayDivs.push((
