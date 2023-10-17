@@ -7,7 +7,7 @@ import logger from './logger';
 const DOMAIN = 'sandbox980f491aefb7400189acac13fb51fe26.mailgun.org';
 const mailgun = new Mailgun(formData);
 const mailgunClient = mailgun.client({ username: 'api', key: config.mailgun.key });
-
+// CHANGE TO EMAIL IN 2ND FUNCTION
 export const mailgunMessage = async(
   contactName: string, messageEmail: string,
   messageSubject: string, message: string
