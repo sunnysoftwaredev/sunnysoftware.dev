@@ -1,27 +1,20 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
+import styles from './RegistrationForm.scss';
 
 const RegistrationForm: FunctionComponent = () => {
-  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
-
-  // temporary
-  useEffect(() => {
-    setRole('admin');
-  }, []);
+  const [role, setRole] = useState('client');
 
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
-  // Handling the name change
-  const handleUsernameChange = useCallback(
+  const handleUsernameChange
+  = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setUsername(e.target.value);
       setSubmitted(false);
@@ -29,28 +22,33 @@ const RegistrationForm: FunctionComponent = () => {
     [setUsername],
   );
 
-  // Handling the email change
-  const handleEmailChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    setSubmitted(false);
-  }, [setEmail],);
+  const handleEmailChange
+  = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value);
+      setSubmitted(false);
+    },
+    [setEmail],
+  );
 
-  // Handling the password change
-  const handlePasswordChange
-  = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-    setSubmitted(false);
-  }, [setPassword]);
+  const handleRoleChange
+  = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setRole(e.target.value);
+      setSubmitted(false);
+    },
+    [setRole]
+  );
 
   // Handling the form submission
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
-      if (username === '' || email === '' || password === '') {
+      if (username === '' || email === '' || role === '') {
         setError(true);
         return;
       }
-      setSubmitted(true);
+      // setSubmitted was here (in case of break)
       setError(false);
       const response = await fetch('http://localhost:3000/api/register', {
         method: 'POST',
@@ -60,7 +58,6 @@ const RegistrationForm: FunctionComponent = () => {
         body: JSON.stringify({
           username,
           email,
-          password,
           role,
         }),
       });
@@ -74,21 +71,15 @@ const RegistrationForm: FunctionComponent = () => {
         throw new Error('success variable not type boolean: RegistrationForm.tsx');
       }
       if (result.success) {
-        // localStorage.setItem('user', JSON.stringify(result.isloggedin));
-        setTimeout(() => {
-          navigate('/login');
-        }, 2000);
-      } else {
-        navigate('/contact-us');
+        setSubmitted(true);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
       }
     }
-  }, [username, email, password, role, navigate]);
+  }, [username, email, role]);
 
-  // Showing success message
   const successMessage = (): React.JSX.Element => (
     <div
       className="success"
@@ -98,6 +89,7 @@ const RegistrationForm: FunctionComponent = () => {
     >
       <h1>
         User
+        {' '}
         {username}
         {' '}
         successfully registered!!
@@ -118,36 +110,46 @@ const RegistrationForm: FunctionComponent = () => {
   );
 
   return (
-    <div className="form">
+    <div className={styles.registrationForm}>
       <div>
-        <h1>User Registration</h1>
+        <h1>Register User</h1>
       </div>
 
-      {/* Calling to the methods */}
       <div className="messages">
         {errorMessage()}
         {successMessage()}
       </div>
 
       <form>
-        {/* Labels and inputs for form data */}
-        <label className="label">Username</label>
+        <label className="label">Username    </label>
         <input
           onChange={handleUsernameChange} className="input"
           value={username} type="text"
         />
 
-        <label className="label">Email</label>
+        <label className="label">Email    </label>
         <input
           onChange={handleEmailChange} className="input"
           value={email} type="email"
         />
 
-        <label className="label">Password</label>
-        <input
-          onChange={handlePasswordChange} className="input"
-          value={password} type="password"
-        />
+        <div>
+          <label htmlFor="clientRadio">Client</label>
+          <input
+            type="radio" name="radioGroup" id="clientRadio"
+            value="client" onChange={handleRoleChange}
+            checked={role === 'client'}
+          />
+
+          <label htmlFor="employeeRadio">Employee</label>
+          <input
+            type="radio" name="radioGroup" id="employeeRadio"
+            value="employee" onChange={handleRoleChange}
+            checked={role === 'employee'}
+
+          />
+
+        </div>
 
         <button
           onClick={handleSubmit} className="registerButton"
