@@ -39,6 +39,28 @@ type UserWithId = {
 };
 export type { UserWithId };
 
+export type UserIdNameEmailRole = {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+};
+
+export const getAllUsers = async():
+Promise<UserIdNameEmailRole[]> => {
+  const result: QueryResult<UserIdNameEmailRole> = await client.query(
+    'SELECT id, username, email, role FROM users',
+    [],
+  );
+
+  const { rows } = result;
+  if (rows.length === 0) {
+    throw new Error('Unable to select users.');
+  }
+
+  return rows;
+};
+
 export const getUserByUsername = async(usernameInput: string):
 Promise<UserWithId> => {
   const result: QueryResult<UserWithId> = await client.query(

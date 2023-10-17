@@ -1,0 +1,12 @@
+.user {
+  display: flex;
+  flex-direction: column;
+  height: 125px;
+  width: 200px;
+  border: solid;
+}
+
+.usersList {
+  display: flex;
+  flex-wrap: wrap;
+}
