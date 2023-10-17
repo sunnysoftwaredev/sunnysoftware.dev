@@ -26,3 +26,8 @@ export const saltAndHash = (password: string, salt: Buffer): Buffer => {
   }
   return saltedPassword;
 };
+
+export const generatePassword = (size = 12): string => {
+  const randomString = crypt.randomBytes(size);
+  return randomString.toString('base64').slice(0, size);
+};

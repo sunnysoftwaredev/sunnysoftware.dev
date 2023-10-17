@@ -33,3 +33,33 @@ export const mailgunMessage = async(
     }
   }
 };
+
+export const mailgunRegister
+ = async(email: string, username: string, password: string): Promise<void> => {
+   try {
+     const data = {
+       from: 'trevinhofmann@gmail.com',
+       to: ['jraugustyn07@gmail.com'], // set email here
+       subject: 'Your Sunny Software Regisation:',
+       text: `An account has been created for you at Sunny Software. You may log in with the following credentials:
+
+      Username: ${username}
+      Password: ${password}
+
+      You may change your password after login.
+
+      Thank you,
+
+      Trevin`,
+     };
+     const result: unknown = await mailgunClient.messages.create(DOMAIN, data);
+
+     if (!isObjectRecord(result) || result.status !== 200) {
+       throw new Error('Unexpected result from mailgun');
+     }
+   } catch (err: unknown) {
+     if (err instanceof Error) {
+       logger.error(err.message);
+     }
+   }
+ };
