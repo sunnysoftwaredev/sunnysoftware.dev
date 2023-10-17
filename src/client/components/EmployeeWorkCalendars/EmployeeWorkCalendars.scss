@@ -1,4 +1,14 @@
 .timesheet{
   border: solid;
   display: flex;
+  gap: 7px;
+  margin: 1rem;
+}
+
+.weekSelect {
+  display: flex;
+  justify-content: flex-start;
+  gap: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }

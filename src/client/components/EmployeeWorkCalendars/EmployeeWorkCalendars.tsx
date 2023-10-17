@@ -96,18 +96,6 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
     });
   }, []);
 
-  // type GroupedEmployeeLogs = Record<string, AllWeeklyLogs[] | undefined>;
-  // const initialGroupedLogs: GroupedEmployeeLogs = {};
-
-  // const groupedByEmployee = fetchList?.reduce(
-  //   (group, item) => {
-  //     group[item.id] ??= [];
-  //     group[item.id]?.push(item);
-  //     return group;
-  //   },
-  //   initialGroupedLogs,
-  // );
-
   const displayEmployeeCalendars = (timesheets: EmployeeTimesheet[]):
   React.ReactElement[] => {
     const timesheetElements: React.ReactElement[] = [];
@@ -123,12 +111,41 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
           key={`timesheet-${username}`}
           className={styles.timesheet}
         >
-          <h3>{username}</h3>
-          <h4>{email}</h4>
-          <h4>{hours.toString()}</h4>
-          <p>{invoiced.toString()}</p>
-          <p>{paid.toString()}</p>
-          <p>{submitted.toString()}</p>
+          <div>
+            <h3>
+              Employee:
+              {' '}
+              {username}
+            </h3>
+            <h4>
+              Email:
+              {' '}
+              {email}
+            </h4>
+            <h4>
+              Total Hours:
+              {' '}
+              {hours.toString()}
+            </h4>
+          </div>
+          <div>
+            <p>
+              Invoiced:
+              {' '}
+              {invoiced.toString()}
+            </p>
+            <p>
+              Paid:
+              {' '}
+              {paid.toString()}
+            </p>
+            <p>
+              Hours Submitted:
+              {' '}
+              {submitted.toString()}
+            </p>
+
+          </div>
         </div>));
     }
     return timesheetElements;
@@ -136,9 +153,15 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
 
   return (
     <div>
-      <h1>Employee Hours</h1>
+      <h1>List of Employees for Selected Week</h1>
+      <h2>
+        Active Employees for Week:
+        {' '}
+        {timesheetList.length}
+      </h2>
+      <h2>Active Clients: </h2>
       <div >
-        <div>
+        <div className={styles.weekSelect}>
           <button type="button" onClick={changeToPrevWeek}> BACK </button>
           <h2>
             Week of

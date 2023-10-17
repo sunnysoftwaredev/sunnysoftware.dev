@@ -385,30 +385,14 @@ export const insertTimesheet = async(
 ): Promise<void> => {
   await client.query(
     `INSERT INTO timesheets (user_id, week_start, week_end,
-      total_hours, submitted, invoiced, paid)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+       submitted, invoiced, paid)
+            VALUES ($1, $2, $3, $4, $5, $6)`,
     [userId,
       weekStart,
       weekEnd,
-      0.0,
       false,
       false,
       false]
   );
 };
 
-export const selectTimesheet = async(
-  userId: number,
-  weekStart: number, weekEnd: number
-): Promise<void> => {
-  await client.query(
-    `SELECT week_start, week_end,
-    total_hours, submitted, invoiced, paid
-    FROM timesheets
-    WHERE user_id=$1 AND week_start=$2 AND week_end=$3
-`,
-    [userId,
-      weekStart,
-      weekEnd]
-  );
-};
