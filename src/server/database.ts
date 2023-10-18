@@ -101,6 +101,30 @@ export const insertUser = async(
   };
 };
 
+export const updateUser = async(
+  id: number,
+  username: string,
+  email: string, role: string,
+):
+Promise<void> => {
+  await client.query(
+    `UPDATE users
+  SET username=$2, email=$3, role=$4
+  WHERE id=$1`,
+    [id, username, email, role]
+  );
+};
+
+// QUESTION ON DELETION OF USERS
+export const deleteUser = async(id: number,):
+Promise<void> => {
+  await client.query(
+    `DELETE FROM users
+    WHERE id=$1`,
+    [id]
+  );
+};
+
 export const insertToken = async(
   foreignKey: number,
   token: string, expirationDate: Date

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import logger from '../../../server/logger';
 import { isObjectRecord, isUsersArray } from '../../../common/utilities/types';
 import type { UserIdNameEmailRole } from '../../../server/database';
+import IndividualUser from '../IndividualUser/IndividualUser';
 import styles from './ManageUsers.scss';
 
 const ManageUsers: FunctionComponent = () => {
@@ -60,30 +61,12 @@ const ManageUsers: FunctionComponent = () => {
       userElements.push((
         <div
           key={`user-${id}`}
-          className={styles.user}
         >
-          <div>
-            <h3>
-              Name:
-              {' '}
-              {username}
-            </h3>
-            <h4>
-              Email:
-              {' '}
-              {email}
-            </h4>
-            <h4>
-              Role:
-              {' '}
-              {role}
-            </h4>
-            <h4>
-              ID:
-              {' '}
-              {id}
-            </h4>
-          </div>
+          <IndividualUser
+            username={username} email={email}
+            role={role}
+            id={id}
+          />
         </div>));
     }
     return userElements;
