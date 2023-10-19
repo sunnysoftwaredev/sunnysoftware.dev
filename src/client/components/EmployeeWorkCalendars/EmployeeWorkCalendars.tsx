@@ -155,7 +155,7 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
   };
 
   return (
-    <div>
+    <div className={styles.timesheetsContainer}>
       <h1>List of Employees for Selected Week</h1>
       <h2>
         Active Employees for Week:

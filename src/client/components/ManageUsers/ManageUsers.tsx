@@ -72,7 +72,7 @@ const ManageUsers: FunctionComponent = () => {
     return userElements;
   };
   return (
-    <div>
+    <div className={styles.manageUsersContainer}>
       <h1>List of Clients and Employees</h1>
       <h2>
         Total Users:
