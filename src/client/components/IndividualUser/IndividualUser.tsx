@@ -13,16 +13,16 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
   const { id } = props;
 
   const [editing, setEditing] = useState(false);
-  const [deleted, setDeleted] = useState(false);
+  const [deactivated, setDeactivated] = useState(false);
 
   const handleEdit = useCallback(() => {
     setEditing(!editing);
   }, [editing]);
 
-  const handleDelete = useCallback(async() => {
+  const handleDeactivate = useCallback(async() => {
     try {
-      const response = await fetch('http://localhost:3000/api/users', {
-        method: 'DELETE',
+      const response = await fetch('http://localhost:3000/api/users/deactivate', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -39,7 +39,7 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
         throw new Error('WorkLog.tsx error: result.success not boolean');
       }
       if (result.success) {
-        setDeleted(true);
+        setDeactivated(true);
         setTimeout(() => {
           window.location.reload();
         }, 1500);
@@ -82,7 +82,7 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
         </h4>
       </div>
       <button type="button" onClick={handleEdit}>Edit</button>
-      <button type="button" onClick={handleDelete}>Delete</button>
+      <button type="button" onClick={handleDeactivate}>Deactivate</button>
       {editing && (
         <EditUser
           username={username}
@@ -91,7 +91,7 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
           id={id}
         />
       )}
-      {deleted && <h3>Record Deleted!</h3>}
+      {deactivated && <h3>User Deactivated!</h3>}
     </div>
   );
 };
