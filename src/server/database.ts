@@ -49,7 +49,8 @@ export type UserIdNameEmailRole = {
 export const getAllUsers = async():
 Promise<UserIdNameEmailRole[]> => {
   const result: QueryResult<UserIdNameEmailRole> = await client.query(
-    'SELECT id, username, email, role FROM users',
+    `SELECT id, username, email, role
+    FROM users WHERE active=true`,
     [],
   );
 
@@ -64,7 +65,9 @@ Promise<UserIdNameEmailRole[]> => {
 export const getUserByUsername = async(usernameInput: string):
 Promise<UserWithId> => {
   const result: QueryResult<UserWithId> = await client.query(
-    'SELECT id, username, email, password, role, salt FROM users WHERE username=$1',
+    `SELECT id, username, email, password, role, salt
+    FROM users
+    WHERE username=$1 AND active=true`,
     [usernameInput],
   );
 
@@ -90,8 +93,8 @@ export const insertUser = async(
   password: string, role: string,
   salt: string
 ): Promise<User> => {
-  await client.query(`INSERT INTO users (username, email, password, role, salt)
-           VALUES ($1, $2, $3, $4, $5)`, [username, email, password, role, salt]);
+  await client.query(`INSERT INTO users (username, email, password, role, salt, active)
+           VALUES ($1, $2, $3, $4, $5, $6)`, [username, email, password, role, salt, true]);
   return {
     username,
     email,
@@ -115,11 +118,11 @@ Promise<void> => {
   );
 };
 
-// QUESTION ON DELETION OF USERS
-export const deleteUser = async(id: number,):
+export const deactivateUser = async(id: number):
 Promise<void> => {
   await client.query(
-    `DELETE FROM users
+    `UPDATE users
+    SET active=false
     WHERE id=$1`,
     [id]
   );
@@ -197,7 +200,7 @@ export const getUsernameAndRole
   FROM users
   JOIN authentication_tokens
   ON authentication_tokens.user_id=users.id
-  WHERE authentication_tokens.token=$1`, [localToken]);
+  WHERE authentication_tokens.token=$1 AND users.active=true`, [localToken]);
 
   const { rows } = result;
   if (rows.length !== 1) {
@@ -317,7 +320,7 @@ export const getEmployeeTimesheets
       ON work_logs.user_id=timesheets.user_id
    WHERE timesheets.week_start=$1 AND timesheets.week_end=$2 AND
    work_logs.unix_start>=$1 AND work_logs.unix_end<=$2
-   AND users.role='employee'
+   AND users.role='employee' AND users.active=true
    GROUP BY users.username, users.email,
    timesheets.submitted, timesheets.invoiced, timesheets.paid;
 `,
@@ -396,7 +399,7 @@ export const getEmployeeIds = async(): Promise<number[] | undefined> => {
    = await client.query(`
    SELECT id
   FROM users
-  WHERE role='employee'
+  WHERE role='employee' AND active=true
    `);
 
   const { rows } = result;
@@ -442,3 +445,15 @@ export const insertTimesheet = async(
   );
 };
 
+export const updateUserPassword = async(
+  id: number,
+  password: string, salt: string
+):
+Promise<void> => {
+  await client.query(
+    `UPDATE users
+  SET password=$2, salt=$3
+  WHERE id=$1`,
+    [id, password, salt]
+  );
+};

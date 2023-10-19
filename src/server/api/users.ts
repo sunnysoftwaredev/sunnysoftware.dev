@@ -1,7 +1,8 @@
 import { Router as createRouter } from 'express';
 import { Mutex } from 'async-mutex';
-import { deleteUser, getAllUsers, updateUser } from '../database';
+import { deactivateUser, getAllUsers, getIDWithToken, updateUser, updateUserPassword } from '../database';
 import { isObjectRecord } from '../../common/utilities/types';
+import { generateSalt, saltAndHash } from '../common/utilities/crypto';
 
 const router = createRouter();
 const mutex = new Mutex();
@@ -78,28 +79,73 @@ router.post('/', (req, res) => {
   });
 });
 
-router.delete('/', (req, res) => {
+router.post('/deactivate', (req, res) => {
   (async(): Promise<void> => {
     if (!isObjectRecord(req.body)) {
-      throw new Error('api/users: req.body is not object');
+      throw new Error('api/usersdeactivate: req.body is not object');
     }
     if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/users: req.cookies is not object');
+      throw new Error('api/usersdeactivate: req.cookies is not object');
     }
 
     const { authenticationToken } = req.cookies;
     if (typeof authenticationToken !== 'string') {
-      throw new Error('api/users: userToken not type string');
+      throw new Error('api/usersdeactivate: userToken not type string');
     }
     const { id } = req.body;
 
     if (typeof id !== 'number') {
-      throw new Error('api/users.post: unixStart is not number');
+      throw new Error('api/users/deactivate.post: id is not number');
     }
 
     const release = await mutex.acquire();
     try {
-      await deleteUser(id);
+      await deactivateUser(id);
+      res.json({
+        success: true,
+
+      });
+    } finally {
+      release();
+    }
+  })().catch((e: Error) => {
+    res.json({
+      success: false,
+      error: e.message,
+    });
+  });
+});
+
+router.post('/password', (req, res) => {
+  (async(): Promise<void> => {
+    if (!isObjectRecord(req.body)) {
+      throw new Error('api/users/password: req.body is not object');
+    }
+    if (!isObjectRecord(req.cookies)) {
+      throw new Error('api/users/password: req.cookies is not object');
+    }
+
+    const { authenticationToken } = req.cookies;
+    if (typeof authenticationToken !== 'string') {
+      throw new Error('api/users/password: userToken not type string');
+    }
+
+    const { password } = req.body;
+
+    if (typeof password !== 'string') {
+      throw new Error('api/users/password.post: password is not string');
+    }
+
+    const release = await mutex.acquire();
+    try {
+      const idResult = await getIDWithToken(authenticationToken);
+
+      const salt = await generateSalt();
+      const saltedAndHashedPassword = saltAndHash(password, salt);
+      const finalPasswordString = saltedAndHashedPassword.toString('hex');
+      const saltString = salt.toString('hex');
+
+      await updateUserPassword(idResult, finalPasswordString, saltString);
       res.json({
         success: true,
 

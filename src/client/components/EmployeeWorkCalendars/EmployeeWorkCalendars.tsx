@@ -61,6 +61,9 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
 
       const { listResult } = result;
 
+      // clear list when switching back to empty week
+      setTimesheetList([]);
+
       if (isEmployeeTimesheetArray(listResult)) {
         setTimesheetList(listResult);
       }
