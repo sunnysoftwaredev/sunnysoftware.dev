@@ -2,6 +2,7 @@ import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import WorkCalendar from '../../components/WorkCalendar/WorkCalendar';
+import ResetPassword from '../../components/ResetPassword/ResetPassword';
 
 const ClientPortalPage: FunctionComponent = () => (
   <div>
@@ -15,6 +16,7 @@ const ClientPortalPage: FunctionComponent = () => (
       />
     </Helmet>
     <h1>Work Portal</h1>
+    <ResetPassword />
     <WorkCalendar />
   </div>
 );

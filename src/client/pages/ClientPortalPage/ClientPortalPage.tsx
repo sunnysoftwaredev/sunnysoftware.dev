@@ -1,6 +1,7 @@
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
+import ResetPassword from '../../components/ResetPassword/ResetPassword';
 
 const ClientPortalPage: FunctionComponent = () => (
   <div>
@@ -12,6 +13,7 @@ const ClientPortalPage: FunctionComponent = () => (
     </Helmet>
     <h1>Portal</h1>
     <p>For logged in clients</p>
+    <ResetPassword />
   </div>
 );
 
