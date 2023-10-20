@@ -2,6 +2,7 @@ import { Router as createRouter } from 'express';
 // import logger from '../logger';
 import { isObjectRecord } from '../../common/utilities/types';
 import { deleteWorkLog, getIDWithToken, postWorkLog, updateWorkLog } from '../database';
+import logger from '../logger';
 
 const router = createRouter();
 
@@ -41,7 +42,7 @@ router.post('/', (req, res) => {
       success: true,
       createdWorkLog: result,
     });
-    // logger.info('res.json success in workLogs.ts post');
+    logger.debug('res.json success in workLogs.ts post');
   })().catch((e: Error) => {
     res.json({
       success: false,
@@ -91,7 +92,7 @@ router.put('/', (req, res) => {
       success: true,
       createdWorkLog: result,
     });
-    // logger.info('res.json success in workLogs.ts put');
+    logger.debug('res.json success in workLogs.ts put');
   })().catch((e: Error) => {
     res.json({
       success: false,
@@ -136,7 +137,7 @@ router.delete('/', (req, res) => {
       success: true,
       deletedWorkLog: result,
     });
-    // logger.info('res.json success in workLogs.ts delete');
+    logger.debug('res.json success in workLogs.ts delete');
   })().catch((e: Error) => {
     res.json({
       success: false,

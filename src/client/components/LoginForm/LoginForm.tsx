@@ -35,7 +35,7 @@ const LoginForm: FunctionComponent = () => {
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
-      const response = await fetch('http://localhost:3000/api/login', {
+      const response = await fetch('api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,9 +73,9 @@ const LoginForm: FunctionComponent = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="usernameBox">
+      <div>
         <input
-          type="text" id="username" className="usernameBox"
+          type="text" id="username"
           onChange={handleUsernameChange}
         />
         <label className="usernameLabel" htmlFor="username">

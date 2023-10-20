@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }: IProps): React.JSX.Element => {
       if (typeof getLocalCookieValue() !== 'string') {
         return <div />;
       }
-      const response = await fetch('http://localhost:3000/api/authenticate', {
+      const response = await fetch('api/authenticate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import type { ChangeEvent, FunctionComponent, SyntheticEvent } from 'react';
 import React, { useState, useCallback } from 'react';
+import classNames from 'classnames';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import styles from './ContactForm.scss';
@@ -13,7 +14,6 @@ const ContactForm: FunctionComponent = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
-  // Handling the name change
   const handleNameChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setContactName(e.target.value);
@@ -22,13 +22,11 @@ const ContactForm: FunctionComponent = () => {
     [setContactName],
   );
 
-  // Handling the email change
   const handleEmailChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     setSubmitted(false);
   }, [setEmail],);
 
-  // Handling the password change
   const handleSubjectChange
   = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSubject(e.target.value);
@@ -41,7 +39,6 @@ const ContactForm: FunctionComponent = () => {
     setSubmitted(false);
   }, [setMessage]);
 
-  // Handling the form submission
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
@@ -50,7 +47,7 @@ const ContactForm: FunctionComponent = () => {
         return;
       }
       setError(false);
-      const response = await fetch('http://localhost:3000/api/contacts', {
+      const response = await fetch('api/contacts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,13 +78,9 @@ const ContactForm: FunctionComponent = () => {
     }
   }, [contactName, email, subject, message]);
 
-  // Showing success message
   const successMessage = (): React.JSX.Element => (
     <div
-      className="success"
-      style={{
-        display: submitted ? '' : 'none',
-      }}
+      className={classNames({ [styles.hidden]: !submitted })}
     >
       <h1>
         Message Sent!
@@ -96,12 +89,9 @@ const ContactForm: FunctionComponent = () => {
     </div>
   );
 
-  // Showing error message if error is true
   const errorMessage = (): React.JSX.Element => (
     <div
-      style={{
-        display: error ? '' : 'none',
-      }}
+      className={classNames({ [styles.hidden]: !error })}
     >
       <h1>Please enter all the fields</h1>
     </div>
@@ -110,14 +100,13 @@ const ContactForm: FunctionComponent = () => {
   return (
     <div >
       <div
-        className={styles.formHeader} style={{
-          display: error ? 'none' : '',
-        }}
+        className={classNames(styles.formHeader, {
+          [styles.hidden]: !error,
+        })}
       >
         <h1>Send us a message!</h1>
       </div>
 
-      {/* Calling to the methods */}
       <div className="messages">
         {errorMessage()}
         {successMessage()}

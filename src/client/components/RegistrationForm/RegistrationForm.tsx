@@ -50,7 +50,7 @@ const RegistrationForm: FunctionComponent = () => {
       }
       // setSubmitted was here (in case of break)
       setError(false);
-      const response = await fetch('http://localhost:3000/api/register', {
+      const response = await fetch('api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +97,6 @@ const RegistrationForm: FunctionComponent = () => {
     </div>
   );
 
-  // Showing error message if error is true
   const errorMessage = (): React.JSX.Element => (
     <div
       className="error"
@@ -115,7 +114,7 @@ const RegistrationForm: FunctionComponent = () => {
         <h1>Register User</h1>
       </div>
 
-      <div className="messages">
+      <div>
         {errorMessage()}
         {successMessage()}
       </div>

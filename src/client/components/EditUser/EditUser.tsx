@@ -1,15 +1,13 @@
 import type { ChangeEvent, FunctionComponent, SyntheticEvent } from 'react';
 import React, { useCallback, useState } from 'react';
+import classNames from 'classnames';
 import type { UserIdNameEmailRole } from '../../../server/database';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import styles from './EditUser.scss';
 
 const EditUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
-  const { username } = props;
-  const { email } = props;
-  const { role } = props;
-  const { id } = props;
+  const { username, email, role, id } = props;
 
   const [newUsername, setNewUsername] = useState(username);
   const [newEmail, setNewEmail] = useState(email);
@@ -18,7 +16,6 @@ const EditUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
-  // Handling the name change
   const handleNameChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setNewUsername(e.target.value);
@@ -47,7 +44,7 @@ const EditUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
         return;
       }
       setError(false);
-      const response = await fetch('http://localhost:3000/api/users', {
+      const response = await fetch('api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,21 +80,17 @@ const EditUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
 
   const successMessage = (): React.JSX.Element => (
     <div
-      className="success"
-      style={{
-        display: submitted ? '' : 'none',
-      }}
+      className={classNames(styles.success, {
+        [styles.hidden]: !submitted,
+      })}
     >
-
       <h3>User info updated</h3>
     </div>
   );
 
   const errorMessage = (): React.JSX.Element => (
     <div
-      style={{
-        display: error ? '' : 'none',
-      }}
+      className={classNames({ [styles.hidden]: !error })}
     >
       <h1>Please enter all the fields</h1>
     </div>
@@ -105,7 +98,7 @@ const EditUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
 
   return (
     <div className={styles.editUserContainer} >
-      <div className="messages">
+      <div>
         {errorMessage()}
         {successMessage()}
       </div>

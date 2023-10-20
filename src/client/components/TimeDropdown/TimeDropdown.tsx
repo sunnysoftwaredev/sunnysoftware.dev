@@ -32,11 +32,7 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
   const handleEndMinuteChange = useChangeHandler(setEndMinute);
   const handleEndMeridiemChange = useChangeHandler(setEndMeridiem);
 
-  const { propsDate } = props;
-  const { dayLogs } = props;
-  const { defaultStart } = props;
-  const { defaultEnd } = props;
-  const { updating } = props;
+  const { propsDate, dayLogs, defaultStart, defaultEnd, updating } = props;
 
   // Set default if editing
   useEffect(() => {
@@ -219,7 +215,7 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
       };
       const fetchMethod = postOrPut(updating);
 
-      const response = await fetch('http://localhost:3000/api/workLogs', {
+      const response = await fetch('api/workLogs', {
         method: fetchMethod,
         headers: {
           'Content-Type': 'application/json',

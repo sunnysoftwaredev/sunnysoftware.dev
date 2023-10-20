@@ -14,8 +14,7 @@ const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
   const [deleted, setDeleted] = useState(false);
 
   const { log } = props;
-  const { unixStart } = log;
-  const { unixEnd } = log;
+  const { unixStart, unixEnd } = log;
 
   const unixToTimeString = (unix: number): string => new Date(unix
     * 1000).toLocaleString('default', {
@@ -29,7 +28,7 @@ const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
 
   const deleteTime = useCallback(async() => {
     try {
-      const response = await fetch('http://localhost:3000/api/workLogs', {
+      const response = await fetch('api/workLogs', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -41,7 +40,7 @@ const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
       const result: unknown = await response.json();
 
       if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: WorkCalendar.tsx');
+        throw new Error('Unexpected body type: WorkLog.tsx');
       }
       if (typeof result.success !== 'boolean') {
         throw new Error('WorkLog.tsx error: result.success not boolean');
@@ -52,7 +51,7 @@ const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
           window.location.reload();
         }, 1500);
       } else {
-        logger.info('unsuccessful database update in TimeDropdown.tsx');
+        logger.info('unsuccessful database update in WorkLog.tsx');
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
