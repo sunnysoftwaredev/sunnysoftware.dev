@@ -1,5 +1,6 @@
 import type { ChangeEvent, FunctionComponent, SyntheticEvent } from 'react';
 import React, { useCallback, useState } from 'react';
+import classNames from 'classnames';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import styles from './ResetPassword.scss';
@@ -11,7 +12,6 @@ const ResetPassword: FunctionComponent = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
-  // Handling the name change
   const handlePasswordChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setPassword(e.target.value);
@@ -26,7 +26,6 @@ const ResetPassword: FunctionComponent = () => {
      setSubmitted(false);
    }, [setConfirmPassword],);
 
-  // Update User information
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
@@ -35,7 +34,7 @@ const ResetPassword: FunctionComponent = () => {
         return;
       }
       setError(false);
-      const response = await fetch('http://localhost:3000/api/users/password', {
+      const response = await fetch('api/users/password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,9 +54,9 @@ const ResetPassword: FunctionComponent = () => {
       }
       if (result.success) {
         setSubmitted(true);
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 1500);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -68,10 +67,7 @@ const ResetPassword: FunctionComponent = () => {
 
   const successMessage = (): React.JSX.Element => (
     <div
-      className="success"
-      style={{
-        display: submitted ? '' : 'none',
-      }}
+      className={classNames({ [styles.hidden]: !submitted })}
     >
       <h3>Password Changed</h3>
     </div>
@@ -79,9 +75,7 @@ const ResetPassword: FunctionComponent = () => {
 
   const errorMessage = (): React.JSX.Element => (
     <div
-      style={{
-        display: error ? '' : 'none',
-      }}
+      className={classNames({ [styles.hidden]: !error })}
     >
       <h1>Error, passwords do not match</h1>
     </div>

@@ -26,7 +26,6 @@ export const mailgunMessage = async(
     if (!isObjectRecord(result) || result.status !== 200) {
       throw new Error('Unexpected result from mailgun');
     }
-    // logger.info(result);
   } catch (err: unknown) {
     if (err instanceof Error) {
       logger.error(err.message);
@@ -46,7 +45,7 @@ export const mailgunRegister
       Username: ${username}
       Password: ${password}
 
-      You may change your password after login.
+      Please change your password after login.
 
       Thank you,
 

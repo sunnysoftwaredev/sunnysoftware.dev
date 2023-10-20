@@ -44,7 +44,7 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
     try {
       const unixWeekStart = getUnixDayStart(daysInWeek[0]);
       const unixWeekEnd = getUnixDayEnd(daysInWeek[6]);
-      const response = await fetch('http://localhost:3000/api/timesheets', {
+      const response = await fetch('api/timesheets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
       });
   }, [fetchAllWeekLogs]);
 
-  const changeToPrevWeek = useCallback((): void => {
+  const changeToPreviousWeek = useCallback((): void => {
     setCurrentDate((currDate: Date): Date => {
       const Year = currDate.getFullYear();
       const Month = currDate.getMonth();
@@ -103,12 +103,14 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
   React.ReactElement[] => {
     const timesheetElements: React.ReactElement[] = [];
     for (const userTimesheet of timesheets) {
-      const { username } = userTimesheet;
-      const { email } = userTimesheet;
-      const { hours } = userTimesheet;
-      const { invoiced } = userTimesheet;
-      const { paid } = userTimesheet;
-      const { submitted } = userTimesheet;
+      const {
+        username,
+        email,
+        hours,
+        invoiced,
+        paid,
+        submitted,
+      } = userTimesheet;
       timesheetElements.push((
         <div
           key={`timesheet-${username}`}
@@ -165,10 +167,9 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
       <h2>Active Clients: </h2>
       <div >
         <div className={styles.weekSelect}>
-          <button type="button" onClick={changeToPrevWeek}> BACK </button>
+          <button type="button" onClick={changeToPreviousWeek}> BACK </button>
           <h2>
             Week of
-            {' '}
             {' '}
             {daysInWeek[0].toLocaleString('default', {
               year: 'numeric',
@@ -176,9 +177,7 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
               day: 'numeric',
             })}
             {' '}
-            {' '}
             to
-            {' '}
             {' '}
             {daysInWeek[6].toLocaleString('default', {
               year: 'numeric',

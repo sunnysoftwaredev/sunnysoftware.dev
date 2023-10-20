@@ -11,7 +11,7 @@ const ManageUsers: FunctionComponent = () => {
 
   const getUserList = useCallback(async() => {
     try {
-      const response = await fetch('http://localhost:3000/api/users', {
+      const response = await fetch('api/users', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -22,14 +22,12 @@ const ManageUsers: FunctionComponent = () => {
       const result: unknown = await response.json();
 
       if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: WorkCalendar.tsx');
+        throw new Error('Unexpected body type: ManageUsers.tsx');
       }
       const { usersArray } = result;
-      // console.log('usersArray: ', usersArray);
       if (isUsersArray(usersArray)) {
         setUserList(usersArray);
       }
-      // console.log('userList: ', userList);
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
@@ -42,8 +40,6 @@ const ManageUsers: FunctionComponent = () => {
       logger.error(err);
     });
   }, [getUserList]);
-
-  // console.log(userList);
 
   const displayUsers = (users: UserIdNameEmailRole[]):
   React.ReactElement[] => {

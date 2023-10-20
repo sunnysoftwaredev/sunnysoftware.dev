@@ -11,7 +11,6 @@ import styles from './WorkCalendar.scss';
 const WorkCalendar: FunctionComponent = () => {
   const { username } = useContext(AuthContext) ?? { username: 'loading' };
   const [currentDate, setCurrentDate] = useState(new Date());
-  // const [clickedDate, setClickedDate] = useState('');
   const [weeklyWorkLogs, setWeeklyWorkLogs] = useState<TimeObject[]>();
 
   const getDaysInWeek = useCallback((): Date[] => {
@@ -50,7 +49,7 @@ const WorkCalendar: FunctionComponent = () => {
       const unixWeekStart = getUnixDayStart(daysInWeek[0]);
       const unixWeekEnd = getUnixDayEnd(daysInWeek[6]);
 
-      const response = await fetch('http://localhost:3000/api/weeklyWorkLogs', {
+      const response = await fetch('api/weeklyWorkLogs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -101,21 +100,6 @@ const WorkCalendar: FunctionComponent = () => {
     });
   }, []);
 
-  // In case of future use:
-  // const handleDateClick
-  //  = useCallback((e: React.MouseEvent<HTMLDivElement>): void => {
-  //    e.preventDefault();
-  //    const { target } = e;
-  //    if (target instanceof HTMLDivElement) {
-  //      const dayString: string = target.innerText;
-  //      setClickedDate(dayString);
-  //    } else if (target instanceof Object) {
-  //      // else if here stops the logger below from continually running
-  //    } else {
-  //      logger.info('type error in handleDateClick');
-  //    }
-  //  }, []);
-
   const displayDayLogs = (dayLogs: TimeObject[] | undefined):
   React.JSX.Element[] => {
     if (typeof dayLogs === 'undefined') {
@@ -153,7 +137,6 @@ const WorkCalendar: FunctionComponent = () => {
         <div
           key={`day-${i}`}
           className={styles.box}
-          // onClick={handleDateClick}
         >
           {day}
           <TimeDropdown
@@ -183,16 +166,13 @@ const WorkCalendar: FunctionComponent = () => {
           <h2>
             Week of
             {' '}
-            {' '}
             {daysInWeek[0].toLocaleString('default', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
             })}
             {' '}
-            {' '}
             to
-            {' '}
             {' '}
             {daysInWeek[6].toLocaleString('default', {
               year: 'numeric',
@@ -207,12 +187,6 @@ const WorkCalendar: FunctionComponent = () => {
           {displayWeek()}
           {' '}
         </div>
-
-        {/* <div className={styles.boxSelected}>
-          Selected Date:
-          {' '}
-          <p>{clickedDate}</p>
-        </div> */}
       </div>
     </div>
   );
