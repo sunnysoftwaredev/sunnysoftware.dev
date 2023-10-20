@@ -22,17 +22,21 @@ export const isIdArray = (value: unknown): value is IdObject[] => (
   && 'id' in value[0]
 );
 
+const isEmployeeTimesheet
+ = (currentValue: Record<string, unknown>): boolean => (
+   isObjectRecord(currentValue)
+  && 'hours' in currentValue
+  && 'submitted' in currentValue
+  && 'invoiced' in currentValue
+  && 'paid' in currentValue
+  && 'username' in currentValue
+  && 'email' in currentValue
+ );
+
 export const isEmployeeTimesheetArray
  = (value: unknown): value is EmployeeTimesheet[] => (
    Array.isArray(value)
-  && value[0] !== null
-  && value[0] !== undefined
-  && 'hours' in value[0]
-  && 'submitted' in value[0]
-  && 'invoiced' in value[0]
-  && 'paid' in value[0]
-  && 'username' in value[0]
-  && 'email' in value[0]
+  && value.every(isEmployeeTimesheet)
  );
 
 export const isUsersArray
