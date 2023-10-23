@@ -457,3 +457,12 @@ Promise<void> => {
     [id, password, salt]
   );
 };
+
+export const createClientProject
+ = async(id: number, title: string, description: string):
+ Promise<void> => {
+   await client.query(`
+   INSERT INTO client_projects (client_id, title, description, active)
+    VALUES ($1, $2, $3, true)
+    `, [id, title, description]);
+ };
