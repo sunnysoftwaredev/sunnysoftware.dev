@@ -4,6 +4,7 @@ import logger from '../../../server/logger';
 import { isObjectRecord, isUsersArray } from '../../../common/utilities/types';
 import type { UserIdNameEmailRole } from '../../../server/database';
 import IndividualUser from '../IndividualUser/IndividualUser';
+import CreateProject from '../CreateProject/CreateProject';
 import styles from './ManageUsers.scss';
 
 const ManageUsers: FunctionComponent = () => {
@@ -79,6 +80,7 @@ const ManageUsers: FunctionComponent = () => {
 
         {displayUsers(userList)}
       </div>
+      <CreateProject userList={userList} />
     </div>
 
   );
