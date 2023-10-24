@@ -6,6 +6,7 @@ import EmployeeWorkCalendars from '../../components/EmployeeWorkCalendars/Employ
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
 import ManageUsers from '../../components/ManageUsers/ManageUsers';
 import ResetPassword from '../../components/ResetPassword/ResetPassword';
+import ManageProjects from '../../components/MangageProjects/ManageProjects';
 
 const AdminPortalPage: FunctionComponent = () => (
   <div>
@@ -19,6 +20,7 @@ const AdminPortalPage: FunctionComponent = () => (
       />
     </Helmet>
     <h1>Admin Portal</h1>
+    <ManageProjects />
     <ResetPassword />
     <WorkCalendar />
     <EmployeeWorkCalendars />
