@@ -466,3 +466,41 @@ export const createClientProject
     VALUES ($1, $2, $3, true)
     `, [id, title, description]);
  };
+
+export type ClientProject = {
+  id: number;
+  title: string;
+  description: string;
+  active: boolean;
+  username: string;
+  email: string;
+};
+
+export const getAllClientProjects = async():
+Promise<ClientProject[]> => {
+  const result: QueryResult<ClientProject> = await client.query(`
+  SELECT
+    client_projects.id, client_projects.client_id AS clientId,
+    client_projects.title, client_projects.description, client_projects.active,
+    users.username, users.email
+  FROM client_projects
+  INNER JOIN users
+    ON client_projects.client_id=users.id`);
+
+  const { rows } = result;
+  return rows;
+};
+
+export const updateClientProject = async(
+  id: number,
+  title: string,
+  description: string, active: boolean,
+):
+Promise<void> => {
+  await client.query(
+    `UPDATE client_projects
+  SET title=$2, description=$3, active=$4
+  WHERE id=$1`,
+    [id, title, description, active]
+  );
+};
