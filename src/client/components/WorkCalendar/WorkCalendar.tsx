@@ -3,15 +3,16 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
 import TimeDropdown from '../TimeDropdown/TimeDropdown';
-import { isClientProjectArray, isObjectRecord, isTimeArray } from '../../../common/utilities/types';
-import type { ClientProject, TimeObject } from '../../../server/database';
+import { isClientProjectArray, isObjectRecord, isTimeObjectWithProjectArray } from '../../../common/utilities/types';
+import type { ClientProject, TimeObject, TimeObjectWithProject } from '../../../server/database';
 import WorkLog from '../WorkLog/WorkLog';
 import styles from './WorkCalendar.scss';
 
 const WorkCalendar: FunctionComponent = () => {
   const { username } = useContext(AuthContext) ?? { username: 'loading' };
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [weeklyWorkLogs, setWeeklyWorkLogs] = useState<TimeObject[]>();
+  const [weeklyWorkLogs, setWeeklyWorkLogs]
+   = useState<TimeObjectWithProject[]>();
   const [activeProjects, setActiveProjects] = useState<ClientProject[]>([]);
 
   const getDaysInWeek = useCallback((): Date[] => {
@@ -66,7 +67,7 @@ const WorkCalendar: FunctionComponent = () => {
       }
       const { listResult } = result;
 
-      if (isTimeArray(listResult)) {
+      if (isTimeObjectWithProjectArray(listResult)) {
         setWeeklyWorkLogs(listResult);
       }
     } catch (err: unknown) {
@@ -148,7 +149,7 @@ const WorkCalendar: FunctionComponent = () => {
     });
   }, []);
 
-  const displayDayLogs = (dayLogs: TimeObject[] | undefined):
+  const displayDayLogs = (dayLogs: TimeObjectWithProject[] | undefined):
   React.JSX.Element[] => {
     if (typeof dayLogs === 'undefined') {
       return [<div key={0} />];
@@ -198,7 +199,6 @@ const WorkCalendar: FunctionComponent = () => {
     }
     return dayDivs;
   };
-
   return (
     <div>
       <h3>

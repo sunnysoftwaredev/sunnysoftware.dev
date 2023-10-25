@@ -220,6 +220,10 @@ export type TimeObject = {
   unixEnd: number;
 };
 
+export type TimeObjectWithProject = TimeObject & {
+  projectId: number;
+};
+
 export const postWorkLog = async(
   id: number,
   unixStart: number, unixEnd: number,
@@ -268,9 +272,10 @@ export const getWeeklyWorkLogs = async(
   id: number,
   unixWeekStart: number, unixWeekEnd: number
 ):
-Promise<TimeObject[]> => {
-  const result: QueryResult<TimeObject> = await client.query(
-    `SELECT unix_start AS "unixStart", unix_end AS "unixEnd"
+Promise<TimeObjectWithProject[]> => {
+  const result: QueryResult<TimeObjectWithProject> = await client.query(
+    `SELECT unix_start AS "unixStart", unix_end AS "unixEnd",
+    project_id AS "projectId"
     FROM work_logs
     WHERE user_id=$1 and unix_start >= $2 and unix_end <= $3`,
     [id, unixWeekStart, unixWeekEnd],

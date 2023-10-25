@@ -1,22 +1,39 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import type { FunctionComponent } from 'react';
 import TimeDropdown from '../TimeDropdown/TimeDropdown';
-import type { ClientProject, TimeObject } from '../../../server/database';
+import type { ClientProject, TimeObjectWithProject } from '../../../server/database';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import styles from './WorkLog.scss';
 
 type WorkLogProps = {
-  log: TimeObject;
+  log: TimeObjectWithProject;
   activeProjects: ClientProject[];
 
 };
 const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
   const [updating, setUpdating] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  const [projectExists, setProjectExists] = useState(false);
+  const [projectName, setProjectName] = useState('');
 
   const { log, activeProjects } = props;
-  const { unixStart, unixEnd } = log;
+  const { unixStart, unixEnd, projectId } = log;
+
+  useEffect(() => {
+    if (typeof projectId === 'number') {
+      if (projectId !== 0) {
+        setProjectExists(true);
+      }
+    }
+
+    const logProject
+    = activeProjects.filter(project => project.id === projectId);
+
+    if (logProject.length === 1) {
+      setProjectName(logProject[0].title);
+    }
+  }, [activeProjects, projectId]);
 
   const unixToTimeString = (unix: number): string => new Date(unix
     * 1000).toLocaleString('default', {
@@ -64,6 +81,13 @@ const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
 
   return (
     <div key={log.unixStart} className={styles.workLogContainer}>
+      {projectExists && (
+        <p>
+          Project for:
+          {' '}
+          {projectName}
+        </p>
+      )}
       <div className={styles.workLog}>
         <li>{unixToTimeString(log.unixStart)}</li>
         <h4>-</h4>

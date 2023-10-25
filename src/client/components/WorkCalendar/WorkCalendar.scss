@@ -28,7 +28,7 @@
 
 }
 .box {
-  height: 15rem;
+  height: 100%;
   background-color: #f0f0f0;
   border: 1px solid #ccc;
   display: flex;
@@ -37,6 +37,7 @@
   align-items: center;
   cursor: pointer;
   gap: 8px;
+  padding-bottom: 5rem;
 }
 // .box:hover{
 //   background-color: antiquewhite;
