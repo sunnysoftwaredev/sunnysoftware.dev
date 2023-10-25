@@ -3,8 +3,8 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
 import TimeDropdown from '../TimeDropdown/TimeDropdown';
-import { isObjectRecord, isTimeArray } from '../../../common/utilities/types';
-import type { TimeObject } from '../../../server/database';
+import { isClientProjectArray, isObjectRecord, isTimeArray } from '../../../common/utilities/types';
+import type { ClientProject, TimeObject } from '../../../server/database';
 import WorkLog from '../WorkLog/WorkLog';
 import styles from './WorkCalendar.scss';
 
@@ -12,6 +12,7 @@ const WorkCalendar: FunctionComponent = () => {
   const { username } = useContext(AuthContext) ?? { username: 'loading' };
   const [currentDate, setCurrentDate] = useState(new Date());
   const [weeklyWorkLogs, setWeeklyWorkLogs] = useState<TimeObject[]>();
+  const [activeProjects, setActiveProjects] = useState<ClientProject[]>([]);
 
   const getDaysInWeek = useCallback((): Date[] => {
     const days: Date[] = [];
@@ -75,12 +76,59 @@ const WorkCalendar: FunctionComponent = () => {
     }
   }, [daysInWeek]);
 
+  const compareProjects = (a: ClientProject, b: ClientProject): number => {
+    const projectA = a.title;
+    const projectB = b.title;
+
+    let comparison = 0;
+    if (projectA > projectB) {
+      comparison = 1;
+    } else if (projectA < projectB) {
+      comparison = -1;
+    }
+    return comparison;
+  };
+
+  const getProjects = useCallback(async() => {
+    try {
+      const response = await fetch('api/projects', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin',
+      });
+
+      const result: unknown = await response.json();
+
+      if (!isObjectRecord(result)) {
+        throw new Error('Unexpected body type: ManageProjects.tsx');
+      }
+
+      const { projectList } = result;
+      if (isClientProjectArray(projectList)) {
+        const activeProjectList
+         = projectList.filter(project => project.active);
+        const sortedActive = activeProjectList.sort(compareProjects);
+
+        setActiveProjects(sortedActive);
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        logger.error(err.message);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     fetchWeekLogs()
       .catch((err) => {
         logger.error(err);
       });
-  }, [fetchWeekLogs]);
+    getProjects().catch((err) => {
+      logger.error(err);
+    });
+  }, [fetchWeekLogs, getProjects]);
 
   const changeToPrevWeek = useCallback((): void => {
     setCurrentDate((currDate: Date): Date => {
@@ -106,7 +154,7 @@ const WorkCalendar: FunctionComponent = () => {
       return [<div key={0} />];
     }
     return dayLogs.map(log => (
-      <WorkLog key={log.unixStart} log={log} />
+      <WorkLog key={log.unixStart} log={log} activeProjects={activeProjects} />
     ));
   };
 
@@ -142,7 +190,7 @@ const WorkCalendar: FunctionComponent = () => {
           <TimeDropdown
             propsDate={rawDate} dayLogs={dayLogs}
             defaultStart={0} defaultEnd={0}
-            updating={false}
+            updating={false} activeProjects={activeProjects}
           />
           {displayDayLogs(dayLogs)}
         </div>
