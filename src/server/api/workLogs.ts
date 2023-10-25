@@ -1,10 +1,11 @@
 import { Router as createRouter } from 'express';
-// import logger from '../logger';
+import { Mutex } from 'async-mutex';
 import { isObjectRecord } from '../../common/utilities/types';
 import { deleteWorkLog, getIDWithToken, postWorkLog, updateWorkLog } from '../database';
 import logger from '../logger';
 
 const router = createRouter();
+const mutex = new Mutex();
 
 router.post('/', (req, res) => {
   (async(): Promise<void> => {
@@ -20,28 +21,35 @@ router.post('/', (req, res) => {
       throw new Error('api/workLogs: userToken not type string');
     }
 
-    const idResult = getIDWithToken(authenticationToken);
-    const id = await idResult;
-    const { unixStart } = req.body;
-    const { unixEnd } = req.body;
+    const release = await mutex.acquire();
+    try {
+      const idResult = getIDWithToken(authenticationToken);
+      const id = await idResult;
+      const { unixStart, unixEnd, projectId } = req.body;
 
-    if (typeof unixStart !== 'number') {
-      throw new Error('api/workLogs.post: unixStart is not number');
+      if (typeof unixStart !== 'number') {
+        throw new Error('api/workLogs.post: unixStart is not number');
+      }
+      if (typeof unixEnd !== 'number') {
+        throw new Error('api/workLogs.post: unixEnd is not number');
+      }
+      if (typeof projectId !== 'number') {
+        throw new Error('api/workLogs.post: projectId is not number');
+      }
+
+      const result = await postWorkLog(
+        id,
+        unixStart,
+        unixEnd,
+        projectId,
+      );
+      res.json({
+        success: true,
+        createdWorkLog: result,
+      });
+    } finally {
+      release();
     }
-    if (typeof unixEnd !== 'number') {
-      throw new Error('api/workLogs.post: unixEnd is not number');
-    }
-
-    const result = await postWorkLog(
-      id,
-      unixStart,
-      unixEnd,
-    );
-
-    res.json({
-      success: true,
-      createdWorkLog: result,
-    });
     logger.debug('res.json success in workLogs.ts post');
   })().catch((e: Error) => {
     res.json({
@@ -65,33 +73,40 @@ router.put('/', (req, res) => {
       throw new Error('api/workLogs: userToken not type string');
     }
 
-    const idResult = getIDWithToken(authenticationToken);
-    const id = await idResult;
-    const { oldUnixStart } = req.body;
-    const { unixStart } = req.body;
-    const { unixEnd } = req.body;
+    const release = await mutex.acquire();
+    try {
+      const idResult = getIDWithToken(authenticationToken);
+      const id = await idResult;
+      const { oldUnixStart, unixStart, unixEnd, projectId } = req.body;
 
-    if (typeof oldUnixStart !== 'number') {
-      throw new Error('api/workLogs.put: unixStart is not number');
-    }
-    if (typeof unixStart !== 'number') {
-      throw new Error('api/workLogs.put: unixStart is not number');
-    }
-    if (typeof unixEnd !== 'number') {
-      throw new Error('api/workLogs.put: unixEnd is not number');
-    }
+      if (typeof oldUnixStart !== 'number') {
+        throw new Error('api/workLogs.put: unixStart is not number');
+      }
+      if (typeof unixStart !== 'number') {
+        throw new Error('api/workLogs.put: unixStart is not number');
+      }
+      if (typeof unixEnd !== 'number') {
+        throw new Error('api/workLogs.put: unixEnd is not number');
+      }
+      if (typeof projectId !== 'number') {
+        throw new Error('api/workLogs.post: projectId is not number');
+      }
 
-    const result = await updateWorkLog(
-      id,
-      oldUnixStart,
-      unixStart,
-      unixEnd,
-    );
+      const result = await updateWorkLog(
+        id,
+        oldUnixStart,
+        unixStart,
+        unixEnd,
+        projectId,
+      );
 
-    res.json({
-      success: true,
-      createdWorkLog: result,
-    });
+      res.json({
+        success: true,
+        createdWorkLog: result,
+      });
+    } finally {
+      release();
+    }
     logger.debug('res.json success in workLogs.ts put');
   })().catch((e: Error) => {
     res.json({

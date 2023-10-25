@@ -223,11 +223,12 @@ export type TimeObject = {
 export const postWorkLog = async(
   id: number,
   unixStart: number, unixEnd: number,
+  projectId: number,
 ):
 Promise<TimeObject> => {
   await client.query(`INSERT INTO work_logs
-  (user_id, unix_start,unix_end)
-    VALUES ($1, $2, $3)`, [id, unixStart, unixEnd]);
+  (user_id, unix_start,unix_end, project_id)
+    VALUES ($1, $2, $3, $4)`, [id, unixStart, unixEnd, projectId]);
   return {
     unixStart,
     unixEnd,
@@ -335,13 +336,14 @@ export const updateWorkLog = async(
   id: number,
   oldUnixStart: number,
   unixStart: number, unixEnd: number,
+  projectId: number,
 ):
 Promise<TimeObject> => {
   await client.query(
     `UPDATE work_logs
-  SET unix_start = $3, unix_end=$4
+  SET unix_start = $3, unix_end=$4, project_id=$5
   WHERE user_id=$1 AND unix_start =$2`,
-    [id, oldUnixStart, unixStart, unixEnd]
+    [id, oldUnixStart, unixStart, unixEnd, projectId]
   );
   return {
     unixStart,
@@ -504,3 +506,4 @@ Promise<void> => {
     [id, title, description, active]
   );
 };
+

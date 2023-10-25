@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import type { FunctionComponent, SyntheticEvent } from 'react';
+import type { ChangeEvent, FunctionComponent, SyntheticEvent } from 'react';
 import logger from '../../../server/logger';
 import { isObjectRecord } from '../../../common/utilities/types';
 import useChangeHandler from '../../hooks/useChangeHandler';
-import type { TimeObject } from '../../../server/database';
+import type { ClientProject, TimeObject } from '../../../server/database';
 import styles from './TimeDropdown.scss';
 
 type TimeDropdownProps = {
@@ -12,6 +12,7 @@ type TimeDropdownProps = {
   defaultStart: number;
   defaultEnd: number;
   updating: boolean;
+  activeProjects: ClientProject[];
 };
 
 const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
@@ -21,6 +22,8 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
   const [endHour, setEndHour] = useState('5');
   const [endMinute, setEndMinute] = useState('0');
   const [endMeridiem, setEndMeridiem] = useState('PM');
+
+  const [projectId, setProjectId] = useState(0);
 
   const [valid, setValid] = useState(true);
   const [submitted, setSubmitted] = useState(false);
@@ -32,7 +35,22 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
   const handleEndMinuteChange = useChangeHandler(setEndMinute);
   const handleEndMeridiemChange = useChangeHandler(setEndMeridiem);
 
-  const { propsDate, dayLogs, defaultStart, defaultEnd, updating } = props;
+  const { propsDate, dayLogs, defaultStart,
+    defaultEnd, updating, activeProjects } = props;
+
+  useEffect(() => {
+    if (typeof activeProjects[0] !== 'undefined') {
+      setProjectId(activeProjects[0].id);
+    }
+  }, [activeProjects]);
+
+  const handleProjectIdChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      setProjectId(parseInt(e.target.value, 10));
+      setSubmitted(false);
+    },
+    [setProjectId],
+  );
 
   // Set default if editing
   useEffect(() => {
@@ -105,7 +123,6 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
   ];
 
   const meridiemOptions = [
-    { label: '--', value: '--' },
     { label: 'AM', value: 'AM' },
     { label: 'PM', value: 'PM' },
   ];
@@ -215,6 +232,7 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
       };
       const fetchMethod = postOrPut(updating);
 
+      // API query
       const response = await fetch('api/workLogs', {
         method: fetchMethod,
         headers: {
@@ -224,6 +242,7 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
           oldUnixStart,
           unixStart,
           unixEnd,
+          projectId,
         }),
       });
 
@@ -258,7 +277,8 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
     endMinute,
     endMeridiem,
     validUnixTimes,
-    updating]);
+    updating,
+    projectId]);
 
   return (
 
@@ -339,6 +359,20 @@ const TimeDropdown: FunctionComponent<TimeDropdownProps> = (props) => {
           ))}
         </select>
 
+      </div>
+      <div>
+        <label>Project: </label>
+        <select value={projectId} onChange={handleProjectIdChange}>
+          <option value={0}>None</option>
+          {activeProjects.map(option => (
+            <option
+              key={option.id}
+              value={option.id}
+            >
+              {option.title}
+            </option>
+          ))}
+        </select>
       </div>
       <button type="button" onClick={saveTime}>
         {updating ? <p>Update</p> : <p>Save</p>}

@@ -1,19 +1,21 @@
 import React, { useCallback, useState } from 'react';
 import type { FunctionComponent } from 'react';
 import TimeDropdown from '../TimeDropdown/TimeDropdown';
-import type { TimeObject } from '../../../server/database';
+import type { ClientProject, TimeObject } from '../../../server/database';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import styles from './WorkLog.scss';
 
 type WorkLogProps = {
   log: TimeObject;
+  activeProjects: ClientProject[];
+
 };
 const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
   const [updating, setUpdating] = useState(false);
   const [deleted, setDeleted] = useState(false);
 
-  const { log } = props;
+  const { log, activeProjects } = props;
   const { unixStart, unixEnd } = log;
 
   const unixToTimeString = (unix: number): string => new Date(unix
@@ -75,7 +77,7 @@ const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
           dayLogs={undefined}
           defaultStart={log.unixStart}
           defaultEnd={log.unixEnd}
-          updating
+          updating activeProjects={activeProjects}
         />
       )}
       {deleted && <h3>Record Deleted!</h3>}
