@@ -1,0 +1,106 @@
+// FONT SETTINGS //
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: local('./PlusJakartaSans/PlusJakartaSans-Regular.ttf') format("truetype");
+}
+
+
+// GLOBAL COLORS //
+
+//Main colors
+$main-color-1: #f3aa1f;
+$main-color-2: #fed323;
+
+//Primary Colors
+$primary-color-10: #fffbed;
+$primary-color-20: #ffeec4;
+$primary-color-30: #ffe09c;
+$primary-color-40: #ffce73;
+$primary-color-50: #ffba4a;
+$primary-color-60: #f39b1f;
+$primary-color-70: #cc7810;
+$primary-color-80: #a65805;
+$primary-color-90: #803e00;
+$primary-color-100: #592800;
+
+//Secondary Colors
+$secondary-color-10: #fffef0;
+$secondary-color-20: #fffbc7;
+$secondary-color-30: #fff59e;
+$secondary-color-40: #ffed75;
+$secondary-color-50: #ffe14d;
+$secondary-color-60: #fed323;
+$secondary-color-70: #d9ab14;
+$secondary-color-80: #b38507;
+$secondary-color-90: #8c6200;
+$secondary-color-100: #664400;
+
+//Neutral Colors
+$neutral-color-10: #ffffff;
+$neutral-color-20: #fafafa;
+$neutral-color-30: #e4ecf2;
+$neutral-color-40: #d8dfe6;
+$neutral-color-50: #c0c6cc;
+$neutral-color-60: #b4b9bf;
+$neutral-color-70: #888f99;
+$neutral-color-80: #606773;
+$neutral-color-90: #3c424d;
+$neutral-color-100: #1e2026;
+
+//Blue Colors
+$blue-color-10: #f7fdff;
+$blue-color-20: #f0fcff;
+$blue-color-30: #dbf7ff;
+$blue-color-40: #b3ecff;
+$blue-color-50: #8adeff;
+$blue-color-60: #60cdff;
+$blue-color-70: #48a6d9;
+$blue-color-80: #3281b3;
+$blue-color-90: #205f8c;
+$blue-color-100: #164266;
+
+
+
+
+
+// background-image: inline-image('smallPlus.svg');
+// background-image: url(`data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="url('#{$imagedir}#{$filename}')" color='$color`);
+
+
+
+// INPUT COMPONENTS //
+
+// The component should take props such as size, placeholderText,
+// icon, value, and onChange to determine how it renders and behaves.
+
+@mixin input($size: "medium") {
+display: flex;
+width: 200px;
+align-items: center;
+gap: 8px;
+font-family: 'Plus Jakarta Sans';
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px;
+// change on hover
+border-radius: 100px;
+// check size
+@if $size == "small" {
+  width: 200px;
+  height: 30px;
+}
+@else if $size == "medium" {
+  width: 200px;
+  height: 40px;
+}
+@else if $size== "large" {
+  width: 200px;
+  height: 48px;
+}
+&:hover {
+border: 1px solid $primary-color-50;
+background: $neutral-color-10;
+}
+}
