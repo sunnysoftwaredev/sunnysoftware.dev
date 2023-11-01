@@ -22,10 +22,13 @@
     transform: rotate(360deg);
   }
 }
-.loading{
+.animate{
   animation: rotate 2s linear infinite;
-// possibly: animation: spin 4s infinite linear;
+}
 
+.loading {
+  background-color: main.$primary-color-30 !important;
+  border: 1px solid main.$primary-color-30 !important;
 }
 
 // Variants
@@ -40,55 +43,24 @@
     border: 1px solid main.$primary-color-70;
     cursor: pointer;
   }
+  &:active{
+    background-color: main.$primary-color-80;
+    border: 1px solid main.$primary-color-80;
+  }
+  &:active::after {
+    background-color: main.$primary-color-30;
+    border: 1px solid main.$primary-color-30;
+  }
+  &:disabled {
+    background-color: main.$primary-color-30;
+    border: 1px solid main.$primary-color-30;
+  }
   &:focus {
     background-color: main.$primary-color-70;
     border: 1px solid main.$primary-color-40;
   }
-  &:active{
-    background-color: main.$primary-color-30;
-    border: 1px solid main.$primary-color-30;
-  }
 }
-.outlined {
-  @include baseAttributes();
-  color: main.$primary-color-60;
-  background-color: main.$neutral-color-10; // changed to here
-  border: 1px solid main.$primary-color-60;
 
-  &:hover {
-    background-color: main.$primary-color-70;
-    border: 1px solid main.$primary-color-70;
-    cursor: pointer;
-  }
-  &:focus {
-    background-color: main.$primary-color-70;
-    border: 1px solid main.$primary-color-40;
-  }
-  &:active{
-    background-color: main.$primary-color-30;
-    border: 1px solid main.$primary-color-30;
-  }
-}
-.white {
-  @include baseAttributes();
-  color: main.$neutral-color-10;
-  background-color: main.$primary-color-60;
-  border: 1px solid main.$primary-color-60;
-
-  &:hover {
-    background-color: main.$primary-color-70;
-    border: 1px solid main.$primary-color-70;
-    cursor: pointer;
-  }
-  &:focus {
-    background-color: main.$primary-color-70;
-    border: 1px solid main.$primary-color-40;
-  }
-  &:active{
-    background-color: main.$primary-color-30;
-    border: 1px solid main.$primary-color-30;
-  }
-}
 
  // check size
  .small {
