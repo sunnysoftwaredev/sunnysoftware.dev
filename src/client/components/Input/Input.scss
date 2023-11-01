@@ -1,0 +1,39 @@
+// INPUT COMPONENTS //
+
+// The component should take props such as size, placeholderText,
+// icon, value, and onChange to determine how it renders and behaves.
+
+@use '../../SCSS/main';
+
+.input {
+  display: flex;
+  width: 200px;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Plus Jakarta Sans';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  border-radius: 100px;
+  &:hover {
+  border: 1px solid main.$primary-color-50;
+  background: main.$neutral-color-10;
+  }
+  }
+
+// Check size
+.small {
+  width: 200px;
+    height: 30px;
+}
+
+.medium {
+  width: 200px;
+    height: 40px;
+}
+
+.large {
+  width: 200px;
+    height: 480px;
+}

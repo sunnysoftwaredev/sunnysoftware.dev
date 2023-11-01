@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import logger from '../../../server/logger';
 import Button from '../Button/Button';
 import style from './CallToAction.scss';
-import background from './unsplashWhiteboard.png';
 
 const CallToAction: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -21,7 +20,6 @@ const CallToAction: FunctionComponent = () => {
   }, [navigate]);
   return (
     <div className={style.cta}>
-      <img src={background} className={style.ctaImage} />
       <p className={style.ctaBlurb}>
         See how our experienced
         engineers can bring your business value and efficiency

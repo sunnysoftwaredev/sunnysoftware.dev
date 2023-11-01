@@ -1,6 +1,6 @@
 @use "../../SCSS/main";
 
-.button {
+@mixin baseAttributes() {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -11,6 +11,26 @@
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
+}
+
+// animate loading circle
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loading{
+  animation: rotate 2s linear infinite;
+// possibly: animation: spin 4s infinite linear;
+
+}
+
+// Variants
+.primary {
+  @include baseAttributes();
   color: main.$neutral-color-10;
   background-color: main.$primary-color-60;
   border: 1px solid main.$primary-color-60;
@@ -20,7 +40,54 @@
     border: 1px solid main.$primary-color-70;
     cursor: pointer;
   }
+  &:focus {
+    background-color: main.$primary-color-70;
+    border: 1px solid main.$primary-color-40;
+  }
+  &:active{
+    background-color: main.$primary-color-30;
+    border: 1px solid main.$primary-color-30;
+  }
+}
+.outlined {
+  @include baseAttributes();
+  color: main.$primary-color-60;
+  background-color: main.$neutral-color-10; // changed to here
+  border: 1px solid main.$primary-color-60;
 
+  &:hover {
+    background-color: main.$primary-color-70;
+    border: 1px solid main.$primary-color-70;
+    cursor: pointer;
+  }
+  &:focus {
+    background-color: main.$primary-color-70;
+    border: 1px solid main.$primary-color-40;
+  }
+  &:active{
+    background-color: main.$primary-color-30;
+    border: 1px solid main.$primary-color-30;
+  }
+}
+.white {
+  @include baseAttributes();
+  color: main.$neutral-color-10;
+  background-color: main.$primary-color-60;
+  border: 1px solid main.$primary-color-60;
+
+  &:hover {
+    background-color: main.$primary-color-70;
+    border: 1px solid main.$primary-color-70;
+    cursor: pointer;
+  }
+  &:focus {
+    background-color: main.$primary-color-70;
+    border: 1px solid main.$primary-color-40;
+  }
+  &:active{
+    background-color: main.$primary-color-30;
+    border: 1px solid main.$primary-color-30;
+  }
 }
 
  // check size
@@ -48,24 +115,3 @@
   width: 48px;
   height: 48px;
 }
-
-
-// May not be necessary
-.icon {
-  display: flex;
-  justify-content: center;
-}
-
-
-
-// $svg-path: "data:image/svg+xml;utf8,";
-// $svg-plus-s: "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M12 6.25C12.4142 6.25 12.75 6.58579 12.75 7V11.25H17C17.4142 11.25 17.75 11.5858 17.75 12C17.75 12.4142 17.4142 12.75 17 12.75H12.75V17C12.75 17.4142 12.4142 17.75 12 17.75C11.5858 17.75 11.25 17.4142 11.25 17V12.75H7C6.58579 12.75 6.25 12.4142 6.25 12C6.25 11.5858 6.58579 11.25 7 11.25H11.25V7C11.25 6.58579 11.5858 6.25 12 6.25Z' fill="white"/></svg>";
-
-// svg code directly inside
-// turn into a sprite
-// check label/text
-// @if $icon == true {
-//   @if $size == "small" {
-//     background-image: inline-image("#{$svg-path}#{$svg-plus-s}");
-//   }
-// }
