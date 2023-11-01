@@ -26,12 +26,22 @@
   animation: rotate 2s linear infinite;
 }
 
-.loading {
+// Loading variants
+
+.primaryLoading {
   background-color: main.$primary-color-30 !important;
   border: 1px solid main.$primary-color-30 !important;
 }
+.outlinedLoading {
+  background-color: main.$neutral-color-10 !important;
+  border: 1px solid main.$primary-color-40 !important;
+}
+.whiteLoading {
+  background-color: main.$neutral-color-10 !important;
+  border: 1px solid main.$neutral-color-10 !important;
+}
 
-// Variants
+// Main variants
 .primary {
   @include baseAttributes();
   color: main.$neutral-color-10;
@@ -47,10 +57,6 @@
     background-color: main.$primary-color-80;
     border: 1px solid main.$primary-color-80;
   }
-  &:active::after {
-    background-color: main.$primary-color-30;
-    border: 1px solid main.$primary-color-30;
-  }
   &:disabled {
     background-color: main.$primary-color-30;
     border: 1px solid main.$primary-color-30;
@@ -58,6 +64,66 @@
   &:focus {
     background-color: main.$primary-color-70;
     border: 1px solid main.$primary-color-40;
+  }
+}
+.outlined {
+  @include baseAttributes();
+  color: main.$primary-color-60;
+  background-color: main.$neutral-color-10;
+  border: 1px solid main.$primary-color-60;
+
+  &:hover {
+    background-color: main.$primary-color-10;
+    border: 1px solid main.$primary-color-60;
+    cursor: pointer;
+  }
+  &:active{
+    background-color: main.$primary-color-30;
+    border: 1px solid main.$primary-color-60;
+  }
+  &:disabled {
+    background-color: main.$neutral-color-10;
+    border: 1px solid main.$primary-color-40;
+  }
+  &:focus {
+    background-color: main.$neutral-color-10;
+    border: 1px solid main.$primary-color-40;
+  }
+
+  svg {
+    path {
+      stroke: main.$primary-color-60;
+    }
+  }
+}
+.white {
+  @include baseAttributes();
+  color: main.$primary-color-60;
+  background-color: main.$neutral-color-10;
+  border: 1px solid main.$neutral-color-10;
+
+  &:hover {
+    background-color: main.$primary-color-10;
+    border: 1px solid main.$neutral-color-10;
+    cursor: pointer;
+  }
+  &:active{
+    background-color: main.$primary-color-30;
+    border: 1px solid main.$neutral-color-10;
+  }
+  &:disabled {
+    background-color: main.$neutral-color-10;
+    border: 1px solid main.$neutral-color-10;
+  }
+  &:focus {
+    background-color: main.$neutral-color-10;
+    border: 1px solid main.$primary-color-40;
+  }
+
+  svg {
+    path {
+      stroke: main.$primary-color-60;
+    }
   }
 }
 
