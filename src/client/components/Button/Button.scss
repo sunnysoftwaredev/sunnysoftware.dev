@@ -29,16 +29,34 @@
 // Loading variants
 
 .primaryLoading {
-  background-color: main.$primary-color-30 !important;
-  border: 1px solid main.$primary-color-30 !important;
+  @include baseAttributes();
+  background-color: main.$primary-color-30;
+  border: 1px solid main.$primary-color-30;
+  svg {
+    path {
+      stroke: main.$primary-color-60;
+    }
+  }
 }
 .outlinedLoading {
-  background-color: main.$neutral-color-10 !important;
-  border: 1px solid main.$primary-color-40 !important;
+  @include baseAttributes();
+  background-color: main.$neutral-color-10;
+  border: 1px solid main.$primary-color-40;
+  svg {
+    path {
+      stroke: main.$primary-color-60;
+    }
+  }
 }
 .whiteLoading {
-  background-color: main.$neutral-color-10 !important;
-  border: 1px solid main.$neutral-color-10 !important;
+  @include baseAttributes();
+  background-color: main.$neutral-color-10;
+  border: 1px solid main.$neutral-color-10;
+  svg {
+    path {
+      stroke: main.$primary-color-60;
+    }
+  }
 }
 
 // Main variants

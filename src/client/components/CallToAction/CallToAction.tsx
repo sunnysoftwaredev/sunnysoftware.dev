@@ -26,7 +26,7 @@ const CallToAction: FunctionComponent = () => {
         engineers can bring your business value and efficiency
 
       </p>
-      <Button size="large" onClick={handleSubmit} icon>Get in Touch! </Button>
+      <Button size="large" onClick={handleSubmit} icon >Get in Touch! </Button>
     </div>
   );
 };
