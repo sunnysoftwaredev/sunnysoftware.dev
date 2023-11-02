@@ -26,9 +26,9 @@ const Button: FunctionComponent<ButtonProps>
        type="button"
        disabled={disabled !== undefined}
        className={classNames({
-         [styles.primary]: variant === undefined,
-         [styles.outlined]: variant === 'outlined',
-         [styles.white]: variant === 'white',
+         [styles.primary]: variant === undefined && !clicked,
+         [styles.outlined]: variant === 'outlined' && !clicked,
+         [styles.white]: variant === 'white' && !clicked,
        }, {
          [styles.small]: size === 'small',
          [styles.medium]: size === 'medium',
@@ -39,8 +39,8 @@ const Button: FunctionComponent<ButtonProps>
          [styles.largeIcon]: (size === 'large') && children === undefined,
        }, {
          [styles.primaryLoading]: clicked && variant === undefined,
-         [styles.outlinedLoading]: clicked && variant === undefined,
-         [styles.whiteLoading]: clicked && variant === undefined,
+         [styles.outlinedLoading]: clicked && variant === 'outlined',
+         [styles.whiteLoading]: clicked && variant === 'white',
        })}
        onClick={handleClick}
      >

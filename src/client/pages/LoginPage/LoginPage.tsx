@@ -19,7 +19,7 @@ const LoginPage: FunctionComponent = () => {
         <link rel="canonical" href="https://sunnysoftware.dev/login" />
         <meta name="description" content="The login page" />
       </Helmet>
-      <h1 className="LoginPage">LoginPage</h1>
+      <h1 className="loginPage">Login Page</h1>
       <LoginForm />
     </div>
   );
