@@ -4,9 +4,10 @@ import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
 import { isObjectRecord } from '../../../common/utilities/types';
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
+import Input from '../Input/Input';
 
 const LoginForm: FunctionComponent = () => {
-  const [inputName, setInputName] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
@@ -20,9 +21,9 @@ const LoginForm: FunctionComponent = () => {
 
   const handleUsernameChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setInputName(e.target.value);
+      setUsername(e.target.value);
     },
-    [setInputName],
+    [setUsername],
   );
 
   const handlePasswordChange = useCallback(
@@ -41,7 +42,7 @@ const LoginForm: FunctionComponent = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          inputName,
+          username,
           password,
         }),
       });
@@ -69,27 +70,20 @@ const LoginForm: FunctionComponent = () => {
         logger.error(err.message);
       }
     }
-  }, [inputName, password, navigate]);
+  }, [username, password, navigate]);
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <input
-          type="text" id="username"
-          onChange={handleUsernameChange}
-        />
-        <label className="usernameLabel" htmlFor="username">
-          Username
+        <label>
+          Username:
+          <Input size="large" value={username} setValue={setUsername} onChange={handleUsernameChange} placeholderText="Your username" />
         </label>
       </div>
-
-      <div className="passwordBox">
-        <input
-          type="password" id="passwordBox" className="passwordBox"
-          onChange={handlePasswordChange}
-        />
-        <label className="passwordLabel" htmlFor="passwordBox">
+      <div>
+        <label>
           Password
+          <Input size="large" value={password} setValue={setPassword} onChange={handlePasswordChange} placeholderText="Your password" />
         </label>
       </div>
 
