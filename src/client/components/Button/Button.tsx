@@ -7,7 +7,7 @@ type ButtonProps = {
   size: string;
   children?: string;
   onClick: (e: SyntheticEvent) => void;
-  icon: boolean;
+  icon?: boolean;
   variant?: string;
   disabled?: boolean;
 };
@@ -34,9 +34,13 @@ const Button: FunctionComponent<ButtonProps>
          [styles.medium]: size === 'medium',
          [styles.large]: size === 'large',
        }, {
-         [styles.smallIcon]: (size === 'small') && children === undefined,
-         [styles.mediumIcon]: (size === 'medium') && children === undefined,
-         [styles.largeIcon]: (size === 'large') && children === undefined,
+         [styles.smallWithIcon]: (size === 'small') && icon !== undefined,
+         [styles.mediumWithIcon]: (size === 'medium') && icon !== undefined,
+         [styles.largeWithIcon]: (size === 'large') && icon !== undefined,
+       }, {
+         [styles.smallIconOnly]: (size === 'small') && children === undefined,
+         [styles.mediumIconOnly]: (size === 'medium') && children === undefined,
+         [styles.largeIconOnly]: (size === 'large') && children === undefined,
        }, {
          [styles.primaryLoading]: clicked && variant === undefined,
          [styles.outlinedLoading]: clicked && variant === 'outlined',
@@ -44,7 +48,7 @@ const Button: FunctionComponent<ButtonProps>
        })}
        onClick={handleClick}
      >
-       {(icon && !clicked) && (
+       {(icon !== undefined && !clicked) && (
          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
            <path d="M12 4.5V19.5M19.5 12H4.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
          </svg>

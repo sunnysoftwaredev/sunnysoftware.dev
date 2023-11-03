@@ -1,6 +1,6 @@
 @use "../../SCSS/main";
 
-@mixin baseAttributes() {
+@mixin baseAttributes {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -151,7 +151,11 @@
   width: 68px;
   height: 32px;
 }
-.smallIcon {
+.smallWithIcon {
+  width: 90px;
+  height: 32px;
+}
+.smallIconOnly {
   width: 32px;
   height: 32px;
 }
@@ -159,7 +163,11 @@
   width: 85px;
   height: 40px;
 }
-.mediumIcon {
+.mediumWithIcon {
+  width: 109px;
+  height: 40px;
+}
+.mediumIconOnly {
   width: 40px;
   height: 40px;
 }
@@ -167,7 +175,11 @@
   width: 101px;
   height: 48px;
 }
-.largeIcon {
+.largeWithIcon {
+  width: 113px;
+  height: 48px;
+}
+.largeIconOnly {
   width: 48px;
   height: 48px;
 }

@@ -5,8 +5,10 @@
 
 @use '../../SCSS/main';
 
-.input {
+@mixin baseAttributes {
   display: flex;
+  background: main.$neutral-color-10;
+  color: main.$neutral-color-90;
   width: 200px;
   align-items: center;
   gap: 8px;
@@ -16,24 +18,90 @@
   font-weight: 400;
   line-height: 24px;
   border-radius: 100px;
+  &::placeholder{
+    color: main.$neutral-color-60;
+  }
+}
+
+// Main styling
+.input {
+  @include baseAttributes();
+  box-sizing: border-box;
+  padding-left: 40px;
+  padding-right: 40px;
+
   &:hover {
   border: 1px solid main.$primary-color-50;
-  background: main.$neutral-color-10;
+  }
+  &:focus {
+    border: 1px solid main.$primary-color-60;
+  }
+  &:invalid {
+    border: 1px solid #ff4d4f;
+  }
+  &:disabled {
+    color: main.$neutral-color-60;
+    border: 1px solid main.$neutral-color-50;
+    background-color: main.$neutral-color-40;
+  }
+  &:invalid {
+    border: 1px solid #ff4d4f;
   }
   }
 
-// Check size
 .small {
-  width: 200px;
-    height: 30px;
+  height: 30px;
 }
 
 .medium {
-  width: 200px;
-    height: 40px;
+  height: 40px;
 }
 
 .large {
-  width: 200px;
-    height: 480px;
+  height: 48px;
 }
+
+
+// Buttons
+
+.svgButton {
+  all: unset;
+  position: relative;
+  background: none;
+  left: 10px;
+  z-index: 1;
+}
+
+.smallSvgButton {
+  top: 31px;
+}
+.mediumSvgButton {
+  top: 36px;
+}
+.largeSvgButton {
+  top: 41px;
+}
+
+.eraseButton {
+  all: unset;
+  position: relative;
+  width: 0;
+  height: 0;
+  z-index: 1;
+  left: 170px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.smallEraseButton{
+  bottom: 26px;
+}
+.mediumEraseButton{
+  bottom: 31px;
+}
+.largeEraseButton{
+  bottom: 36px;
+}
+
+

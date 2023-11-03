@@ -42,13 +42,6 @@ const Navbar: FunctionComponent = () => {
             </a>
           </li>
         )}
-        {!active && (
-          <li className="nav-item">
-            <a className="nav-link active" href="/register">
-              Register
-            </a>
-          </li>
-        )}
         <li className="nav-item">
           <a className="nav-link active" href="/contact-us">
             Contact Us
