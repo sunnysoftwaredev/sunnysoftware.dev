@@ -3,10 +3,7 @@ import type { ChangeEvent, Dispatch, FunctionComponent, SetStateAction } from 'r
 import React, { useCallback } from 'react';
 import styles from './Input.scss';
 
-// value or icon needed as prop?
-
-// hitting the reset button DOES NOT reset the stateful variable
-// in the component until user starts typing again
+// still need to work on icon
 
 type InputProps = {
   size: string;
@@ -20,8 +17,8 @@ type InputProps = {
 };
 
 const Input: FunctionComponent<InputProps>
- = ({ size, placeholderText, onChange, type,
-   disabled, icon, setValue, value }) => {
+ = ({ size = 'medium', placeholderText, onChange, type = 'text',
+   disabled = false, icon = false, setValue, value }) => {
    const handleClick = useCallback((): void => {
      setValue('');
    }, [setValue]);
@@ -33,7 +30,7 @@ const Input: FunctionComponent<InputProps>
     }, [onChange]);
    return (
      <form>
-       {(icon !== undefined) && (
+       {icon && (
          <button
            type="button" className={classNames(styles.svgButton, {
              [styles.smallSvgButton]: size === 'small',
@@ -47,9 +44,9 @@ const Input: FunctionComponent<InputProps>
          </button>
        )}
        <input
-         type={type ?? 'text'}
+         type={type}
          placeholder={placeholderText ?? ''}
-         disabled={disabled !== undefined}
+         disabled={disabled}
          value={value}
          className={classNames(styles.input, {
            [styles.small]: size === 'small',

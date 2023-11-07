@@ -83,6 +83,7 @@
     background-color: main.$primary-color-70;
     border: 1px solid main.$primary-color-40;
   }
+
 }
 .outlined {
   @include baseAttributes();

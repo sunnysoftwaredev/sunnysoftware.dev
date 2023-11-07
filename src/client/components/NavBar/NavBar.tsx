@@ -2,6 +2,7 @@ import React, { useCallback, useContext } from 'react';
 import type { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
+import Button, { ButtonSize } from '../Button/Button';
 import styles from './NavBar.scss';
 
 const Navbar: FunctionComponent = () => {
@@ -29,7 +30,8 @@ const Navbar: FunctionComponent = () => {
 
   return (
     <nav>
-      <ul className={styles.navbarUL}>
+      <div className="logo">SUNNY SOFTWARE PLACEHOLDER</div>
+      <ul className={styles.menu}>
         <li className="nav-item">
           <a className="nav-link active" href="/">
             Home
@@ -90,25 +92,14 @@ const Navbar: FunctionComponent = () => {
             </a>
           </li>
         )}
-        {active
-          ? (
-            <form onSubmit={handleSubmit}>
-              <button type="submit" className="loginButton">
-                Log Out
-              </button>
-
-            </form>
-
-          )
-          : (
-            <form onSubmit={handleSubmit}>
-              <button type="submit" className="loginButton">
-                Log In
-              </button>
-
-            </form>
-          )}
       </ul>
+      {active
+        ? (
+          <Button size={ButtonSize.Large} onClick={handleSubmit} variant="outlined">Log Out</Button>
+        )
+        : (
+          <Button size={ButtonSize.Large} variant="outlined" onClick={handleSubmit}>Log In</Button>
+        )}
     </nav>
   );
 };
