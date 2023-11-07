@@ -11,16 +11,16 @@ router.post('/', (req, res) => {
     if (!isObjectRecord(req.body)) {
       throw new Error('api/login: req.body is not object');
     }
-    const { inputName, password } = req.body;
+    const { username, password } = req.body;
 
-    if (typeof inputName !== 'string') {
-      throw new Error('api/login: inputName not type string');
+    if (typeof username !== 'string') {
+      throw new Error('api/login: username not type string');
     }
     if (typeof password !== 'string') {
       throw new Error('api/login: password not type string');
     }
 
-    const userObject = await getUserByUsername(inputName);
+    const userObject = await getUserByUsername(username);
 
     const { id: userID, password: passwordDB, salt: saltDB }
      = userObject;
@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
     const checkPassword = saltedAndHashedLoginPassword.toString('hex');
 
     if (checkPassword !== passwordDB) {
-      throw new Error('Unable to authenticate with the provided inputName and password');
+      throw new Error('Unable to authenticate with the provided username and password');
     }
 
     // create expiration date 10 days from creation

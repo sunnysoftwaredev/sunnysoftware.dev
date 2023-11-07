@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import type { FunctionComponent, SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logger from '../../../server/logger';
-import Button from '../Button/Button';
+import Button, { ButtonSize } from '../Button/Button';
 import style from './CallToAction.scss';
 
 const CallToAction: FunctionComponent = () => {
@@ -26,7 +26,12 @@ const CallToAction: FunctionComponent = () => {
         engineers can bring your business value and efficiency
 
       </p>
-      <Button size="large" onClick={handleSubmit} >Contact Us! </Button>
+      <Button
+        size={ButtonSize.Large}
+        onClick={handleSubmit}
+      >
+        Contact Us!
+      </Button>
     </div>
   );
 };

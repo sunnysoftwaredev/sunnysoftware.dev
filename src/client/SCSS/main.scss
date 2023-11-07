@@ -60,3 +60,35 @@ $blue-color-80: #3281b3;
 $blue-color-90: #205f8c;
 $blue-color-100: #164266;
 
+
+// Breakpoints
+
+$breakpoints: (
+  "verySmall": 0,
+  "small": 480px,
+  "medium": 720px,
+  "large": 960px,
+  "xl": 1200px,
+);
+
+// @mixin verySmall {
+//   @media (min-width: map-get($breakpoints, "verySmall")) {
+//     @content;
+//   }
+// }
+
+// // Then in file:
+// // @verySmall {
+//   // font-size: 10px;
+//   // background-color: red;
+// //}
+
+// .responsive-test {
+//   @include verySmall{
+//     color: red;
+//   }
+//   @include small{
+//     color: red;
+//   }
+//   // etc...
+// }
