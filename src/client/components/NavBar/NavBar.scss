@@ -1,3 +1,6 @@
+@use "../../SCSS/main";
+
+
 $textColor: black;
 $temporaryBacking: gray;
 
@@ -10,21 +13,48 @@ display: flex;
 width: 90vw;
 height: 72px;
 padding: 32px 16px;
+margin: auto;
 justify-content: space-between;
 align-items: center;
 flex-shrink: 0;
 border-radius: 10px;
-// background: rgba(255, 255, 255, 0.90);
 background: $temporaryBacking;
+// REPLACE BELOW!!!
+// background: rgba(255, 255, 255, 0.90);
 backdrop-filter: blur(3.5px);
 gap: 32px;
 }
 
+img {
+  width: 72px;
+  height: 72px;
+}
+
 .menu {
-list-style-type: none;
-gap: 48px;
+  list-style-type: none;
+  gap: 48px;
   display: flex;
   padding: 1rem;
   color: black;
+  @include main.mobile {
+    display: none;
+  }
 
+}
+
+// .navItem {
+//   @include main.mobile {
+//     display: none;
+//   }
+// }
+
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  @include main.mobile {
+    flex-direction: column;
+  }
+  // border:  solid main.$primary-color-10
 }

@@ -63,32 +63,19 @@ $blue-color-100: #164266;
 
 // Breakpoints
 
-$breakpoints: (
-  "verySmall": 0,
-  "small": 480px,
-  "medium": 720px,
-  "large": 960px,
-  "xl": 1200px,
-);
+// $breakpoint: (
+//   "Mobile": 1023px
+// );
 
-// @mixin verySmall {
-//   @media (min-width: map-get($breakpoints, "verySmall")) {
+// @mixin mobile {
+//   @media (max-width: map-get($breakpoint, "Mobile")) {
 //     @content;
 //   }
 // }
 
-// // Then in file:
-// // @verySmall {
-//   // font-size: 10px;
-//   // background-color: red;
-// //}
+@mixin mobile {
+  @media (max-width: 1023px) {
+    @content;
+  }
+}
 
-// .responsive-test {
-//   @include verySmall{
-//     color: red;
-//   }
-//   @include small{
-//     color: red;
-//   }
-//   // etc...
-// }
