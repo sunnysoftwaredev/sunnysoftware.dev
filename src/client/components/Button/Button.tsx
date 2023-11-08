@@ -79,4 +79,3 @@ const Button: FunctionComponent<ButtonProps> = ({
 };
 
 export default Button;
-
