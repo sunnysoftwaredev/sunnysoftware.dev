@@ -111,7 +111,7 @@ const Navbar: FunctionComponent = () => {
           size={ButtonSize.Large}
           onClick={handleLetsTalk}
         >
-          Let's Talk
+          {'Let\'s Talk'}
         </Button>
       </div>
     </nav>
