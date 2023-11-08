@@ -150,11 +150,11 @@
     width: 90px;
     height: 32px;
   }
-}
 
-.smallIconOnly {
-  width: 32px;
-  height: 32px;
+  &.iconOnly {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .medium {
@@ -165,11 +165,11 @@
     width: 109px;
     height: 40px;
   }
-}
 
-.mediumIconOnly {
-  width: 40px;
-  height: 40px;
+  &.iconOnly {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .large {
@@ -180,9 +180,9 @@
     width: 113px;
     height: 48px;
   }
-}
 
-.largeIconOnly {
-  width: 48px;
-  height: 48px;
+  &.iconOnly {
+    width: 48px;
+    height: 48px;
+  }
 }
