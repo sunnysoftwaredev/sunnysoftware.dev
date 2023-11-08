@@ -2,7 +2,7 @@ import React, { useCallback, useContext } from 'react';
 import type { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
-import Button, { ButtonSize } from '../Button/Button';
+import Button, { ButtonSize, ButtonVariant } from '../Button/Button';
 import logger from '../../../server/logger';
 import Logo from '../../SCSS/Assets/Logo.png';
 import styles from './NavBar.scss';
@@ -102,10 +102,22 @@ const Navbar: FunctionComponent = () => {
       <div className={styles.buttons}>
         {active
           ? (
-            <Button size={ButtonSize.Large} onClick={handleSubmit} variant="outlined">Log Out</Button>
+            <Button
+              size={ButtonSize.Large}
+              onClick={handleSubmit}
+              variant={ButtonVariant.Outlined}
+            >
+              Log Out
+            </Button>
           )
           : (
-            <Button size={ButtonSize.Large} variant="outlined" onClick={handleSubmit}>Log In</Button>
+            <Button
+              size={ButtonSize.Large}
+              variant={ButtonVariant.Outlined}
+              onClick={handleSubmit}
+            >
+              Log In
+            </Button>
           )}
         <Button
           size={ButtonSize.Large}
