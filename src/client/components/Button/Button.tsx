@@ -24,7 +24,7 @@ const Button: FunctionComponent<ButtonProps>
  = ({ size = 'medium', onClick, icon = false, children, variant = 'primary', disabled = false, loading = false }) => {
    const handleClick = useCallback((e: SyntheticEvent): void => {
      e.preventDefault();
-     onClick(e);
+     onClick();
    }, [onClick]);
    return (
      <button

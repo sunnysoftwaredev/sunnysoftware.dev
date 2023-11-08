@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import type { FunctionComponent, SyntheticEvent } from 'react';
+import type { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logger from '../../../server/logger';
 import Button, { ButtonSize } from '../Button/Button';
@@ -8,9 +8,8 @@ import style from './CallToAction.scss';
 const CallToAction: FunctionComponent = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = useCallback((e: SyntheticEvent): void => {
+  const handleSubmit = useCallback((): void => {
     try {
-      e.preventDefault();
       // setTimeout(() => console.log('timeout'), 3000);
       navigate('/contact-us');
     } catch (err: unknown) {
