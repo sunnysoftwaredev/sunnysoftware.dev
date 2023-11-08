@@ -141,39 +141,47 @@
 }
 
 
- // check size
- .small {
+// check size
+.small {
   width: 68px;
   height: 32px;
+
+  &.icon {
+    width: 90px;
+    height: 32px;
+  }
 }
-.smallWithIcon {
-  width: 90px;
-  height: 32px;
-}
+
 .smallIconOnly {
   width: 32px;
   height: 32px;
 }
+
 .medium {
   width: 85px;
   height: 40px;
+
+  &.icon {
+    width: 109px;
+    height: 40px;
+  }
 }
-.mediumWithIcon {
-  width: 109px;
-  height: 40px;
-}
+
 .mediumIconOnly {
   width: 40px;
   height: 40px;
 }
+
 .large {
   width: 101px;
   height: 48px;
+
+  &.icon {
+    width: 113px;
+    height: 48px;
+  }
 }
-.largeWithIcon {
-  width: 113px;
-  height: 48px;
-}
+
 .largeIconOnly {
   width: 48px;
   height: 48px;
