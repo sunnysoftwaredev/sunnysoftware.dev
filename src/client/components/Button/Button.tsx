@@ -38,6 +38,12 @@ const Button: FunctionComponent<ButtonProps> = ({
     e.preventDefault();
     onClick();
   }, [onClick]);
+  const small = size === ButtonSize.Small;
+  const medium = size === ButtonSize.Medium;
+  const large = size === ButtonSize.Large;
+  const primary = variant === ButtonVariant.Primary;
+  const outlined = variant === ButtonVariant.Outlined;
+  const white = variant === ButtonVariant.White;
   return (
     <button
       disabled={disabled}
@@ -47,19 +53,19 @@ const Button: FunctionComponent<ButtonProps> = ({
         [styles.outlined]: variant === ButtonVariant.Outlined && !loading,
         [styles.white]: variant === ButtonVariant.White && !loading,
       }, {
-        [styles.small]: size === ButtonSize.Small,
-        [styles.medium]: size === ButtonSize.Medium,
-        [styles.large]: size === ButtonSize.Large,
-        [styles.smallWithIcon]: (size === ButtonSize.Small) && !icon,
-        [styles.mediumWithIcon]: (size === ButtonSize.Medium) && !icon,
-        [styles.largeWithIcon]: (size === ButtonSize.Large) && !icon,
-        [styles.smallIconOnly]: (size === ButtonSize.Small) && children === undefined,
-        [styles.mediumIconOnly]: (size === ButtonSize.Medium) && children === undefined,
-        [styles.largeIconOnly]: (size === ButtonSize.Large) && children === undefined,
+        [styles.small]: small,
+        [styles.medium]: medium,
+        [styles.large]: large,
+        [styles.smallWithIcon]: small && !icon,
+        [styles.mediumWithIcon]: medium && !icon,
+        [styles.largeWithIcon]: large && !icon,
+        [styles.smallIconOnly]: small && children === undefined,
+        [styles.mediumIconOnly]: medium && children === undefined,
+        [styles.largeIconOnly]: large && children === undefined,
       }, {
-        [styles.primaryLoading]: loading && variant === ButtonVariant.Primary,
-        [styles.outlinedLoading]: loading && variant === ButtonVariant.Outlined,
-        [styles.whiteLoading]: loading && variant === ButtonVariant.White,
+        [styles.primaryLoading]: loading && primary,
+        [styles.outlinedLoading]: loading && outlined,
+        [styles.whiteLoading]: loading && white,
       })}
       onClick={handleClick}
     >
