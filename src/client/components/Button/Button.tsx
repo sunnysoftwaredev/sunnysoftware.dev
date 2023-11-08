@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import type { FunctionComponent, SyntheticEvent } from 'react';
+import type { FunctionComponent, PropsWithChildren, SyntheticEvent } from 'react';
 import React, { useCallback } from 'react';
 import styles from './Button.scss';
 
@@ -15,15 +15,14 @@ export enum ButtonVariant {
   White = 'White',
 }
 
-type ButtonProps = {
+type ButtonProps = PropsWithChildren<{
   variant?: ButtonVariant;
   size: ButtonSize;
-  children?: string;
   onClick: () => void;
   icon?: boolean;
   disabled?: boolean;
   loading?: boolean;
-};
+}>;
 
 const Button: FunctionComponent<ButtonProps> = ({
   variant = ButtonVariant.Primary,
