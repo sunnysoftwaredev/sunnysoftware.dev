@@ -11,6 +11,12 @@
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
+
+  svg {
+    path {
+      stroke: main.$primary-color-60;
+    }
+  }
 }
 
 // animate loading circle
@@ -26,36 +32,6 @@
   animation: rotate 2s linear infinite;
 }
 
-// Loading variants
-
-.primaryLoading {
-  background-color: main.$primary-color-30;
-  border: 1px solid main.$primary-color-30;
-  svg {
-    path {
-      stroke: main.$primary-color-60;
-    }
-  }
-}
-.outlinedLoading {
-  background-color: main.$neutral-color-10;
-  border: 1px solid main.$primary-color-40;
-  svg {
-    path {
-      stroke: main.$primary-color-60;
-    }
-  }
-}
-.whiteLoading {
-  background-color: main.$neutral-color-10;
-  border: 1px solid main.$neutral-color-10;
-  svg {
-    path {
-      stroke: main.$primary-color-60;
-    }
-  }
-}
-
 // Main variants
 .primary {
   color: main.$neutral-color-10;
@@ -67,20 +43,28 @@
     border: 1px solid main.$primary-color-70;
     cursor: pointer;
   }
+
   &:active{
     background-color: main.$primary-color-80;
     border: 1px solid main.$primary-color-80;
   }
+
   &:disabled {
     background-color: main.$primary-color-30;
     border: 1px solid main.$primary-color-30;
   }
+
   &:focus {
     background-color: main.$primary-color-70;
     border: 1px solid main.$primary-color-40;
   }
 
+  &.loading {
+    background-color: main.$primary-color-30;
+    border: 1px solid main.$primary-color-30;
+  }
 }
+
 .outlined {
   color: main.$primary-color-60;
   background-color: main.$neutral-color-10;
@@ -104,12 +88,12 @@
     border: 1px solid main.$primary-color-40;
   }
 
-  svg {
-    path {
-      stroke: main.$primary-color-60;
-    }
+  &.loading {
+    background-color: main.$neutral-color-10;
+    border: 1px solid main.$primary-color-40;
   }
 }
+
 .white {
   color: main.$primary-color-60;
   background-color: main.$neutral-color-10;
@@ -133,10 +117,9 @@
     border: 1px solid main.$primary-color-40;
   }
 
-  svg {
-    path {
-      stroke: main.$primary-color-60;
-    }
+  &.loading {
+    background-color: main.$neutral-color-10;
+    border: 1px solid main.$neutral-color-10;
   }
 }
 

@@ -49,17 +49,15 @@ const Button: FunctionComponent<ButtonProps> = ({
       disabled={disabled}
       type="button"
       className={classNames(styles.button, {
-        [styles.primary]: variant === ButtonVariant.Primary && !loading,
-        [styles.outlined]: variant === ButtonVariant.Outlined && !loading,
-        [styles.white]: variant === ButtonVariant.White && !loading,
+        [styles.primary]: primary,
+        [styles.outlined]: outlined,
+        [styles.white]: white,
         [styles.small]: small,
         [styles.medium]: medium,
         [styles.large]: large,
         [styles.icon]: icon,
         [styles.iconOnly]: children === undefined,
-        [styles.primaryLoading]: loading && primary,
-        [styles.outlinedLoading]: loading && outlined,
-        [styles.whiteLoading]: loading && white,
+        [styles.loading]: loading,
       })}
       onClick={handleClick}
     >
