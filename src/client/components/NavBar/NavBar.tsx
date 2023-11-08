@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from 'react';
-import type { FunctionComponent, SyntheticEvent } from 'react';
+import type { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
 import Button, { ButtonSize } from '../Button/Button';
@@ -11,9 +11,7 @@ const Navbar: FunctionComponent = () => {
   const navigate = useNavigate();
   const { active, role } = useContext(AuthContext) ?? { active: false, role: '' };
 
-  const handleSubmit = useCallback(async(e: React.FormEvent<HTMLFormElement>):
-  Promise<void> => {
-    e.preventDefault();
+  const handleSubmit = useCallback(async(): Promise<void> => {
     if (active) {
       await fetch('api/logout', {
         method: 'POST',
@@ -30,9 +28,8 @@ const Navbar: FunctionComponent = () => {
     }
   }, [navigate, active]);
 
-  const handleLetsTalk = useCallback((e: SyntheticEvent): void => {
+  const handleLetsTalk = useCallback((): void => {
     try {
-      e.preventDefault();
       // setTimeout(() => console.log('timeout'), 3000);
       navigate('/contact-us');
     } catch (err: unknown) {
