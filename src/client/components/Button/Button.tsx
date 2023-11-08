@@ -48,11 +48,10 @@ const Button: FunctionComponent<ButtonProps> = ({
     <button
       disabled={disabled}
       type="button"
-      className={classNames({
+      className={classNames(styles.button, {
         [styles.primary]: variant === ButtonVariant.Primary && !loading,
         [styles.outlined]: variant === ButtonVariant.Outlined && !loading,
         [styles.white]: variant === ButtonVariant.White && !loading,
-      }, {
         [styles.small]: small,
         [styles.medium]: medium,
         [styles.large]: large,
@@ -62,7 +61,6 @@ const Button: FunctionComponent<ButtonProps> = ({
         [styles.smallIconOnly]: small && children === undefined,
         [styles.mediumIconOnly]: medium && children === undefined,
         [styles.largeIconOnly]: large && children === undefined,
-      }, {
         [styles.primaryLoading]: loading && primary,
         [styles.outlinedLoading]: loading && outlined,
         [styles.whiteLoading]: loading && white,

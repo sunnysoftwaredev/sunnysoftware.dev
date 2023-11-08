@@ -1,6 +1,6 @@
 @use "../../SCSS/main";
 
-@mixin baseAttributes {
+.button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -29,7 +29,6 @@
 // Loading variants
 
 .primaryLoading {
-  @include baseAttributes();
   background-color: main.$primary-color-30;
   border: 1px solid main.$primary-color-30;
   svg {
@@ -39,7 +38,6 @@
   }
 }
 .outlinedLoading {
-  @include baseAttributes();
   background-color: main.$neutral-color-10;
   border: 1px solid main.$primary-color-40;
   svg {
@@ -49,7 +47,6 @@
   }
 }
 .whiteLoading {
-  @include baseAttributes();
   background-color: main.$neutral-color-10;
   border: 1px solid main.$neutral-color-10;
   svg {
@@ -61,7 +58,6 @@
 
 // Main variants
 .primary {
-  @include baseAttributes();
   color: main.$neutral-color-10;
   background-color: main.$primary-color-60;
   border: 1px solid main.$primary-color-60;
@@ -86,7 +82,6 @@
 
 }
 .outlined {
-  @include baseAttributes();
   color: main.$primary-color-60;
   background-color: main.$neutral-color-10;
   border: 1px solid main.$primary-color-60;
@@ -116,7 +111,6 @@
   }
 }
 .white {
-  @include baseAttributes();
   color: main.$primary-color-60;
   background-color: main.$neutral-color-10;
   border: 1px solid main.$neutral-color-10;
