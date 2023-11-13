@@ -63,18 +63,14 @@ $blue-color-100: #164266;
 
 // Breakpoints
 
-// $breakpoint: (
-//   "Mobile": 1023px
-// );
-
-// @mixin mobile {
-//   @media (max-width: map-get($breakpoint, "Mobile")) {
-//     @content;
-//   }
-// }
-
 @mixin mobile {
   @media (max-width: 1023px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media(min-width: 1024px) {
     @content;
   }
 }

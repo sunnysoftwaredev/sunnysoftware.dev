@@ -1,6 +1,7 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import type { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import classNames from 'classnames';
 import AuthContext from '../../context/AuthContext';
 import Button, { ButtonSize, ButtonVariant } from '../Button/Button';
 import logger from '../../../server/logger';
@@ -10,6 +11,7 @@ import styles from './NavBar.scss';
 const Navbar: FunctionComponent = () => {
   const navigate = useNavigate();
   const { active, role } = useContext(AuthContext) ?? { active: false, role: '' };
+  const [hamburgerOpen, setHamburgerOpen] = useState(false);
 
   const handleSubmit = useCallback(async(): Promise<void> => {
     if (active) {
@@ -38,10 +40,19 @@ const Navbar: FunctionComponent = () => {
       }
     }
   }, [navigate]);
+
+  const toggleHamburger = useCallback(() => {
+    setHamburgerOpen(!hamburgerOpen);
+  }, [hamburgerOpen]);
+
   return (
     <nav>
       <img src={Logo} alt="Sunny Software Logo" />
-      <ul className={styles.menu}>
+      <ul className={classNames(styles.menu, {
+        [styles.hidden]: !hamburgerOpen && window.innerWidth < 1024,
+        [styles.mobileMenu]: hamburgerOpen,
+      })}
+      >
         <li className={styles.navItem}>
           <a className="nav-link active" href="/">
             Home
@@ -99,7 +110,10 @@ const Navbar: FunctionComponent = () => {
           </li>
         )}
       </ul>
-      <div className={styles.buttons}>
+      <div className={classNames(styles.buttons, {
+        [styles.hidden]: !hamburgerOpen && window.innerWidth < 1024,
+      })}
+      >
         {active
           ? (
             <Button
@@ -115,6 +129,7 @@ const Navbar: FunctionComponent = () => {
               size={ButtonSize.Large}
               variant={ButtonVariant.Outlined}
               onClick={handleSubmit}
+              icon
             >
               Log In
             </Button>
@@ -122,9 +137,27 @@ const Navbar: FunctionComponent = () => {
         <Button
           size={ButtonSize.Large}
           onClick={handleLetsTalk}
+          icon
         >
           {'Let\'s Talk'}
         </Button>
+      </div>
+      <div className={styles.hamburger} onClick={toggleHamburger}>
+        <div className={classNames(
+          styles.burger,
+          { [styles.burgerOne]: hamburgerOpen }
+        )}
+        />
+        <div className={classNames(
+          styles.burger,
+          { [styles.burgerTwo]: hamburgerOpen }
+        )}
+        />
+        <div className={classNames(
+          styles.burger,
+          { [styles.burgerThree]: hamburgerOpen }
+        )}
+        />
       </div>
     </nav>
   );

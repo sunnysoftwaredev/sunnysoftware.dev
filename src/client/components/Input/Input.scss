@@ -1,30 +1,26 @@
 @use '../../SCSS/main';
 
-@mixin baseAttributes {
-  display: flex;
-  position: relative;
-  background: main.$neutral-color-10;
-  color: main.$neutral-color-90;
-  width: 200px;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Plus Jakarta Sans';
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  border-radius: 100px;
-  &::placeholder{
-    color: main.$neutral-color-60;
-  }
-}
 
 // Main styling
 .input {
-  @include baseAttributes();
+  display: flex;
+  background: main.$neutral-color-10;
+  color: main.$neutral-color-90;
+  width: 12.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Plus Jakarta Sans';
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem;
+  border-radius: 6.25rem;
+  &::placeholder{
+    color: main.$neutral-color-60;
+  }
   box-sizing: border-box;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
 
   &:hover {
   border: 1px solid main.$primary-color-50;
@@ -45,58 +41,57 @@
   }
   }
 
-.small {
-  height: 30px;
-}
-
-.medium {
-  height: 40px;
-}
-
-.large {
-  height: 48px;
-}
-
-
 // Buttons
 
-.svgButton {
-  all: unset;
+form {
   position: relative;
-  background: none;
-  left: 10px;
-  z-index: 1;
 }
 
-.smallSvgButton {
-  top: 31px;
-}
-.mediumSvgButton {
-  top: 36px;
-}
-.largeSvgButton {
-  top: 41px;
+.searchButton {
+  all: unset;
+  position: absolute;
+  background: none;
+  margin-left: 0.45rem;
+  z-index: 1;
 }
 
 .eraseButton {
   all: unset;
-  position: relative;
-  z-index: 1px;
-  left: 170px;
-  bottom: 40px;
+  position: absolute;
+  z-index: 1;
+  left: 10.625rem;
   &:hover {
     cursor: pointer;
   }
 }
 
-.smallEraseButton{
-  bottom: 26px;
-}
-.mediumEraseButton{
-  bottom: 31px;
-}
-.largeEraseButton{
-  bottom: 36px;
+// Sizes
+.small {
+  height: 1.875rem;
+  &.searchButton {
+    top: 0.2rem;
+  }
+  &.eraseButton {
+  bottom: -0.1rem;
+  }
 }
 
+.medium {
+  height: 2.5rem;
+  &.searchButton {
+    top: 0.2rem;
+  }
+  &.eraseButton {
+  bottom: -0.15rem;
+  }
+}
 
+.large {
+  height: 3rem;
+  &.searchButton {
+    top: 0.2rem;
+  }
+  &.eraseButton {
+  bottom: -0.2rem;
+  }
+}

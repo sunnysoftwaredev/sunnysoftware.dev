@@ -1,6 +1,5 @@
 @use "../../SCSS/main";
 
-
 $textColor: black;
 $temporaryBacking: gray;
 
@@ -10,10 +9,10 @@ $temporaryBacking: gray;
 
 nav {
 display: flex;
-width: 90vw;
+width: auto;
 height: 72px;
 padding: 32px 16px;
-margin: auto;
+margin: 0 5vw;
 justify-content: space-between;
 align-items: center;
 flex-shrink: 0;
@@ -37,17 +36,26 @@ img {
   padding: 1rem;
   color: black;
   @include main.mobile {
-    display: none;
+    flex-direction: column;
+    height: 80vh;
   }
-
 }
 
-// .navItem {
-//   @include main.mobile {
-//     display: none;
-//   }
-// }
+.mobileMenu {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  background-color: $temporaryBacking;
+  height: 80vh;
+  width: 75vw;
+  top: 0;
+  left: 100px;
+  border-radius: 10px;
+}
 
+.hidden {
+  display: none;
+}
 
 .buttons {
   display: flex;
@@ -55,6 +63,41 @@ img {
   gap: 32px;
   @include main.mobile {
     flex-direction: column;
+    display: none;
   }
-  // border:  solid main.$primary-color-10
+}
+
+
+// Hamburger menu
+.hamburger {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: space-around;
+  flex-flow: column nowrap;
+  z-index: 1;
+  cursor: pointer;
+  @include main.desktop {
+    display: none;
+  }
+}
+
+.burger {
+  width: 2rem;
+  height: 0.25rem;
+  border-radius: 10px;
+  background-color: black;
+  transform-origin: 1px;
+  transition: all 0.3s linear;
+}
+.burgerOne {
+  transform: rotate(45deg)
+}
+
+.burgerTwo {
+  opacity: 0;
+}
+
+.burgerThree {
+  transform: rotate(-45deg)
 }
