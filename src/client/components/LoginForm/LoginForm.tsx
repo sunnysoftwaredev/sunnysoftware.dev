@@ -4,7 +4,7 @@ import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
 import { isObjectRecord } from '../../../common/utilities/types';
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
-import Input from '../Input/Input';
+import Input, { InputSize } from '../Input/Input';
 
 const LoginForm: FunctionComponent = () => {
   const [username, setUsername] = useState('');
@@ -77,13 +77,13 @@ const LoginForm: FunctionComponent = () => {
       <div>
         <label>
           Username:
-          <Input size="large" value={username} setValue={setUsername} onChange={handleUsernameChange} placeholderText="Your username" />
+          <Input icon size={InputSize.Small} value={username} setValue={setUsername} onChange={handleUsernameChange} placeholderText="Your username" />
         </label>
       </div>
       <div>
         <label>
           Password
-          <Input size="large" value={password} setValue={setPassword} onChange={handlePasswordChange} placeholderText="Your password" />
+          <Input icon size={InputSize.Medium} value={password} setValue={setPassword} onChange={handlePasswordChange} placeholderText="Your password" />
         </label>
       </div>
 

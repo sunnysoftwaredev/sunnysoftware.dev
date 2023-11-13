@@ -14,7 +14,7 @@
 
   svg {
     path {
-      stroke: main.$primary-color-60;
+      stroke: white;
     }
   }
 }
@@ -92,6 +92,11 @@
     background-color: main.$neutral-color-10;
     border: 1px solid main.$primary-color-40;
   }
+  svg {
+    path {
+      stroke: main.$primary-color-60;
+    }
+  }
 }
 
 .white {
@@ -120,6 +125,11 @@
   &.loading {
     background-color: main.$neutral-color-10;
     border: 1px solid main.$neutral-color-10;
+  }
+  svg {
+    path {
+      stroke: main.$primary-color-60;
+    }
   }
 }
 
