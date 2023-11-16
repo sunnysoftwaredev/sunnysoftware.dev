@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
+import type { FunctionComponent, ChangeEvent } from 'react';
 import { isObjectRecord } from '../../../common/utilities/types';
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
 import Input, { InputSize } from '../Input/Input';
+import Button, { ButtonSize } from '../Button/Button';
 
 const LoginForm: FunctionComponent = () => {
   const [username, setUsername] = useState('');
@@ -33,9 +34,8 @@ const LoginForm: FunctionComponent = () => {
     [setPassword],
   );
 
-  const handleSubmit = useCallback(async(e: SyntheticEvent) => {
+  const handleSubmit = useCallback(async() => {
     try {
-      e.preventDefault();
       const response = await fetch('api/login', {
         method: 'POST',
         headers: {
@@ -77,7 +77,7 @@ const LoginForm: FunctionComponent = () => {
       <div>
         <label>
           Username:
-          <Input icon size={InputSize.Small} value={username} setValue={setUsername} onChange={handleUsernameChange} placeholderText="Your username" />
+          <Input icon size={InputSize.Medium} value={username} setValue={setUsername} onChange={handleUsernameChange} placeholderText="Your username" />
         </label>
       </div>
       <div>
@@ -86,11 +86,7 @@ const LoginForm: FunctionComponent = () => {
           <Input icon size={InputSize.Medium} value={password} setValue={setPassword} onChange={handlePasswordChange} placeholderText="Your password" />
         </label>
       </div>
-
-      <button type="submit" className="loginButton">
-        Sign in
-      </button>
-
+      <Button size={ButtonSize.Large} onClick={handleSubmit}>Sign in </Button>
       <div className="forgotPassword">
         <a href="#">Forgot password?</a>
       </div>

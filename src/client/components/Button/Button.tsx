@@ -15,6 +15,26 @@ export enum ButtonVariant {
   White = 'White',
 }
 
+export enum ButtonType {
+  Button = 'button',
+  Submit = 'submit',
+  Reset = 'reset',
+}
+// export type ButtonType = JSX.IntrinsicElements['button']['type'];
+
+// export type ButtonType = React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+// export type ButtonType = {
+//   'button':string,
+//   'submit': string,
+//   'reset': string,
+//   undefined: undefined,
+// }
+
+// // React.ComponentProps<'button'>
+
+// export type ButtonType = '"submit" | "button" | "reset" | undefined';
+
 type ButtonProps = PropsWithChildren<{
   variant?: ButtonVariant;
   size: ButtonSize;
@@ -22,6 +42,7 @@ type ButtonProps = PropsWithChildren<{
   icon?: boolean;
   disabled?: boolean;
   loading?: boolean;
+  type?: ButtonType;
 }>;
 
 const Button: FunctionComponent<ButtonProps> = ({
@@ -32,6 +53,7 @@ const Button: FunctionComponent<ButtonProps> = ({
   icon = false,
   disabled = false,
   loading = false,
+  type = ButtonType.Button,
 }) => {
   const handleClick = useCallback((e: SyntheticEvent): void => {
     e.preventDefault();
@@ -43,6 +65,11 @@ const Button: FunctionComponent<ButtonProps> = ({
   const primary = variant === ButtonVariant.Primary;
   const outlined = variant === ButtonVariant.Outlined;
   const white = variant === ButtonVariant.White;
+  const elementType = {
+    [ButtonType.Button]: 'button',
+    [ButtonType.Submit]: 'submit',
+    [ButtonType.Reset]: 'reset',
+  }[type];
   const iconElement = icon && !loading && (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 4.5V19.5M19.5 12H4.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -56,6 +83,7 @@ const Button: FunctionComponent<ButtonProps> = ({
   return (
     <button
       disabled={disabled}
+      // type={elementType}
       type="button"
       className={classNames(styles.button, {
         [styles.primary]: primary,
