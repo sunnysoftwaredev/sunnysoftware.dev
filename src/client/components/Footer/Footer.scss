@@ -1,13 +1,67 @@
+@use '../../SCSS/main';
+
 footer {
   display: flex;
+  box-sizing: border-box;
   flex-direction: column;
   position: relative;
   bottom: 0;
-  font-size: 1.2rem;
   left: 0;
-  padding: 1rem;
-  text-align: center;
-  width: 100%;
+  height: fit-content;
+  width: 100vw;
+  gap: 2rem;
+  margin-top: auto;
+  margin: .5rem;
+  padding: 1.5rem 5rem;
   background-color: rgb(245, 242, 239);
-  margin-top: 2rem;
+  z-index: 1;
+  @include main.mobile {
+    margin: 0;
+  }
+}
+
+.topContainer {
+  display: flex;
+  justify-content: space-between;
+  @include main.mobile {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
+
+.siteLinks {
+  display: flex;
+  justify-content: space-between;
+  @include main.desktop {
+    width: 30vw;
+  }
+}
+
+.socialIcons{
+  display: flex;
+  justify-content: space-between;
+  @include main.desktop {
+    width: 15vw;
+  }
+}
+
+.divider {
+  border-top: solid 3px main.$neutral-color-30;
+}
+
+.bottomContainer {
+  display: flex;
+  justify-content: space-between;
+  @include main.mobile {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
+
+.privacy > a {
+  text-decoration: none;
+  color: black;
+  &:hover {
+    text-decoration: underline;
+  }
 }
