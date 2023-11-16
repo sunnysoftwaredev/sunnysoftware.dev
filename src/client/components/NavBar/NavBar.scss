@@ -11,8 +11,8 @@ nav {
 display: flex;
 width: auto;
 position: relative;
-height: 72px;
-padding: 32px 16px;
+height: 4.5rem;
+padding: 2rem 1rem;
 margin: 0 5vw;
 justify-content: space-between;
 align-items: center;
@@ -22,13 +22,13 @@ background: $temporaryBacking;
 // REPLACE BELOW!!!
 // background: rgba(255, 255, 255, 0.90);
 backdrop-filter: blur(3.5px);
-gap: 32px;
-z-index: 1;
+gap: 2rem;
+z-index: 2;
 }
 
 img {
-  width: 72px;
-  height: 72px;
+  width: 4.5rem;
+  height: 4.5rem;
 }
 
 .menu {
@@ -70,7 +70,7 @@ img {
 .buttons {
   display: flex;
   flex-direction: row;
-  gap: 32px;
+  gap: 2rem;
   @include main.mobile {
     flex-direction: column;
     display: none;
