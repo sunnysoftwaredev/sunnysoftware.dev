@@ -41,7 +41,6 @@ const Navbar: FunctionComponent = () => {
 
   const handleLetsTalk = useCallback((): void => {
     try {
-      // setTimeout(() => console.log('timeout'), 3000);
       navigate('/contact-us');
     } catch (err: unknown) {
       if (err instanceof Error) {
