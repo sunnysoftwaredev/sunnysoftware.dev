@@ -1,33 +1,200 @@
-// .servicesContainer{
-//   color: rgb(26, 2, 2);
-// }
+@use '../../SCSS/main';
 
-// .divider{
-//   background-color: beige;
-// }
+.servicesContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 80rem;
+  background: radial-gradient(circle closest-side, main.$secondary-color-30, white);
+  padding: 1rem;
+  gap: 2rem;
+  @include main.mobile {
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.5fr, repeat(3, 1fr);
+    height: 120rem;
+  }
+}
 
-// div{
-//   background-color: blue;
-// }
-
-.servicesContainer{
+.servicesTextCard{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  & h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 3rem;
+  }
+
+  & p {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+  }
 }
 
-.servicesPanel{
-  border: 3px solid black;
-  margin: 1rem;
+@mixin cardContainer {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  padding: 2rem;
+  padding-bottom: 15rem;
+  gap: 1rem;
+  & h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 2rem;
+  }
+  & p {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+  }
 }
 
-.divider {
-  border-top: 3px solid black;
+.webDevelopmentCard {
+  @include cardContainer();
+  color: white;
+  background-color: main.$primary-color-60;
 }
 
-.picPlaceholder{
-  display: inline-block;
-  width: 100%;
-  height: 100px;
-  background-color: red;
-  font-size: larger;
+.webImg1 {
+  position: absolute;
+  top: 12rem;
+  left: 15rem;
+  transform: rotate(-16deg);
+  width: 55%;
+  height: auto;
+  border-radius: 30px;
+  @include main.mobile {
+    top: 16rem;
+    left: 7rem;
+  }
+}
+
+.webImg2 {
+  position: absolute;
+  top: 12rem;
+  left: 40rem;
+  transform: rotate(-16deg);
+  width: 55%;
+  height: auto;
+  border-radius: 30px;
+  @include main.mobile {
+    top: 17rem;
+    left: 19rem;
+  }
+}
+
+.mobileDevelopmentCard{
+  @include cardContainer();
+  color: black;
+  background-color: main.$blue-color-60;
+}
+
+.mobileImg1 {
+  position: absolute;
+  top: 27rem;
+  left: 5rem;
+  transform: rotate(-18deg);
+  width: 15%;
+  height: auto;
+  border-radius: 10px;
+  @include main.mobile {
+    top: 27rem;
+    left: 4rem;
+  }
+}
+.mobileImg2 {
+  position: absolute;
+  top: 14rem;
+  left: 15rem;
+  transform: rotate(-18deg);
+  width: 15%;
+  height: auto;
+  border-radius: 10px;
+  @include main.mobile {
+    top: 18rem;
+    left: 8rem;
+  }
+}
+.mobileImg3 {
+  position: absolute;
+  top: 35rem;
+  left: 22rem;
+  transform: rotate(-18deg);
+  width: 15%;
+  height: auto;
+  border-radius: 10px;
+  @include main.mobile {
+    top: 29rem;
+    left: 12rem;
+  }
+}
+.mobileImg4 {
+  position: absolute;
+  top: 14rem;
+  left: 30rem;
+  transform: rotate(-18deg);
+  width: 15%;
+  height: auto;
+  border-radius: 10px;
+  @include main.mobile {
+    top: 18rem;
+    left: 16rem;
+  }
+}
+.mobileImg5 {
+  position: absolute;
+  top: 34rem;
+  left: 37rem;
+  transform: rotate(-18deg);
+  width: 15%;
+  height: auto;
+  border-radius: 10px;
+  @include main.mobile {
+    top: 29rem;
+    left: 20rem;
+  }
+}
+.mobileImg6 {
+  position: absolute;
+  top: 17rem;
+  left: 44rem;
+  transform: rotate(-18deg);
+  width: 15%;
+  height: auto;
+  border-radius: 10px;
+  @include main.mobile {
+    top: 20rem;
+    left: 23rem;
+  }
+}
+
+.cryptoCard{
+  @include cardContainer();
+  color: black;
+  background-color: main.$secondary-color-60;
+}
+
+.cryptoImg1 {
+  position: absolute;
+  top: 15rem;
+  left: 7rem;
+  width: 35%;
+  height: auto;
+  border-radius: 20px;
+  @include main.mobile {
+    top: 17rem;
+    left: 4rem;
+  }
+}
+.cryptoImg2 {
+  position: absolute;
+  top: 20rem;
+  left: 10rem;
+  width: 57%;
+  height: auto;
+  border-radius: 20px;
 }
