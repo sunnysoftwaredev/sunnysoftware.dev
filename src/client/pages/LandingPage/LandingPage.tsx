@@ -15,7 +15,7 @@ const LandingPage: FunctionComponent = () => (
     </Helmet>
     <Hero />
     <Services />
-    <CallToAction />
+    {/* <CallToAction /> */}
   </div>
 );
 
