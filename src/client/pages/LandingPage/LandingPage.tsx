@@ -3,7 +3,8 @@ import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import Hero from '../../components/Hero/Hero';
 import Services from '../../components/Services/Services';
-import CallToAction from '../../components/CallToAction/CallToAction';
+// import CallToAction from '../../components/CallToAction/CallToAction';
+import Methodology from '../../components/Methodology/Methodology';
 
 const LandingPage: FunctionComponent = () => (
   <div>
@@ -15,6 +16,7 @@ const LandingPage: FunctionComponent = () => (
     </Helmet>
     <Hero />
     <Services />
+    <Methodology />
     {/* <CallToAction /> */}
   </div>
 );
