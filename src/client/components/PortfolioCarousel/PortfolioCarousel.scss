@@ -1,0 +1,92 @@
+@use '../../SCSS/main';
+
+.portfolioCarouselContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  margin-left: 3rem;
+}
+
+// Top
+.portfolioCarouselTop {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  @include main.mobile {
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.portfolioCarouselText {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  & h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 3rem;
+  }
+  & p {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+.porfolioCarouselButtons {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  padding-right: 10%;
+  gap: 1rem;
+  @include main.mobile {
+    justify-content: start;
+    margin-top: 1rem;
+  }
+}
+
+// Bottom
+.portfolioScrollContainer {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 55%;
+  gap: 1rem;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: inline mandatory;
+  border-radius: 20px;
+  min-height: 300px;
+  max-height: 800px;
+  @include main.mobile {
+    grid-auto-columns: 90%;
+    height: 400px;
+  }
+}
+
+.portfolioProjectCard {
+  display: flex;
+  scroll-snap-align: start;
+  transition: all 250ms linear;
+  & img {
+    width: 110%;
+    height: auto;
+    object-fit: cover;
+  }
+}
+
+@mixin portfolioText {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.portfolioCard1 {
+  @include portfolioText();
+  background-color: main.$blue-color-60;
+}
+.portfolioCard2 {
+  @include portfolioText();
+  background-color: main.$primary-color-60;
+}

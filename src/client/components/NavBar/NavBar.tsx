@@ -3,7 +3,7 @@ import type { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 import AuthContext from '../../context/AuthContext';
-import Button, { ButtonSize, ButtonVariant } from '../Button/Button';
+import Button, { ButtonIcon, ButtonSize, ButtonVariant } from '../Button/Button';
 import logger from '../../../server/logger';
 import Logo from '../../SCSS/Assets/Logo.png';
 import useIsMobileWidth from '../../hooks/useIsMobileWidth';
@@ -133,7 +133,7 @@ const Navbar: FunctionComponent = () => {
                 size={ButtonSize.Small}
                 variant={ButtonVariant.Outlined}
                 onClick={handleSubmit}
-                icon
+                iconType={ButtonIcon.Plus}
               >
                 Log In
               </Button>
@@ -166,7 +166,7 @@ const Navbar: FunctionComponent = () => {
               size={ButtonSize.Large}
               variant={ButtonVariant.Outlined}
               onClick={handleSubmit}
-              icon
+              iconType={ButtonIcon.Plus}
             >
               Log In
             </Button>
@@ -174,7 +174,7 @@ const Navbar: FunctionComponent = () => {
         <Button
           size={ButtonSize.Large}
           onClick={handleLetsTalk}
-          icon
+          iconType={ButtonIcon.Plus}
         >
           {'Let\'s Talk'}
         </Button>
