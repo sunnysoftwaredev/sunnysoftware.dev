@@ -15,6 +15,12 @@ export enum ButtonVariant {
   White = 'White',
 }
 
+export enum ButtonIcon {
+  LeftArrow = 'LeftArrow',
+  RightArrow = 'RightArrow',
+  Plus = 'Plus',
+}
+
 export enum ButtonType {
   Button = 'button',
   Submit = 'submit',
@@ -39,7 +45,7 @@ type ButtonProps = PropsWithChildren<{
   variant?: ButtonVariant;
   size: ButtonSize;
   onClick: () => void;
-  icon?: boolean;
+  iconType?: ButtonIcon;
   disabled?: boolean;
   loading?: boolean;
   type?: ButtonType;
@@ -50,7 +56,7 @@ const Button: FunctionComponent<ButtonProps> = ({
   size = ButtonSize.Medium,
   children,
   onClick,
-  icon = false,
+  iconType,
   disabled = false,
   loading = false,
   type = ButtonType.Button,
@@ -65,14 +71,29 @@ const Button: FunctionComponent<ButtonProps> = ({
   const primary = variant === ButtonVariant.Primary;
   const outlined = variant === ButtonVariant.Outlined;
   const white = variant === ButtonVariant.White;
+  const plusIcon = iconType === ButtonIcon.Plus;
+  const leftArrowIcon = iconType === ButtonIcon.LeftArrow;
+  const rightArrowIcon = iconType === ButtonIcon.RightArrow;
   const elementType = {
     [ButtonType.Button]: 'button',
     [ButtonType.Submit]: 'submit',
     [ButtonType.Reset]: 'reset',
   }[type];
-  const iconElement = icon && !loading && (
+  // WORKING HERE, RENAME ICONS AND TYPES
+  const plusIconElement = plusIcon && !loading && (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 4.5V19.5M19.5 12H4.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+  const leftArrowIconElement = leftArrowIcon && !loading && (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19.5 12H4.5M4.5 12L11.25 18.75M4.5 12L11.25 5.25" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+
+  const rightArrowIconElement = rightArrowIcon && !loading && (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4.5 12H19.5M19.5 12L12.75 5.25M19.5 12L12.75 18.75" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
   const loadingElement = loading && (
@@ -92,13 +113,15 @@ const Button: FunctionComponent<ButtonProps> = ({
         [styles.small]: small,
         [styles.medium]: medium,
         [styles.large]: large,
-        [styles.icon]: icon,
+        [styles.icon]: plusIcon || leftArrowIcon || rightArrowIcon,
         [styles.iconOnly]: children === undefined,
         [styles.loading]: loading,
       })}
       onClick={handleClick}
     >
-      {iconElement}
+      {plusIconElement}
+      {leftArrowIconElement}
+      {rightArrowIconElement}
       {loadingElement}
       {children}
     </button>
