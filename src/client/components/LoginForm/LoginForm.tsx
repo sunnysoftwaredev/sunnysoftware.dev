@@ -72,6 +72,26 @@ const LoginForm: FunctionComponent = () => {
     }
   }, [username, password, navigate]);
 
+  // potential check for hitting 'enter'
+  // useEffect(() => {
+  //   const keyDownHandler = event => {
+  //     console.log('User pressed: ', event.key);
+
+  //     if (event.key === 'Enter') {
+  //       event.preventDefault();
+
+  //       // 👇️ call submit function here
+  //       handleSubmit();
+  //     }
+  //   };
+
+  //   document.addEventListener('keydown', keyDownHandler);
+
+  //   return () => {
+  //     document.removeEventListener('keydown', keyDownHandler);
+  //   };
+  // }, []);
+
   return (
     <form onSubmit={handleSubmit}>
       <div>

@@ -6,6 +6,7 @@ import Services from '../../components/Services/Services';
 // import CallToAction from '../../components/CallToAction/CallToAction';
 import Methodology from '../../components/Methodology/Methodology';
 import PortfolioCarousel from '../../components/PortfolioCarousel/PortfolioCarousel';
+import OurTeamAndOpenings from '../../components/OurTeamAndOpenings/OurTeamAndOpenings';
 
 const LandingPage: FunctionComponent = () => (
   <div>
@@ -19,6 +20,7 @@ const LandingPage: FunctionComponent = () => (
     <Services />
     <Methodology />
     <PortfolioCarousel />
+    <OurTeamAndOpenings />
     {/* <CallToAction /> */}
   </div>
 );
