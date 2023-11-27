@@ -17,107 +17,78 @@
 
 .teamCircleImages {
   position: relative;
-  height: 100%;
-  width: auto;
+  width: 458px;
+  height: 471px;
+  margin: 0 auto;
+
+  @include main.mobile {
+    width: 327px;
+    height: 336px;
+  }
+
   & img {
+    position: absolute;
+    border-radius: 100%;
     border: 5px solid #f3aa1f;
     object-fit: cover;
+    box-sizing: border-box;
   }
-  // & :nth-child(1) {
-  //   position: absolute;
-  //   border-radius: clamp(107px, 125px, 151px );
-  //   height: clamp(107px, 125px, 151px );
-  //   width: clamp(107px, 125px, 151px );
-  //   // transform: translate(45%, 0%);
-  //   top: 0%;
-  //   left: 15%;
-  // }
-  // & :nth-child(2) {
-  //   position: absolute;
-  //   border-radius: clamp(118px, 135px, 166px );
-  //   height: clamp(118px, 135px, 166px );
-  //   width: clamp(118px, 135px, 166px );
-  //   // transform: translate(185%, 50%);
-  //   top: 10%;
-  //   left: 55%;
-  // }
-  // & :nth-child(3) {
-  //   position: absolute;
-  //   border-radius: clamp(144px, 175px, 200px);
-  //   height: clamp(144px, 175px, 200px);
-  //   width: clamp(144px, 175px, 200px);
-  //   transform: translateX(-50%) translateY(100%);
 
-  // }
-  // & :nth-child(4) {
-  //   position: absolute;
-  //   border-radius: clamp(109px, 140px, 154px);
-  //   height: clamp(109px, 140px, 154px);
-  //   width: clamp(109px, 140px, 154px);
-  //   transform: translateX(10%) translateY(-40%);
-
-  // }
-  & .svg {
+  & svg {
     position: absolute;
     z-index: -1;
-    // top: 50%;
-    // left: 50%;
-    // transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
   }
 }
 
 .imageOne {
-    position: absolute;
-    border-radius: 100px;
-    height: 125px;
-    width: 125px;
-    top: 0%;
-    left: 25%;
+  height: 150px;
+  width: 150px;
+  top: 0%;
+  left: 30%;
+
+  @include main.mobile {
+    width: 108px;
+    height: 108px;
+  }
 }
 
 .imageTwo {
-  position: absolute;
-  border-radius: 100px;
-    // height: clamp(118px, 135px, 166px );
-    // width: clamp(118px, 135px, 166px );
-    height: 135px;
-    width: 135px;
-    // transform: translate(185%, 50%);
-    top: 15%;
-    left: 60%;
+  height: 165px;
+  width: 165px;
+  top: 25%;
+  right: 0%;
+
+  @include main.mobile {
+    width: 119px;
+    height: 119px;
+  }
 }
 
 .imageThree {
-  position: absolute;
-  border-radius: 100px;
-  // height: clamp(144px, 175px, 200px);
-  // width: clamp(144px, 175px, 200px);
-  height: 175px;
-  width: 175px;
-  // transform: translateX(-50%) translateY(100%);
-  top: 50%;
+  height: 200px;
+  width: 200px;
+  bottom: 0%;
   left: 35%;
+
+  @include main.mobile {
+    width: 144px;
+    height: 144px;
+  }
 }
 
 .imageFour {
-  position: absolute;
-  border-radius: 100px;
-  // height: clamp(109px, 140px, 154px);
-  // width: clamp(109px, 140px, 154px);
-  // transform: translateX(10%) translateY(-40%);
-  height: 140px;
-  width: 140px;
-  top: 25%;
+  height: 155px;
+  width: 155px;
+  top: 35%;
   left: 0%;
-}
 
-// .backgroundSvg {
-//   position: absolute;
-//   z-index: -1;
-//   top: 50%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-// }
+  @include main.mobile {
+    width: 110px;
+    height: 110px;
+  }
+}
 
 .textAndOpenenings {
   display: flex;
