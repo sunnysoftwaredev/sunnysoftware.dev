@@ -1,0 +1,90 @@
+@use '../../SCSS/main';
+
+.employeeCardStackContainer {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  margin-top: 125px;
+  margin-bottom: 250px;
+  height: 565px;
+  width: 100%;
+}
+
+.backgroundSvg {
+  position: absolute;
+  box-sizing: border-box;
+  z-index: -50;
+  width: 100%;
+  height: 100%;
+  left: 37%;
+  bottom: 23%;
+  @include main.mobile {
+    left: -0%;
+    bottom: 15%;
+    overflow: hidden;
+  }
+}
+
+.employeeCardStack {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 850px;
+}
+
+.employeeCard {
+  transition: all .3s linear;
+  transform: translateX(0px);
+  display: flex;
+  position: absolute;
+  margin: 0 6rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.10);
+  height: 362px;
+  background-color: white;
+  padding: 1rem;
+  & img {
+    display: none;
+    position: absolute;
+    width: 122px;
+    height: 122px;
+    bottom: 22rem;
+  }
+  & h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 2.25rem;
+    color: main.$neutral-color-90;
+  }
+  & h6 {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: main.$neutral-color-70;
+    margin-bottom: 1rem;
+  }
+  & p {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: main.$neutral-color-80;
+  }
+  & Button {
+    z-index: 2;
+  }
+}
+
+.buttonIndex {
+  z-index: 2;
+}
+
+.topCard {
+  z-index: 1 !important;
+  transform: translateX(-20px);
+  & img {
+    display: block;
+  }
+}

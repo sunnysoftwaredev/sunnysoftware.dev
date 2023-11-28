@@ -11,10 +11,6 @@
   }
 }
 
-// .teamAndBackground{
-//   position: relative;
-// }
-
 .teamCircleImages {
   position: relative;
   width: 458px;
@@ -124,7 +120,7 @@
 .ourTeamAndOpeningsButtons {
   display: flex;
   gap: 1rem;
-  // @include main.mobile {
-  //   flex-direction: column;
-  // }
+  @include main.mobile {
+    flex-direction: column;
+  }
 }

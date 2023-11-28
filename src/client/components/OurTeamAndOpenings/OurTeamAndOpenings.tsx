@@ -51,17 +51,13 @@ const OurTeamAndOpenings: FunctionComponent = () => {
   }, [navigate]);
   return (
     <div className={styles.containerOurTeamAndOpenings}>
-      {/* <div className={styles.teamAndBackground}> */}
       <div className={styles.teamCircleImages}>
         <img className={styles.imageOne} src={imageAt11} alt="sunny software employee" />
         <img className={styles.imageTwo} src={imageAt2} alt="sunny software employee" />
         <img className={styles.imageThree} src={imageAt5} alt="sunny software employee" />
         <img className={styles.imageFour} src={imageAt830} alt="sunny software employee" />
-        {/* <div className={styles.backgroundSvg}> */}
         {backgroundSvg}
-        {/* </div> */}
       </div>
-      {/* </div> */}
       <div className={styles.textAndOpenenings}>
         <div className={styles.teamAndOpeningsText}>
           <h2>Our team of professionals</h2>
