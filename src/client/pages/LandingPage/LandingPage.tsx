@@ -7,6 +7,7 @@ import Services from '../../components/Services/Services';
 import Methodology from '../../components/Methodology/Methodology';
 import PortfolioCarousel from '../../components/PortfolioCarousel/PortfolioCarousel';
 import OurTeamAndOpenings from '../../components/OurTeamAndOpenings/OurTeamAndOpenings';
+import EmployeeCardStack from '../../components/EmployeeCardStack/EmployeeCardStack';
 
 const LandingPage: FunctionComponent = () => (
   <div>
@@ -21,6 +22,7 @@ const LandingPage: FunctionComponent = () => (
     <Methodology />
     <PortfolioCarousel />
     <OurTeamAndOpenings />
+    <EmployeeCardStack />
     {/* <CallToAction /> */}
   </div>
 );
