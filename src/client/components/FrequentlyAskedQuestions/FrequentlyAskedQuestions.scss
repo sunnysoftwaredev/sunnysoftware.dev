@@ -1,0 +1,41 @@
+@use '../../SCSS/main';
+
+.faqContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 4rem;
+  @include main.mobile {
+    width: 90%;
+  }
+  & h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 3rem;
+  }
+}
+
+.faqContainerText{
+  line-height: 1.5rem;
+  color: #1c1c1c;
+  padding: 0 2rem;
+}
+
+.faqPanelsContainer {
+  background-color: main.$neutral-color-20;
+  border-radius: 18px;
+  width: 65%;
+  margin-top: 4rem;
+  padding: 7rem 7rem 3rem;
+  @include main.mobile {
+    padding: 3rem;
+  }
+  & Button {
+    position: relative;
+    margin: 2rem 0;
+    left: 50%;
+    @include main.mobile {
+      left: 30%;
+  }
+}
+}

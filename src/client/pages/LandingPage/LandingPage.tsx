@@ -8,6 +8,7 @@ import Methodology from '../../components/Methodology/Methodology';
 import PortfolioCarousel from '../../components/PortfolioCarousel/PortfolioCarousel';
 import OurTeamAndOpenings from '../../components/OurTeamAndOpenings/OurTeamAndOpenings';
 import EmployeeCardStack from '../../components/EmployeeCardStack/EmployeeCardStack';
+import FrequentlyAskedQuestions from '../../components/FrequentlyAskedQuestions/FrequentlyAskedQuestions';
 
 const LandingPage: FunctionComponent = () => (
   <div>
@@ -23,6 +24,7 @@ const LandingPage: FunctionComponent = () => (
     <PortfolioCarousel />
     <OurTeamAndOpenings />
     <EmployeeCardStack />
+    <FrequentlyAskedQuestions />
     {/* <CallToAction /> */}
   </div>
 );

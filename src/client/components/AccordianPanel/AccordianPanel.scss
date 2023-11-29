@@ -1,0 +1,36 @@
+@use '../../SCSS/main';
+
+.accordianPanelContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.accordianQuestion {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 2rem 0;
+  & :hover {
+    cursor: pointer;
+  }
+  & h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 2rem;
+    color: #1e2026;
+  }
+}
+
+.panelArrow {
+  font-size: 1.5rem;
+}
+
+.accordianDivider {
+  border: solid 1px #D8DFE6;
+}
+
+.accordianAnswer {
+  display: flex;
+  color: #3c424d;
+  margin: 2rem 0;
+}
