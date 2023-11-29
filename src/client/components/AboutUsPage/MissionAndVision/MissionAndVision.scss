@@ -1,0 +1,94 @@
+@use '../../../SCSS/main';
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  padding: 9rem 2rem;
+  gap: 3rem;
+  @include main.mobile {
+    grid-template-columns: 1fr;
+    grid-template-rows: 4fr;
+  }
+}
+
+.imageContainer {
+  position: relative;
+  & img {
+    width: 800px;
+    height: 370px;
+    object-fit: cover;
+    @include main.mobile {
+      width: 400px;
+      height: 205px;
+    }
+  }
+  & svg {
+    position: absolute;
+    bottom: -50px;
+    right: 30px;
+    @include main.mobile {
+      bottom: -40px;
+      right: 35px;
+    }
+  }
+}
+
+.simpleTextBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3rem;
+  height: 360px;
+  width: 588px;
+  margin: 1rem;
+  @include main.mobile {
+    max-width: 460px;
+    height: auto;
+  }
+  & h2 {
+    @include main.boldFont;
+  }
+  & p {
+    width: 90%;
+    line-height: 1.5rem;
+    color: #3C424D;
+  }
+}
+
+.textBoxColored {
+  display: flex;
+  flex-direction: column;
+  width: 588px;
+  height: 232px;
+  margin-top: 2rem;
+  padding: 2rem;
+  gap: 1rem;
+  border-radius: 20px;
+  background-color: #FFFEF0;
+  @include main.mobile {
+    width: 80%;
+    height: auto;
+  }
+  & h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.75rem;
+    color: #1E2026;
+  }
+  & p {
+    line-height: 1.5rem;
+    color: #3C424D;
+  }
+}
+
+.graphicAndTitle {
+  display: flex;
+  gap: 2rem;
+  justify-content: flex-start;
+  align-items: center;
+}

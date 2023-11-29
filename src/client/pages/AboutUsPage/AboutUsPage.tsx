@@ -3,6 +3,7 @@ import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import AboutUsTop from '../../components/AboutUsPage/AboutUsTop/AboutUsTop';
 import StatisticsBar from '../../components/AboutUsPage/StatisticsBar/StatisticsBar';
+import MissionAndVision from '../../components/AboutUsPage/MissionAndVision/MissionAndVision';
 
 const AboutUsPage: FunctionComponent = () => (
   <div>
@@ -14,6 +15,7 @@ const AboutUsPage: FunctionComponent = () => (
     </Helmet>
     <AboutUsTop />
     <StatisticsBar />
+    <MissionAndVision />
   </div>
 );
 
