@@ -8,7 +8,7 @@ import style from './CallToAction.scss';
 const CallToAction: FunctionComponent = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = useCallback((): void => {
+  const exploreMoreClick = useCallback((): void => {
     try {
       navigate('/contact-us');
     } catch (err: unknown) {
@@ -18,17 +18,18 @@ const CallToAction: FunctionComponent = () => {
     }
   }, [navigate]);
   return (
-    <div className={style.cta}>
-      <p className={style.ctaBlurb}>
-        See how our experienced
-        engineers can bring your business value and efficiency
-
+    <div className={style.ctaContainer}>
+      <h2>We make your business shine</h2>
+      <p>
+        Book a call to see how Perspective Design
+        can help elevate your company&#39;s designs
+        to the next level.
       </p>
       <Button
         size={ButtonSize.Large}
-        onClick={handleSubmit}
+        onClick={exploreMoreClick}
       >
-        Contact Us!
+        Explore more
       </Button>
     </div>
   );
