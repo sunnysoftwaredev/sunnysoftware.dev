@@ -1,0 +1,77 @@
+@use '../../../SCSS/main';
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  background-color: main.$primary-color-10;
+  height: 686px;
+  width: 100vw;
+  @include main.mobile {
+    height: 812px;
+    padding-top: 6rem;
+    flex-direction: column;
+    align-items: normal;
+  }
+  & svg {
+    position: absolute;
+    opacity: 0.6;
+    width: 100%;
+    height: 100%;
+  }
+  & img {
+    width: 265px;
+    height: 375px;
+    overflow: hidden;
+    object-fit: cover;
+    @include main.mobile {
+      width: 178px;
+      height: 250px;
+    }
+  }
+}
+
+.leftImage {
+  border-radius: 0px 20px 20px 0px;
+
+}
+
+.textAndButton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  & h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 3rem;
+    color: #1E2026;
+  }
+  & p {
+    line-height: 1.5rem;
+    color: black;
+    text-align: center;
+  }
+  & Button {
+    z-index: 1;
+  }
+  @include main.mobile {
+    padding: 2rem 0;
+  }
+}
+
+
+.rightImage {
+  border-radius: 20px 0px 0px 20px;
+  @include main.mobile {
+    align-self: end;
+  }
+}

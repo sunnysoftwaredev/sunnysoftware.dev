@@ -1,6 +1,7 @@
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
+import AboutUsTop from '../../components/AboutUsPage/AboutUsTop/AboutUsTop';
 
 const AboutUsPage: FunctionComponent = () => (
   <div>
@@ -10,8 +11,7 @@ const AboutUsPage: FunctionComponent = () => (
       <link rel="canonical" href="https://sunnysoftware.dev/about-us" />
       <meta name="description" content="Information about Sunny Software LLC" />
     </Helmet>
-    <h1>About Us</h1>
-    <p>Info on the company</p>
+    <AboutUsTop />
   </div>
 );
 
