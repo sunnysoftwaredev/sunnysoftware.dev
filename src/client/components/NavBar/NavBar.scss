@@ -47,12 +47,13 @@ img {
   display: flex;
   position: absolute;
   flex-direction: column;
-  background-color: $temporaryBacking;
+  background-color: main.$neutral-color-20;
   height: fit-content;
   width: 100%;
   top: 0;
   left: 0;
   border-radius: 10px;
+  box-shadow: 0px 14px 14px 0px rgba(0, 0, 0, 0.15);
 }
 
 .hidden {
