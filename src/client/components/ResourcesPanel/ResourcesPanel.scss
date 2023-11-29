@@ -1,0 +1,36 @@
+@use '../../SCSS/main';
+
+.resourcesPanelContainer {
+  display: flex;
+  justify-content: space-around;
+  box-sizing: border-box;
+  background-color: #FED323;
+  align-items: center;
+  padding: 4rem 2rem;
+  @include main.mobile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  & Button {
+    margin-top: 2rem;
+  }
+}
+
+.resourcePanelText {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+  @include main.mobile {
+    width: 90%;
+  }
+  & h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 3rem;
+    color: #1E2026;
+  }
+  & p {
+    line-height: 1.5rem;
+    color: #1E2026;
+  }
+}
