@@ -2,6 +2,7 @@ import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import AboutUsTop from '../../components/AboutUsPage/AboutUsTop/AboutUsTop';
+import StatisticsBar from '../../components/AboutUsPage/StatisticsBar/StatisticsBar';
 
 const AboutUsPage: FunctionComponent = () => (
   <div>
@@ -12,6 +13,7 @@ const AboutUsPage: FunctionComponent = () => (
       <meta name="description" content="Information about Sunny Software LLC" />
     </Helmet>
     <AboutUsTop />
+    <StatisticsBar />
   </div>
 );
 
