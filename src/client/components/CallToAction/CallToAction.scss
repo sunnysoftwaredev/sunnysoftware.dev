@@ -1,43 +1,17 @@
 @use "../../SCSS/main.scss";
 
-// .ctaButton {
-//   @include main.button("large", true);
-//  }
-
-//  .input {
-//   @include styles.input("small");
-//  }
-
-
-// .cta {
-//   // background-image: url(./unsplashWhiteboard.png);
-//   // background-size: cover;
-//   // background-repeat: no-repeat;
-//   height: 50vh;
-//   width: 100vw;
-//   display: flex;
-//   flex-direction: row;
-//   position: relative;
-// }
-
-// .ctaImage {
-//   position: relative;
-//   max-width: 100%;
-//   height: auto;
-// }
-
-// .ctaBlurb{
-//   position: absolute;
-//   width: 50%;
-//   left: 30px;
-//   top: 0px;
-//   font-size: 36px;
-// }
-// .ctaButton{
-//   position: absolute;
-//   left: 20px;
-//   top: 250px;
-//   height: 75px;
-//   width: 200px;
-//   background-color: rgb(35, 168, 86);
-// }
+.ctaContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1rem;
+  gap: 1rem;
+  & h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 2.5rem;
+  }
+  & p {
+    line-height: 1.5rem;
+  }
+}
