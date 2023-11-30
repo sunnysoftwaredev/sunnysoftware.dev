@@ -1,0 +1,14 @@
+@use '../../SCSS/main';
+
+* {
+  box-sizing: border-box;
+}
+
+.aboutUsPhoto {
+  width: 100%;
+  height: 619px;
+  object-fit: cover;
+  @include main.mobile {
+    height: 423px;
+  }
+}
