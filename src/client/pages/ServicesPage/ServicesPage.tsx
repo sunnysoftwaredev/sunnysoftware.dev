@@ -1,6 +1,7 @@
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
+import ServicesPageBanner from '../../components/ServicesPage/ServicesPageBanner/ServicesPageBanner';
 
 const ServicesPage: FunctionComponent = () => (
   <div>
@@ -13,8 +14,7 @@ const ServicesPage: FunctionComponent = () => (
         content="Information on services offered by Sunny Software LLC"
       />
     </Helmet>
-    <h1>Services</h1>
-    <p>Information on services offered</p>
+    <ServicesPageBanner />
   </div>
 );
 
