@@ -1,0 +1,50 @@
+@use '../../../SCSS/main';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: 3rem 2rem;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  gap: 1rem;
+  & h2 {
+    @include main.boldFont();
+  }
+  & p {
+    line-height: 1.5rem;
+  }
+}
+
+.cardContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 2rem;
+  margin: 4rem 2rem 4rem 1rem;
+  @include main.mobile {
+    flex-direction: column;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background-color: main.$blue-color-10;
+  padding: 1.5rem;
+  & h3 {
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+  & p {
+    line-height: 1.4rem;
+    text-align: center;
+  }
+}
