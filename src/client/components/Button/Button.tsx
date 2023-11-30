@@ -26,20 +26,6 @@ export enum ButtonType {
   Submit = 'submit',
   Reset = 'reset',
 }
-// export type ButtonType = JSX.IntrinsicElements['button']['type'];
-
-// export type ButtonType = React.ButtonHTMLAttributes<HTMLButtonElement>;
-
-// export type ButtonType = {
-//   'button':string,
-//   'submit': string,
-//   'reset': string,
-//   undefined: undefined,
-// }
-
-// // React.ComponentProps<'button'>
-
-// export type ButtonType = '"submit" | "button" | "reset" | undefined';
 
 type ButtonProps = PropsWithChildren<{
   variant?: ButtonVariant;
@@ -74,11 +60,6 @@ const Button: FunctionComponent<ButtonProps> = ({
   const plusIcon = iconType === ButtonIcon.Plus;
   const leftArrowIcon = iconType === ButtonIcon.LeftArrow;
   const rightArrowIcon = iconType === ButtonIcon.RightArrow;
-  const elementType = {
-    [ButtonType.Button]: 'button',
-    [ButtonType.Submit]: 'submit',
-    [ButtonType.Reset]: 'reset',
-  }[type];
   const plusIconElement = plusIcon && !loading && (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 4.5V19.5M19.5 12H4.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -103,8 +84,11 @@ const Button: FunctionComponent<ButtonProps> = ({
   return (
     <button
       disabled={disabled}
-      // type={elementType}
-      type="button"
+      // Disabling this rule here because TypeScript is verifying the type of
+      // the `type` variable, so we don't need to worry about it being a
+      // "dynamic" type in this case, which is what the rule was concerned with.
+      // eslint-disable-next-line react/button-has-type
+      type={type}
       className={classNames(styles.button, {
         [styles.primary]: primary,
         [styles.outlined]: outlined,
