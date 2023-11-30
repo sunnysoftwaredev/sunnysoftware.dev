@@ -7,6 +7,7 @@ import MissionAndVision from '../../components/AboutUsPage/MissionAndVision/Miss
 import CompanyTimeline from '../../components/AboutUsPage/CompanyTimeline/CompanyTimeline';
 import groupPhoto from '../../components/AboutUsPage/aboutUsGroupPhoto.png';
 import BuildAndGrow from '../../components/AboutUsPage/BuildAndGrow/BuildAndGrow';
+import LocationBanner from '../../components/AboutUsPage/LocationBanner/LocationBanner';
 import styles from './AboutUsPage.scss';
 
 const AboutUsPage: FunctionComponent = () => (
@@ -23,6 +24,7 @@ const AboutUsPage: FunctionComponent = () => (
     <CompanyTimeline />
     <img className={styles.aboutUsPhoto} src={groupPhoto} alt="Sunny Software staff photo" />
     <BuildAndGrow />
+    <LocationBanner />
   </div>
 );
 
