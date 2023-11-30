@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import AboutUsTop from '../../components/AboutUsPage/AboutUsTop/AboutUsTop';
 import StatisticsBar from '../../components/AboutUsPage/StatisticsBar/StatisticsBar';
 import MissionAndVision from '../../components/AboutUsPage/MissionAndVision/MissionAndVision';
+import CompanyTimeline from '../../components/AboutUsPage/CompanyTimeline/CompanyTimeline';
 
 const AboutUsPage: FunctionComponent = () => (
   <div>
@@ -16,6 +17,7 @@ const AboutUsPage: FunctionComponent = () => (
     <AboutUsTop />
     <StatisticsBar />
     <MissionAndVision />
+    <CompanyTimeline />
   </div>
 );
 

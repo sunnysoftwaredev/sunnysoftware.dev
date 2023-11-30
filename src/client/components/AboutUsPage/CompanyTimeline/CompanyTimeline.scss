@@ -1,0 +1,58 @@
+@use '../../../SCSS/main';
+
+
+.companyTimelineContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding-left: 3rem;
+  padding-bottom: 3rem;
+  background-color: main.$neutral-color-20;
+}
+
+
+.timelineTop {
+  display: flex;
+  flex-direction: column;
+  width: 41%;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-top: 2rem;
+  @include main.mobile {
+    width: 90%;
+  }
+  & h2 {
+    @include main.boldFont();
+  }
+  & p {
+    line-height: 1.5rem;
+    color: #3C424D;
+  }
+}
+
+.timelineScroller {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 30%;
+  gap: 3rem;
+  overflow-x: hidden;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: inline mandatory;
+  @include main.mobile {
+    grid-auto-columns: 60%;
+  }
+}
+
+.timelineCard {
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  gap: 1rem;
+  transition: all 250ms linear;
+}
+
+.timelineButtons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+}
