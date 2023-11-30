@@ -1,0 +1,46 @@
+@use '../../../SCSS/main';
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  background-color: main.$primary-color-60;
+  justify-content: center;
+  gap: 4rem;
+  padding: 3rem 0;
+  @include main.mobile {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
+.buildingImage {
+  border-radius: 20px;
+  border: 7px solid #FFF;
+  width: 327px;
+  height: 243px;
+  object-fit: cover;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; // ??
+  color:#FFF;
+  gap: 1rem;
+  & h2 {
+    @include main.boldFont();
+  }
+  & h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.75rem;
+  }
+  & p {
+    line-height: 1.5rem;
+  }
+}
