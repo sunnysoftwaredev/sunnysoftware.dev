@@ -5,6 +5,8 @@ import AboutUsTop from '../../components/AboutUsPage/AboutUsTop/AboutUsTop';
 import StatisticsBar from '../../components/AboutUsPage/StatisticsBar/StatisticsBar';
 import MissionAndVision from '../../components/AboutUsPage/MissionAndVision/MissionAndVision';
 import CompanyTimeline from '../../components/AboutUsPage/CompanyTimeline/CompanyTimeline';
+import groupPhoto from '../../components/AboutUsPage/aboutUsGroupPhoto.png';
+import styles from './AboutUsPage.scss';
 
 const AboutUsPage: FunctionComponent = () => (
   <div>
@@ -18,6 +20,7 @@ const AboutUsPage: FunctionComponent = () => (
     <StatisticsBar />
     <MissionAndVision />
     <CompanyTimeline />
+    <img className={styles.aboutUsPhoto} src={groupPhoto} alt="Sunny Software staff photo" />
   </div>
 );
 
