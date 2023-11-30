@@ -8,6 +8,8 @@ import CompanyTimeline from '../../components/AboutUsPage/CompanyTimeline/Compan
 import groupPhoto from '../../components/AboutUsPage/aboutUsGroupPhoto.png';
 import BuildAndGrow from '../../components/AboutUsPage/BuildAndGrow/BuildAndGrow';
 import LocationBanner from '../../components/AboutUsPage/LocationBanner/LocationBanner';
+import OurTeamAndOpenings from '../../components/OurTeamAndOpenings/OurTeamAndOpenings';
+import CallToAction from '../../components/CallToAction/CallToAction';
 import styles from './AboutUsPage.scss';
 
 const AboutUsPage: FunctionComponent = () => (
@@ -25,6 +27,8 @@ const AboutUsPage: FunctionComponent = () => (
     <img className={styles.aboutUsPhoto} src={groupPhoto} alt="Sunny Software staff photo" />
     <BuildAndGrow />
     <LocationBanner />
+    <OurTeamAndOpenings />
+    <CallToAction />
   </div>
 );
 
