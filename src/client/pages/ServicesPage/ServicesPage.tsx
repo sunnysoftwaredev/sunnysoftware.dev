@@ -2,6 +2,7 @@ import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import ServicesPageBanner from '../../components/ServicesPage/ServicesPageBanner/ServicesPageBanner';
+import FullServicesList from '../../components/ServicesPage/FullServicesList/FullServicesList';
 
 const ServicesPage: FunctionComponent = () => (
   <div>
@@ -15,6 +16,7 @@ const ServicesPage: FunctionComponent = () => (
       />
     </Helmet>
     <ServicesPageBanner />
+    <FullServicesList />
   </div>
 );
 
