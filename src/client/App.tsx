@@ -50,13 +50,7 @@ const App: FunctionComponent = () => (
       />
       <Route path="about-us" element={<AboutUsPage />} />
       <Route path="services" element={<ServicesPage />} />
-      <Route
-        path="portfolio" element={(
-          <EmployeePrivateRoute>
-            <PortfolioPage />
-          </EmployeePrivateRoute>
-        )}
-      />
+      <Route path="portfolio" element={<PortfolioPage />} />
       <Route path="*" element={<b>404 That page does not exist!</b>} />
     </Routes>
     <Footer />

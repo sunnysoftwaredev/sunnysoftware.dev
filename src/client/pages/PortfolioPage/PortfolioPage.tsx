@@ -1,6 +1,9 @@
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
+import PortfolioBanner from '../../components/PortfolioPage/PortfolioBanner/PortfolioBanner';
+import FullPortfolioList from '../../components/PortfolioPage/FullPortfolioList/FullPortfolioList';
+import PortfolioNeedHelp from '../../components/PortfolioPage/PortfolioNeedHelp/PortfolioNeedHelp';
 
 const ClientPortalPage: FunctionComponent = () => (
   <div>
@@ -13,8 +16,9 @@ const ClientPortalPage: FunctionComponent = () => (
         content="Portfolio of projects done by Sunny Software LLC"
       />
     </Helmet>
-    <h1>Portfolio</h1>
-    <p>The portfolio page</p>
+    <PortfolioBanner />
+    <FullPortfolioList />
+    <PortfolioNeedHelp />
   </div>
 );
 
