@@ -2,6 +2,7 @@ import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import TeamBanner from '../../components/TeamPage/TeamBanner/TeamBanner';
+import TeamFullList from '../../components/TeamPage/TeamFullList/TeamFullList';
 
 const ClientPortalPage: FunctionComponent = () => (
   <div>
@@ -15,6 +16,7 @@ const ClientPortalPage: FunctionComponent = () => (
       />
     </Helmet>
     <TeamBanner />
+    <TeamFullList />
   </div>
 );
 
