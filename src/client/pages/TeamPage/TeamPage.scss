@@ -1,0 +1,12 @@
+@use '../../SCSS/main';
+
+.fullTeamPicture {
+  img {
+    object-fit: cover;
+    width: 100%;
+    height: 620px;
+    @include main.mobile {
+      height: 375px;
+    }
+  }
+}
