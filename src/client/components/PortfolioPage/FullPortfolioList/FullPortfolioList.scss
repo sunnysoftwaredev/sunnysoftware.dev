@@ -1,0 +1,77 @@
+@use '../../../SCSS/main';
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 3rem 7rem 3rem 4rem;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 4rem;
+  & h2 {
+    @include main.boldFont();
+  }
+  & p {
+    line-height: 1.5rem;
+  }
+}
+
+.portfolioCardsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@mixin portfolioCard {
+  display: flex;
+  border-radius: 20px;
+  overflow: hidden;
+  & img {
+    width: 110%;
+    height: auto;
+    object-fit: cover;
+  }
+  @include main.mobile {
+    flex-direction: column;
+  }
+}
+
+@mixin portfolioText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 1rem;
+  color: white;
+}
+
+.projectContainer1 {
+  @include portfolioCard();
+  border: 1px solid main.$blue-color-60;
+}
+
+.projectContainer2 {
+  @include portfolioCard();
+  flex-direction: row-reverse;
+  border: 1px solid main.$primary-color-60;
+}
+
+.projectOneText {
+  @include portfolioText();
+  background-color: main.$blue-color-60;
+}
+.projectTwoText {
+  @include portfolioText();
+  background-color: main.$primary-color-60;
+}
