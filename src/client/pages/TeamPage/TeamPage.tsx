@@ -3,6 +3,9 @@ import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import TeamBanner from '../../components/TeamPage/TeamBanner/TeamBanner';
 import TeamFullList from '../../components/TeamPage/TeamFullList/TeamFullList';
+import TeamCallToAction from '../../components/TeamPage/TeamCallToAction/TeamCallToAction';
+import FullTeamPicture from './FullTeamPicture.png';
+import styles from './TeamPage.scss';
 
 const ClientPortalPage: FunctionComponent = () => (
   <div>
@@ -17,6 +20,10 @@ const ClientPortalPage: FunctionComponent = () => (
     </Helmet>
     <TeamBanner />
     <TeamFullList />
+    <div className={styles.fullTeamPicture}>
+      <img src={FullTeamPicture} alt="" />
+    </div>
+    <TeamCallToAction />
   </div>
 );
 
