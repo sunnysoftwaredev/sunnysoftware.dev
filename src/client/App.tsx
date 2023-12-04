@@ -14,6 +14,7 @@ import WorkPortalPage from './pages/WorkPortalPage/WorkPortalPage';
 import AboutUsPage from './pages/AboutUsPage/AboutUsPage';
 import ServicesPage from './pages/ServicesPage/ServicesPage';
 import PortfolioPage from './pages/PortfolioPage/PortfolioPage';
+import TeamPage from './pages/TeamPage/TeamPage';
 import NavBar from './components/NavBar/NavBar';
 import Footer from './components/Footer/Footer';
 import './App.scss';
@@ -51,6 +52,7 @@ const App: FunctionComponent = () => (
       <Route path="about-us" element={<AboutUsPage />} />
       <Route path="services" element={<ServicesPage />} />
       <Route path="portfolio" element={<PortfolioPage />} />
+      <Route path="team" element={<TeamPage />} />
       <Route path="*" element={<b>404 That page does not exist!</b>} />
     </Routes>
     <Footer />
