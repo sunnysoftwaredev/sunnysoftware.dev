@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import MethodologyBanner from '../../components/MethodologyPage/MethodologyBanner/MethodologyBanner';
 import MethodologyFullList from '../../components/MethodologyPage/MethodologyFullList/MethodologyFullList';
 import MethodologyBenefits from '../../components/MethodologyPage/MethodologyBenefits/MethodologyBenefits';
+import MethodologyNeedHelp from '../../components/MethodologyPage/MethodologyNeedHelp/MethodologyNeedHelp';
 
 const MethodologyPage: FunctionComponent = () => (
   <div>
@@ -19,6 +20,7 @@ const MethodologyPage: FunctionComponent = () => (
     <MethodologyBanner />
     <MethodologyFullList />
     <MethodologyBenefits />
+    <MethodologyNeedHelp />
   </div>
 );
 
