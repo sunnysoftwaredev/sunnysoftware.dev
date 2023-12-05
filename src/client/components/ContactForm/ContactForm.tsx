@@ -1,8 +1,10 @@
-import type { ChangeEvent, FunctionComponent, SyntheticEvent } from 'react';
+import type { ChangeEvent, FunctionComponent } from 'react';
 import React, { useState, useCallback } from 'react';
 import classNames from 'classnames';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
+import Button, { ButtonSize, ButtonType } from '../Button/Button';
+import Input, { InputSize } from '../Input/Input';
 import styles from './ContactForm.scss';
 
 const ContactForm: FunctionComponent = () => {
@@ -39,9 +41,8 @@ const ContactForm: FunctionComponent = () => {
     setSubmitted(false);
   }, [setMessage]);
 
-  const handleSubmit = useCallback(async(e: SyntheticEvent) => {
+  const handleSubmit = useCallback(async() => {
     try {
-      e.preventDefault();
       if (contactName === '' || email === '' || subject === '' || message === '') {
         setError(true);
         return;
@@ -98,7 +99,7 @@ const ContactForm: FunctionComponent = () => {
   );
 
   return (
-    <div >
+    <div className={styles.container}>
       <div
         className={classNames(styles.formHeader, {
           [styles.hidden]: !error,
@@ -107,41 +108,39 @@ const ContactForm: FunctionComponent = () => {
         <h1>Send us a message!</h1>
       </div>
 
-      <div className="messages">
+      <div className={styles.popUpMessages}>
         {errorMessage()}
         {successMessage()}
       </div>
 
       <form className={styles.formContainer}>
-        <label className="label">Name</label>
-        <input
-          onChange={handleNameChange} className="input"
-          value={contactName} type="name"
+        <Input
+          size={InputSize.Large} onChange={handleNameChange}
+          setValue={setContactName} placeholderText="Name"
+          value={contactName}
+        />
+        <Input
+          size={InputSize.Large} onChange={handleEmailChange}
+          setValue={setEmail} placeholderText="Email"
+          value={email}
         />
 
-        <label className="label">Email</label>
-        <input
-          onChange={handleEmailChange} className="input"
-          value={email} type="email"
-        />
-
-        <label className="label">Subject</label>
-        <input
-          onChange={handleSubjectChange} className="input"
-          value={subject} type="subject"
+        <Input
+          size={InputSize.Large} onChange={handleSubjectChange}
+          setValue={setSubject} placeholderText="Subject"
+          value={subject}
         />
         <textarea
           onChange={handleMessageChange} className={styles.message}
           value={message}
           placeholder="Your message here..."
         />
-
-        <button
-          onClick={handleSubmit} className="registerButton"
-          type="submit"
+        <Button
+          size={ButtonSize.Large} type={ButtonType.Submit}
+          onClick={handleSubmit}
         >
           Submit
-        </button>
+        </Button>
       </form>
     </div>
   );

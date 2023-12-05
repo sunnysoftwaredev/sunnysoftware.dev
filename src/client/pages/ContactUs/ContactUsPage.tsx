@@ -5,7 +5,7 @@ import ContactForm from '../../components/ContactForm/ContactForm';
 import styles from './ContactUsPage.scss';
 
 const ContactUsPage: FunctionComponent = () => (
-  <div>
+  <div className={styles.container}>
     <Helmet>
       <meta charSet="utf-8" />
       <title>Contact Us-Sunny Software</title>
@@ -15,13 +15,22 @@ const ContactUsPage: FunctionComponent = () => (
         content="Contact information page for Sunny Software LLC"
       />
     </Helmet>
-    <h1>Contact Us </h1>
-    <div className={styles.contactInfoContainer}>
-      <h3>Trevin Hoffman - CEO and Lead Engineer</h3>
-      <p>trevinhofmann@gmail.com</p>
-      <p>
-        (715) 350-9696
-      </p>
+
+    <div className={styles.textContainer}>
+      <h2>Contact us</h2>
+      <div className={styles.contactInfoSection}>
+        <h3>Email:</h3>
+        <p>trevinhofmann@gmail.com</p>
+      </div>
+      <div className={styles.contactInfoSection}>
+        <h3>Phone:</h3>
+        <p>(715) 350-9696</p>
+      </div>
+      <div className={styles.contactInfoSection}>
+        <h3>Office address</h3>
+        <p>Chicago HQ Estica Cop. Macomb, MI 48042</p>
+      </div>
+
     </div>
     <ContactForm />
   </div>

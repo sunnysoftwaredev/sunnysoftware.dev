@@ -1,17 +1,48 @@
+@use '../../SCSS/main';
+
+.container{
+  border-radius: 20px;
+  border: 2px solid #FFF;
+  background: rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(17px);
+  width: 575px;
+  height: 520px;
+  padding: 2rem;
+  @include main.mobile {
+    width: 400px;
+    margin-top: 2rem;
+  }
+}
+
+
 .formHeader {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
 
 .formContainer {
-  gap: 7px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  justify-content: space-evenly;
+  @include main.mobile {
+    gap: 1rem;
+  }
 }
 
 .message {
-  width: 40rem;
-  height: 10rem;
+  border-radius: 16px;
+  background-color:  #FFF;
+  border: 1px solid main.$neutral-color-40;
+  height: 175px;
+  padding: 1rem;
 }
 
 .hidden {
   display: none;
+}
+
+Button {
+  align-self: center;
 }

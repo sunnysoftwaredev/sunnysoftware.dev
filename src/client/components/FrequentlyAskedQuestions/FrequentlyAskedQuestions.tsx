@@ -38,7 +38,7 @@ const FrequentlyAskedQuestions: FunctionComponent = () => {
 
   const meetTeamClick = useCallback((): void => {
     try {
-      navigate('./our-team');
+      navigate('./team');
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
