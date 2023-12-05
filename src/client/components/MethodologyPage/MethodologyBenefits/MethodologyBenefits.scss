@@ -1,0 +1,129 @@
+@use '../../../SCSS/main';
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: main.$neutral-color-20;
+  padding: 3rem;
+  gap: 3rem;
+  @include main.mobile {
+    flex-direction: column-reverse;
+  }
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  @include main.mobile {
+    width: 100%;
+  }
+}
+
+.textHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  & h2 {
+    @include main.boldFont();
+  }
+  & p {
+    color:  #3C424D;
+    line-height: 1.5rem;
+  }
+}
+
+.benefitsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.benefit {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.benefitText{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  color:  #3C424D;
+  & h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 2rem;
+  & p {
+    line-height: 1.5rem;
+  }
+  }
+}
+
+.statsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 50%;
+  height: 400px;
+  padding: 2rem;
+  gap: 2rem;
+  border-radius: 32px;
+  background: #FFF;
+  box-shadow: 3px 15px 31px 0px rgba(0, 0, 0, 0.03);
+  @include main.mobile {
+    width: 100%;
+    gap: 1rem;
+  }
+}
+
+.statsBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 30.743px;
+  background: #FFF;
+  box-shadow: 3px 15px 31px 0px rgba(0, 0, 0, 0.03);
+  & p {
+    color: #495057;
+    font-weight: 500;
+    line-height: 1.5rem;
+  }
+  & h3 {
+    color: #212529;
+    font-size: 2.25rem;
+    font-weight: 600;
+    line-height: 1.6rem;
+  }
+}
+
+.statsBoxBottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  & p {
+  color: #6C757D;
+  font-size: 0.9rem;
+  line-height: 1.6rem;
+  }
+  @include main.mobile {
+    gap: 0.5rem;
+  }
+}
+
+.graphAndPercentage {
+  display: flex;
+  gap: .5rem;
+  & p {
+  color: #22CC29;
+  font-family: Inter;
+  font-size: 0.9rem;
+  line-height: 1.6rem;
+  }
+}
