@@ -6,7 +6,7 @@
   display: flex;
   background: main.$neutral-color-10;
   color: main.$neutral-color-90;
-  width: 12.5rem;
+  width: 90%;
   align-items: center;
   gap: 0.5rem;
   font-family: 'Plus Jakarta Sans';
@@ -44,6 +44,8 @@
 // Buttons
 
 form {
+  display: flex;
+  justify-content: center;
   position: relative;
 }
 
@@ -51,7 +53,7 @@ form {
   all: unset;
   position: absolute;
   background: none;
-  margin-left: 0.45rem;
+  left: 5%;
   z-index: 1;
 }
 
@@ -59,7 +61,7 @@ form {
   all: unset;
   position: absolute;
   z-index: 1;
-  left: 10.625rem;
+  right: 8%;
   &:hover {
     cursor: pointer;
   }
@@ -68,30 +70,12 @@ form {
 // Sizes
 .small {
   height: 1.875rem;
-  &.searchButton {
-    top: 0.2rem;
-  }
-  &.eraseButton {
-  bottom: -0.1rem;
-  }
 }
 
 .medium {
   height: 2.5rem;
-  &.searchButton {
-    top: 0.2rem;
-  }
-  &.eraseButton {
-  bottom: -0.15rem;
-  }
 }
 
 .large {
   height: 3rem;
-  &.searchButton {
-    top: 0.2rem;
-  }
-  &.eraseButton {
-  bottom: -0.2rem;
-  }
 }

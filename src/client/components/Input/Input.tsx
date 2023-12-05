@@ -20,8 +20,6 @@ type InputProps = {
   value: string;
 };
 
-// FIX THE ICON PLACEMENT
-
 const Input: FunctionComponent<InputProps>
  = ({ size = InputSize.Medium, placeholderText, onChange, type = 'text',
    disabled = false, icon = false, setValue, value }) => {
