@@ -20,6 +20,7 @@ import Footer from './components/Footer/Footer';
 import './App.scss';
 import MethodologyPage from './pages/MethodologyPage/MethodologyPage';
 import FAQPage from './pages/FAQPage/FAQPage';
+import TestimonialsPage from './pages/TestimonialsPage/TestimonialsPage';
 
 const App: FunctionComponent = () => (
   <div>
@@ -57,6 +58,7 @@ const App: FunctionComponent = () => (
       <Route path="team" element={<TeamPage />} />
       <Route path="methodology" element={<MethodologyPage />} />
       <Route path="faq" element={<FAQPage />} />
+      <Route path="testimonials" element={<TestimonialsPage />} />
       <Route path="*" element={<b>404 That page does not exist!</b>} />
     </Routes>
     <Footer />
