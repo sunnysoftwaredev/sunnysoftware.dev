@@ -5,10 +5,12 @@
   box-sizing: border-box;
   display: flex;
   justify-content: center;
-  margin-top: 125px;
-  margin-bottom: 250px;
+  margin: auto auto;
   height: 565px;
   width: 100%;
+  @include main.mobile {
+    margin: 0 auto;
+  }
 }
 
 .backgroundSvg {
