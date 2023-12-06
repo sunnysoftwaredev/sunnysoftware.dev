@@ -1,0 +1,30 @@
+@use '../../../SCSS/main';
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: main.$primary-color-10;
+  height: 600px;
+  @include main.mobile {
+    height: 500px;
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  gap: 3rem;
+  & h1 {
+    @include main.boldFont();
+  }
+  & p {
+    line-height: 1.5rem;
+  }
+}

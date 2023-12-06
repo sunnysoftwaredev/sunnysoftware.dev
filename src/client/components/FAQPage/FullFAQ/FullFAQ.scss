@@ -1,0 +1,30 @@
+@use '../../../SCSS/main';
+
+.faqContainer {
+  width: 100%;
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  & h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 3rem;
+  }
+}
+
+.faqPanelsContainer {
+  position: absolute;
+  bottom: -90%;
+  background-color: main.$neutral-color-20;
+  border: 1px solid main.$neutral-color-30;
+  border-radius: 18px;
+  width: 1000px;
+  padding: 3rem;
+  @include main.mobile {
+    padding: 3rem;
+    width: 450px;
+    bottom: -160%;
+  }
+}
