@@ -7,7 +7,7 @@ import CallToAction from '../../components/CallToAction/CallToAction';
 import Methodology from '../../components/Methodology/Methodology';
 import PortfolioCarousel from '../../components/PortfolioCarousel/PortfolioCarousel';
 import OurTeamAndOpenings from '../../components/OurTeamAndOpenings/OurTeamAndOpenings';
-import EmployeeCardStack from '../../components/EmployeeCardStack/EmployeeCardStack';
+import EmployeeCardStack from '../../components/TestimonialsCardStack/TestimonialsCardStack';
 import FrequentlyAskedQuestions from '../../components/FrequentlyAskedQuestions/FrequentlyAskedQuestions';
 import ResourcesPanel from '../../components/ResourcesPanel/ResourcesPanel';
 
