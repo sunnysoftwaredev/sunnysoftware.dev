@@ -1,6 +1,6 @@
 @use '../../SCSS/main';
 
-.employeeCardStackContainer {
+.testimonialsCardStackContainer {
   position: relative;
   box-sizing: border-box;
   display: flex;
@@ -26,7 +26,7 @@
   }
 }
 
-.employeeCardStack {
+.testimonialsCardStack {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -34,7 +34,7 @@
   width: 850px;
 }
 
-.employeeCard {
+.testimonialCard {
   transition: all .3s linear;
   transform: translateX(0px);
   display: flex;
@@ -77,8 +77,17 @@
   }
 }
 
-.buttonIndex {
+.buttonContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  position: relative;
   z-index: 2;
+  @include main.mobile {
+    bottom: -45%;
+    justify-content:center;
+    gap: 3rem;
+  }
 }
 
 .topCard {

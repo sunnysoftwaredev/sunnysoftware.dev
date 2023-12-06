@@ -3,6 +3,8 @@ import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import TestimonialsBanner from '../../components/TestimonialsPage/TestimonialsBanner/TestimonialsBanner';
 import StatisticsBar from '../../components/TestimonialsPage/StatisticsBar/StatisticsBar';
+import TestimonialsCardStack from '../../components/TestimonialsPage/TestimonialsCardStack/TestimonialsCardStack';
+import TestimonialsNeedHelp from '../../components/TestimonialsPage/TestimonialsNeedHelp/TestimonialsNeedHelp';
 
 const TestimonialsPage: FunctionComponent = () => (
   <div>
@@ -17,6 +19,8 @@ const TestimonialsPage: FunctionComponent = () => (
     </Helmet>
     <TestimonialsBanner />
     <StatisticsBar />
+    <TestimonialsCardStack />
+    <TestimonialsNeedHelp />
   </div>
 );
 

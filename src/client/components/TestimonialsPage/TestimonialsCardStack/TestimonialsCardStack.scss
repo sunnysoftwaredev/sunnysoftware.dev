@@ -1,0 +1,44 @@
+@use '../../../SCSS/main';
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 11rem 3rem 2rem 3rem;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 55%;
+  margin: 2rem auto;
+  gap: 1rem;
+  & h2 {
+    @include main.boldFont();
+  }
+  & p {
+    color: #606773;
+    line-height: 1.5rem;
+  }
+}
+
+.starContainer {
+  display: flex;
+  justify-content: center;
+  width: 300px;
+}
+
+.carouselContainer {
+  @include main.mobile{
+    margin-left: -40px;
+    & svg {
+      width: 100%;
+    }
+  }
+}

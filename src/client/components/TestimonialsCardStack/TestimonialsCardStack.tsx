@@ -3,10 +3,10 @@ import React, { useCallback, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import Button, { ButtonIcon, ButtonSize, ButtonVariant } from '../Button/Button';
 import useIsMobileWidth from '../../hooks/useIsMobileWidth';
-import styles from './EmployeeCardStack.scss';
-import headshot from './EmployeeCardHeadshot.png';
+import styles from './TestimonialsCardStack.scss';
+import headshot from './TestimonialsCardHeadshot.png';
 
-const EmployeeCardStack: FunctionComponent = () => {
+const TestimonialsCardStack: FunctionComponent = () => {
   const [index, setIndex] = useState(0);
   const isMobileWidth = useIsMobileWidth();
   const widthDivider = isMobileWidth ? 2 : 1;
@@ -35,28 +35,26 @@ const EmployeeCardStack: FunctionComponent = () => {
     { picture: { headshot }, name: 'Hannah Schmitt-3', title: 'Lead designer', text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio neque incidunt error omnis facilis, quia delectus velit, ea iste reprehenderit ratione voluptate minima, id impedit. Labore quo sed ipsum soluta repellat non perspiciatis impedit recusandae numquam minima, suscipit reiciendis eligendi, quis, et cumque voluptate eum dicta. Et officiis praesentium animi!' },
   ], []);
   const handleLeftClick = useCallback(() => {
-    setIndex((index - 1) % cards.length);
+    if (index - 1 === -1) {
+      setIndex(cards.length - 1);
+    } else {
+      setIndex((index - 1) % cards.length);
+    }
   }, [cards, index]);
   const handleRightClick = useCallback(() => {
     setIndex((index + 1) % cards.length);
   }, [cards, index]);
 
   return (
-    <div className={styles.employeeCardStackContainer}>
+    <div className={styles.testimonialsCardStackContainer}>
       <div className={styles.backgroundSvg}>
         {backgroundSvg}
       </div>
-      <div className={styles.employeeCardStack}>
-        <div className={styles.buttonIndex}>
-          <Button
-            size={ButtonSize.Large} variant={ButtonVariant.Outlined}
-            iconType={ButtonIcon.LeftArrow} onClick={handleLeftClick}
-          />
-        </div>
+      <div className={styles.testimonialsCardStack}>
         {cards.map((card, i) => (
           <div
             style={{ width: `${(600 + (i * 30)) / widthDivider}px `, zIndex: 0 - i }}
-            className={classNames(styles.employeeCard, {
+            className={classNames(styles.testimonialCard, {
               [styles.topCard]: i === Math.abs(index),
             })} key={`${card.name}`}
           >
@@ -68,7 +66,11 @@ const EmployeeCardStack: FunctionComponent = () => {
             </p>
           </div>
         ))}
-        <div className={styles.buttonIndex}>
+        <div className={styles.buttonContainer}>
+          <Button
+            size={ButtonSize.Large} variant={ButtonVariant.Outlined}
+            iconType={ButtonIcon.LeftArrow} onClick={handleLeftClick}
+          />
           <Button
             size={ButtonSize.Large} variant={ButtonVariant.Outlined}
             iconType={ButtonIcon.RightArrow} onClick={handleRightClick}
@@ -79,4 +81,4 @@ const EmployeeCardStack: FunctionComponent = () => {
   );
 };
 
-export default EmployeeCardStack;
+export default TestimonialsCardStack;
