@@ -1,0 +1,57 @@
+@use '../../../SCSS/main';
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  margin: 5rem 3rem 2rem 3rem;
+  width: 100vw;
+  @include main.mobile {
+    flex-direction: column;
+  }
+}
+
+.imageContainer {
+  position: relative;
+  padding: 2rem;
+  width: 45vw;
+  @include main.mobile {
+    width: 90%;
+  }
+  & img {
+    border-radius: 20px;
+    border: 1px lightgray;
+    width: 80%;
+    height: auto;
+    object-fit: cover;
+  }
+  & svg {
+    position: absolute;
+    bottom: -1%;
+    right: 16%;
+    @include main.mobile {
+      bottom: -2%;
+      right: 13%;
+    }
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 45vw;
+  gap: 1rem;
+  @include main.mobile {
+    width: 90%;
+  }
+  & h2 {
+    @include main.boldFont();
+  }
+  & p {
+    line-height: 1.5rem;
+    color: #3C424D;
+  }
+}
