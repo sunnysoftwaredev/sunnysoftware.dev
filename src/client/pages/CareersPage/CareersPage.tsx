@@ -2,6 +2,7 @@ import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import CareersBanner from '../../components/CareersPage/CareersBanner/CareersBanner';
+import OurCulture from '../../components/CareersPage/OurCulture/OurCulture';
 
 const CareersPage: FunctionComponent = () => (
   <div>
@@ -15,6 +16,7 @@ const CareersPage: FunctionComponent = () => (
       />
     </Helmet>
     <CareersBanner />
+    <OurCulture />
   </div>
 );
 
