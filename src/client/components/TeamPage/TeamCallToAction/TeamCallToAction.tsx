@@ -1,22 +1,9 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import type { FunctionComponent } from 'react';
-import { useNavigate } from 'react-router-dom';
-import logger from '../../../../server/logger';
 import Button, { ButtonSize } from '../../Button/Button';
 import style from './TeamCallToAction.scss';
 
 const TeamCallToAction: FunctionComponent = () => {
-  const navigate = useNavigate();
-
-  const exploreMoreClick = useCallback((): void => {
-    try {
-      navigate('/careers');
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        logger.error(err.message);
-      }
-    }
-  }, [navigate]);
   const underlineSvg = (
     <svg width="129" height="12" viewBox="0 0 129 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M106.664 2.53795C98.0712 5.12862 88.8931 6.40976 79.9621 5.35303C79.9244 5.35303 79.8883 5.33807 79.8616 5.31144C79.835 5.2848 79.82 5.24867 79.82 5.211C79.82 5.17333 79.835 5.13721 79.8616 5.11057C79.8883 5.08394 79.9244 5.06897 79.9621 5.06897C88.8988 5.23941 97.7161 3.80772 106.602 2.25957C106.772 2.234 106.826 2.48682 106.664 2.53795Z" fill="#60CDFF" />
@@ -35,7 +22,7 @@ const TeamCallToAction: FunctionComponent = () => {
       {underlineSvg}
       <Button
         size={ButtonSize.Large}
-        onClick={exploreMoreClick}
+        to="/careers"
       >
         See vacancies
       </Button>
