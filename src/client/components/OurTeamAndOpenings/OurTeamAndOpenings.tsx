@@ -1,8 +1,6 @@
 import type { FunctionComponent } from 'react';
-import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import Button, { ButtonIcon, ButtonSize, ButtonVariant } from '../Button/Button';
-import logger from '../../../server/logger';
 import styles from './OurTeamAndOpenings.scss';
 import imageAt11 from './imageAt11.jpg';
 import imageAt2 from './imageAt2.jpg';
@@ -10,8 +8,6 @@ import imageAt5 from './imageAt5.jpg';
 import imageAt830 from './ImageAt830.jpg';
 
 const OurTeamAndOpenings: FunctionComponent = () => {
-  const navigate = useNavigate();
-
   const backgroundSvg = (
     <svg width="500" height="500" viewBox="0 0 405 416" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g filter="url(#filter0_f_239_2929)">
@@ -30,25 +26,6 @@ const OurTeamAndOpenings: FunctionComponent = () => {
       </defs>
     </svg>
   );
-  const meetTeamClick = useCallback((): void => {
-    try {
-      navigate('./our-team');
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        logger.error(err.message);
-      }
-    }
-  }, [navigate]);
-
-  const moreVacanciesClick = useCallback((): void => {
-    try {
-      navigate('./more-vacancies');
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        logger.error(err.message);
-      }
-    }
-  }, [navigate]);
   return (
     <div className={styles.containerOurTeamAndOpenings}>
       <div className={styles.teamCircleImages}>
@@ -73,33 +50,36 @@ const OurTeamAndOpenings: FunctionComponent = () => {
             <h3>Digital Senior Designer</h3>
             <p>Remote</p>
             <Button
-              size={ButtonSize.Small} iconType={ButtonIcon.RightArrow}
-              onClick={moreVacanciesClick} variant={ButtonVariant.Outlined}
+              size={ButtonSize.Small}
+              iconType={ButtonIcon.RightArrow}
+              variant={ButtonVariant.Outlined}
+              to="/more-vacancies"
             />
           </div>
           <div className={styles.positionOpeningBox}>
             <h3>Digital Senior Designer</h3>
             <p>Remote</p>
             <Button
-              size={ButtonSize.Small} iconType={ButtonIcon.RightArrow}
-              onClick={moreVacanciesClick} variant={ButtonVariant.Outlined}
+              size={ButtonSize.Small}
+              iconType={ButtonIcon.RightArrow}
+              variant={ButtonVariant.Outlined}
+              to="/more-vacancies"
             />
           </div>
         </div>
         <div className={styles.ourTeamAndOpeningsButtons}>
           <Button
             size={ButtonSize.Large}
-            onClick={meetTeamClick}
+            to="/our-team"
           >
             Meet our team
-
           </Button>
           <Button
-            size={ButtonSize.Large} onClick={moreVacanciesClick}
+            size={ButtonSize.Large}
             variant={ButtonVariant.Outlined}
+            to="/more-vacancies"
           >
             More vacancies
-
           </Button>
         </div>
       </div>

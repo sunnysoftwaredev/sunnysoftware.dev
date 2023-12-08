@@ -1,9 +1,7 @@
 import type { FunctionComponent } from 'react';
-import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import AccordianPanel from '../AccordianPanel/AccordianPanel';
 import Button, { ButtonSize } from '../Button/Button';
-import logger from '../../../server/logger';
 import styles from './FrequentlyAskedQuestions.scss';
 
 const FrequentlyAskedQuestions: FunctionComponent = () => {
@@ -33,18 +31,6 @@ const FrequentlyAskedQuestions: FunctionComponent = () => {
       many designs as you like.`,
     },
   ];
-
-  const navigate = useNavigate();
-
-  const meetTeamClick = useCallback((): void => {
-    try {
-      navigate('./team');
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        logger.error(err.message);
-      }
-    }
-  }, [navigate]);
   return (
     <div className={styles.faqContainer}>
       <h2>FAQ</h2>
@@ -58,7 +44,7 @@ const FrequentlyAskedQuestions: FunctionComponent = () => {
             question={faq.question} answer={faq.answer}
           />
         ))}
-        <Button size={ButtonSize.Large} onClick={meetTeamClick}>
+        <Button size={ButtonSize.Large} to="/team">
           Meet our team
         </Button>
       </div>

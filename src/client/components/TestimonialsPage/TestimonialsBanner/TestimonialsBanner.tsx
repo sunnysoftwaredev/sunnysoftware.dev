@@ -1,22 +1,9 @@
 import type { FunctionComponent } from 'react';
-import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import Button, { ButtonSize } from '../../Button/Button';
-import logger from '../../../../server/logger';
 import styles from './TestimonialsBanner.scss';
 
 const TestimonialsBanner: FunctionComponent = () => {
-  const navigate = useNavigate();
-  const getAQuoteClick = useCallback(() => {
-    try {
-      navigate('./contact-us');
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        logger.error(err.message);
-      }
-    }
-  }, [navigate]);
-
   const backgroundSvg = (
     <svg width="979" height="261" viewBox="0 0 979 261" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g opacity="0.6" filter="url(#filter0_f_57_5070)">
@@ -45,7 +32,7 @@ const TestimonialsBanner: FunctionComponent = () => {
           technology solutions tailored for your
           business needs.
         </p>
-        <Button size={ButtonSize.Large} onClick={getAQuoteClick}>
+        <Button size={ButtonSize.Large} to="./contact-us">
           Get a quote
         </Button>
       </div>

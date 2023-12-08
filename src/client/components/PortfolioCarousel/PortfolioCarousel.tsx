@@ -1,26 +1,12 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Button, { ButtonIcon, ButtonSize, ButtonVariant } from '../Button/Button';
-import logger from '../../../server/logger';
 import styles from './PortfolioCarousel.scss';
 import projectImage from './projectImage.png';
 
 const PortfolioCarousel: FunctionComponent = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const navigate = useNavigate();
   const numProjects = 2;
-
-  const handleClick = useCallback((): void => {
-    try {
-      navigate('/portfolio');
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        logger.error(err.message);
-      }
-    }
-  }, [navigate]);
 
   // button functions
   const next = useCallback(() => {
@@ -68,8 +54,9 @@ const PortfolioCarousel: FunctionComponent = () => {
             <h3>Project 1</h3>
             <p>Manage, edit, and sync product information across all your</p>
             <Button
-              size={ButtonSize.Large} variant={ButtonVariant.Outlined}
-              onClick={handleClick}
+              size={ButtonSize.Large}
+              variant={ButtonVariant.Outlined}
+              to="/portfolio"
             >
               See more
             </Button>
@@ -85,8 +72,9 @@ const PortfolioCarousel: FunctionComponent = () => {
             <h3>Project 2</h3>
             <p>Manage, edit, and sync product information across all your</p>
             <Button
-              size={ButtonSize.Large} variant={ButtonVariant.Outlined}
-              onClick={handleClick}
+              size={ButtonSize.Large}
+              variant={ButtonVariant.Outlined}
+              to="/portfolio"
             >
               See more
             </Button>
