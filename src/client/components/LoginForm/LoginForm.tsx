@@ -5,10 +5,11 @@ import { isObjectRecord } from '../../../common/utilities/types';
 import AuthContext from '../../context/AuthContext';
 import logger from '../../../server/logger';
 import Input, { InputSize } from '../Input/Input';
-import Button, { ButtonSize } from '../Button/Button';
+import Button, { ButtonSize, ButtonType } from '../Button/Button';
+import styles from './LoginForm.scss';
 
 const LoginForm: FunctionComponent = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
@@ -22,9 +23,9 @@ const LoginForm: FunctionComponent = () => {
 
   const handleUsernameChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setUsername(e.target.value);
+      setEmail(e.target.value);
     },
-    [setUsername],
+    [setEmail],
   );
 
   const handlePasswordChange = useCallback(
@@ -42,7 +43,7 @@ const LoginForm: FunctionComponent = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username,
+          email,
           password,
         }),
       });
@@ -70,7 +71,7 @@ const LoginForm: FunctionComponent = () => {
         logger.error(err.message);
       }
     }
-  }, [username, password, navigate]);
+  }, [email, password, navigate]);
 
   // potential check for hitting 'enter'
   // useEffect(() => {
@@ -93,28 +94,36 @@ const LoginForm: FunctionComponent = () => {
   // }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>
-          Username:
-          <Input icon size={InputSize.Medium} value={username} setValue={setUsername} onChange={handleUsernameChange} placeholderText="Your username" />
-        </label>
+    <div className={styles.container}>
+      <div className={styles.text}>
+        <h2>Login</h2>
+        <p>Welcome back</p>
       </div>
-      <div>
-        <label>
-          Password
-          <Input icon size={InputSize.Medium} value={password} setValue={setPassword} onChange={handlePasswordChange} placeholderText="Your password" />
-        </label>
-      </div>
-      <Button size={ButtonSize.Large} onClick={handleSubmit}>Sign in </Button>
-      <div className="forgotPassword">
-        <a href="#">Forgot password?</a>
-      </div>
+      <form onSubmit={handleSubmit} className={styles.loginForm}>
+        <div>
+          <label>
+            Email:
+            <Input size={InputSize.Large} value={email} setValue={setEmail} onChange={handleUsernameChange} placeholderText="example@gmail.com" />
+          </label>
+        </div>
+        <div>
+          <label>
+            Password
+            <Input size={InputSize.Large} value={password} setValue={setPassword} onChange={handlePasswordChange} placeholderText="*********" />
+          </label>
+        </div>
+        <div className={styles.buttons}>
+          <Button
+            size={ButtonSize.Large} onClick={handleSubmit}
+            type={ButtonType.Submit}
+          >
+            Login
+          </Button>
+          <a href="#">Forgot password?</a>
+        </div>
 
-      <div className="createAccount">
-        <a href="/register">Create an account</a>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 export default LoginForm;
