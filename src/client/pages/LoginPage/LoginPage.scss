@@ -1,0 +1,31 @@
+@use '../../SCSS/main';
+
+.pageContainer {
+  display: flex;
+  width: 100%;
+  height: 650px;
+  @include main.mobile {
+    height: auto;
+    margin-bottom: 3rem;
+  }
+}
+
+.loginContainer {
+  width: 50%;
+  padding: 3rem;
+  @include main.mobile {
+    width: 100%;
+  }
+}
+
+.loginPhoto {
+  width: 50%;
+  & img {
+    width: 100%;
+    height: 650px;
+    object-fit:cover;
+  }
+  @include main.mobile {
+    display: none;
+  }
+}

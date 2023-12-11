@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import AuthContext from '../../context/AuthContext';
 import Button, { ButtonIcon, ButtonSize, ButtonVariant } from '../Button/Button';
 import logger from '../../../server/logger';
-import Logo from '../../SCSS/Assets/Logo.png';
+import Logo from '../../static/images/Logo.png';
 import useIsMobileWidth from '../../hooks/useIsMobileWidth';
 import styles from './NavBar.scss';
 
