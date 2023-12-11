@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import CareersBanner from '../../components/CareersPage/CareersBanner/CareersBanner';
 import OurCulture from '../../components/CareersPage/OurCulture/OurCulture';
 import Openings from '../../components/CareersPage/Openings/Openings';
+import OwnIdeasBottom from '../../components/CareersPage/OwnIdeasBottom/OwnIdeasBottom';
 
 const CareersPage: FunctionComponent = () => (
   <div>
@@ -19,6 +20,7 @@ const CareersPage: FunctionComponent = () => (
     <CareersBanner />
     <OurCulture />
     <Openings />
+    <OwnIdeasBottom />
   </div>
 );
 
