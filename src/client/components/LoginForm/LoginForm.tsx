@@ -11,6 +11,7 @@ import styles from './LoginForm.scss';
 const LoginForm: FunctionComponent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -33,6 +34,13 @@ const LoginForm: FunctionComponent = () => {
       setPassword(e.target.value);
     },
     [setPassword],
+  );
+
+  const handleShowPasswordChange = useCallback(
+    () => {
+      setShowPassword(!showPassword);
+    },
+    [setShowPassword, showPassword],
   );
 
   const handleSubmit = useCallback(async() => {
@@ -109,8 +117,29 @@ const LoginForm: FunctionComponent = () => {
         <div>
           <label>
             Password
-            <Input size={InputSize.Large} value={password} setValue={setPassword} onChange={handlePasswordChange} placeholderText="*********" />
+            <Input
+              size={InputSize.Large}
+              value={password}
+              setValue={setPassword}
+              onChange={handlePasswordChange}
+              placeholderText="*********"
+              type={showPassword ? 'text' : 'password'}
+            />
           </label>
+          <label
+            htmlFor="check"
+            className={styles.passwordCheck}
+          >
+            Show Password
+            {' '}
+            <input
+              id="check"
+              type="checkbox"
+              onChange={handleShowPasswordChange}
+            />
+
+          </label>
+
         </div>
         <div className={styles.buttons}>
           <Button

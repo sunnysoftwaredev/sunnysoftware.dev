@@ -33,6 +33,12 @@ label {
   color: main.$neutral-color-80;
 }
 
+.passwordCheck {
+  justify-content: end;
+  display: flex;
+  margin-right: 6%;
+}
+
 .buttons {
   display: flex;
   justify-content: space-between;
