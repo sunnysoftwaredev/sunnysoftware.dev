@@ -22,6 +22,7 @@ import MethodologyPage from './pages/MethodologyPage/MethodologyPage';
 import FAQPage from './pages/FAQPage/FAQPage';
 import TestimonialsPage from './pages/TestimonialsPage/TestimonialsPage';
 import CareersPage from './pages/CareersPage/CareersPage';
+import ResourcesPage from './pages/ResourcesPage/ResourcesPage';
 
 const App: FunctionComponent = () => (
   <div>
@@ -61,6 +62,7 @@ const App: FunctionComponent = () => (
       <Route path="faq" element={<FAQPage />} />
       <Route path="testimonials" element={<TestimonialsPage />} />
       <Route path="careers" element={<CareersPage />} />
+      <Route path="resources" element={<ResourcesPage />} />
       <Route path="*" element={<b>404 That page does not exist!</b>} />
     </Routes>
     <Footer />
