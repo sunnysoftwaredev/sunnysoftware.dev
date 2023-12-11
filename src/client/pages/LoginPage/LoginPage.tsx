@@ -5,8 +5,8 @@ import type { FunctionComponent } from 'react';
 import LoginForm from '../../components/LoginForm/LoginForm';
 
 const LoginPage: FunctionComponent = () => {
-  const navigate = useNavigate();
   // check if user logged in already
+  const navigate = useNavigate();
   const user = localStorage.getItem('user');
   if (user !== null) {
     navigate('/');

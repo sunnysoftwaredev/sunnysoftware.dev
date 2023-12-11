@@ -23,10 +23,13 @@ import FAQPage from './pages/FAQPage/FAQPage';
 import TestimonialsPage from './pages/TestimonialsPage/TestimonialsPage';
 import CareersPage from './pages/CareersPage/CareersPage';
 import ResourcesPage from './pages/ResourcesPage/ResourcesPage';
+import ShowNavBar from './components/ShowNavBar/ShowNavBar';
 
 const App: FunctionComponent = () => (
   <div>
-    <NavBar />
+    <ShowNavBar>
+      <NavBar />
+    </ShowNavBar>
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="login" element={<LoginPage />} />
