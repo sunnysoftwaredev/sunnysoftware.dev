@@ -1,0 +1,48 @@
+@use '../../../SCSS/main';
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: 3rem;
+  gap: 2rem;
+}
+
+.panel {
+  display: flex;
+  padding: 50px 60px;
+  gap: 1rem;
+  width: 100%;
+  border-radius: 20px;
+  background: main.$neutral-color-20;
+  @include main.mobile {
+    flex-direction: column;
+  }
+}
+
+.panelText {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 80%;
+  & h2 {
+    @include main.boldFont();
+  }
+  & p {
+    color: main.$neutral-color-80;
+    line-height: 1.5rem;
+  }
+}
+
+.buttonContainer {
+  display: flex;
+  width: 20%;
+  justify-content: flex-end;
+  @include main.mobile {
+    width: 80%;
+    justify-content: flex-start;
+  }
+}

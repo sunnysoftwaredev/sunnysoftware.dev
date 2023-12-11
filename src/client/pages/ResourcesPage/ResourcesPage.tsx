@@ -2,6 +2,7 @@ import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import ResourcesBanner from '../../components/ResourcesPage/ResourcesBanner/ResourcesBanner';
+import ResourcesPanels from '../../components/ResourcesPage/ResourcesPanels/ResourcesPanels';
 
 const ResourcesPage: FunctionComponent = () => (
   <div>
@@ -15,6 +16,7 @@ const ResourcesPage: FunctionComponent = () => (
       />
     </Helmet>
     <ResourcesBanner />
+    <ResourcesPanels />
   </div>
 );
 
