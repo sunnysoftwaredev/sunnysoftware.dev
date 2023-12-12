@@ -1,0 +1,36 @@
+@use '../../SCSS/main';
+
+.container {
+  display: flex;
+  width: fit-content;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.leftIcon {
+  margin-right: 1rem;
+}
+
+.rightIcon {
+  margin-left: 2rem;
+}
+
+.success {
+  border: 1px solid #95DE64;
+  background-color: #F6FFED;
+}
+
+.failure {
+  border: 1px solid #FF4D4F;
+  background-color: #FFE3E4;
+}
+
+button {
+  background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}

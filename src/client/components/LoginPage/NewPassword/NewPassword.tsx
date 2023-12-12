@@ -1,16 +1,16 @@
 import React, { useState, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FunctionComponent, ChangeEvent } from 'react';
-import { isObjectRecord } from '../../../common/utilities/types';
-import AuthContext from '../../context/AuthContext';
-import logger from '../../../server/logger';
-import Input, { InputSize } from '../Input/Input';
-import Button, { ButtonSize, ButtonType } from '../Button/Button';
-import styles from './LoginForm.scss';
+import { isObjectRecord } from '../../../../common/utilities/types';
+import AuthContext from '../../../context/AuthContext';
+import logger from '../../../../server/logger';
+import Input, { InputSize } from '../../Input/Input';
+import Button, { ButtonSize, ButtonType } from '../../Button/Button';
+import styles from './NewPassword.scss';
 
-const LoginForm: FunctionComponent = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const NewPassword: FunctionComponent = () => {
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
@@ -22,18 +22,18 @@ const LoginForm: FunctionComponent = () => {
     navigate('/');
   }
 
-  const handleUsernameChange = useCallback(
+  const handleNewPasswordChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setEmail(e.target.value);
+      setNewPassword(e.target.value);
     },
-    [setEmail],
+    [setNewPassword],
   );
 
-  const handlePasswordChange = useCallback(
+  const handleConfirmPasswordChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setPassword(e.target.value);
+      setConfirmPassword(e.target.value);
     },
-    [setPassword],
+    [setConfirmPassword],
   );
 
   const handleShowPasswordChange = useCallback(
@@ -43,6 +43,7 @@ const LoginForm: FunctionComponent = () => {
     [setShowPassword, showPassword],
   );
 
+  // TODO: CHANGE FUNCTIONALITY
   const handleSubmit = useCallback(async() => {
     try {
       const response = await fetch('api/login', {
@@ -51,22 +52,22 @@ const LoginForm: FunctionComponent = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email,
-          password,
+          newPassword,
+          confirmPassword,
         }),
       });
 
       const result: unknown = await response.json();
 
       if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: LoginForm.tsx');
+        throw new Error('Unexpected body type: NewPassword.tsx');
       }
       if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: LoginForm.tsx');
+        throw new Error('success variable not type boolean: NewPassword.tsx');
       }
 
       if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: LoginForm.tsx');
+        throw new Error('success variable not type boolean: NewPassword.tsx');
       }
       if (result.success) {
         navigate('/');
@@ -79,49 +80,36 @@ const LoginForm: FunctionComponent = () => {
         logger.error(err.message);
       }
     }
-  }, [email, password, navigate]);
-
-  // potential check for hitting 'enter'
-  // useEffect(() => {
-  //   const keyDownHandler = event => {
-  //     console.log('User pressed: ', event.key);
-
-  //     if (event.key === 'Enter') {
-  //       event.preventDefault();
-
-  //       // 👇️ call submit function here
-  //       handleSubmit();
-  //     }
-  //   };
-
-  //   document.addEventListener('keydown', keyDownHandler);
-
-  //   return () => {
-  //     document.removeEventListener('keydown', keyDownHandler);
-  //   };
-  // }, []);
+  }, [newPassword, confirmPassword, navigate]);
 
   return (
     <div className={styles.container}>
       <div className={styles.text}>
-        <h2>Login</h2>
-        <p>Welcome back</p>
+        <h2>Change Password</h2>
+        <p>Enter New Password</p>
       </div>
-      <form onSubmit={handleSubmit} className={styles.loginForm}>
+      <form onSubmit={handleSubmit} className={styles.newPassword}>
         <div>
           <label>
-            Email:
-            <Input size={InputSize.Large} value={email} setValue={setEmail} onChange={handleUsernameChange} placeholderText="example@gmail.com" />
+            New Password:
+            <Input
+              size={InputSize.Large}
+              value={newPassword}
+              setValue={setNewPassword}
+              onChange={handleNewPasswordChange}
+              placeholderText="*********"
+              type={showPassword ? 'text' : 'password'}
+            />
           </label>
         </div>
         <div>
           <label>
-            Password
+            Confirm New Password
             <Input
               size={InputSize.Large}
-              value={password}
-              setValue={setPassword}
-              onChange={handlePasswordChange}
+              value={confirmPassword}
+              setValue={setConfirmPassword}
+              onChange={handleConfirmPasswordChange}
               placeholderText="*********"
               type={showPassword ? 'text' : 'password'}
             />
@@ -146,13 +134,12 @@ const LoginForm: FunctionComponent = () => {
             size={ButtonSize.Large} onClick={handleSubmit}
             type={ButtonType.Submit}
           >
-            Login
+            Change Password
           </Button>
-          <a href="#">Forgot password?</a>
         </div>
 
       </form>
     </div>
   );
 };
-export default LoginForm;
+export default NewPassword;
