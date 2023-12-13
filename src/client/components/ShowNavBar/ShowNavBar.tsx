@@ -11,7 +11,9 @@ const ShowNavBar
   const locationPath = useLocation();
 
   useEffect(() => {
-    if (locationPath.pathname === '/login') {
+    if (locationPath.pathname === '/login'
+      || locationPath.pathname === '/login/forgot-password'
+      || locationPath.pathname === '/login/reset-password') {
       setShowNavBar(false);
     } else {
       setShowNavBar(true);

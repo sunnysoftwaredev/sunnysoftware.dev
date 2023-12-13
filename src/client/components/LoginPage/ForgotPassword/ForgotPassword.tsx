@@ -73,8 +73,8 @@ const ForgotPassword: FunctionComponent = () => {
       </div>
       <form onSubmit={handleSubmit} className={styles.forgotPassword}>
         <div>
-          <label>
-            Email:
+          <label className={styles.boxAndLabel}>
+            Email
             <Input
               size={InputSize.Large}
               value={email} setValue={setEmail}
