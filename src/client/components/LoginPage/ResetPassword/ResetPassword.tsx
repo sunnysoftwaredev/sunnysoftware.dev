@@ -6,9 +6,9 @@ import AuthContext from '../../../context/AuthContext';
 import logger from '../../../../server/logger';
 import Input, { InputSize } from '../../Input/Input';
 import Button, { ButtonSize, ButtonType } from '../../Button/Button';
-import styles from './NewPassword.scss';
+import styles from './ResetPassword.scss';
 
-const NewPassword: FunctionComponent = () => {
+const ResetPassword: FunctionComponent = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -85,7 +85,7 @@ const NewPassword: FunctionComponent = () => {
   return (
     <div className={styles.container}>
       <div className={styles.text}>
-        <h2>Change Password</h2>
+        <h2>Reset Password</h2>
         <p>Enter New Password</p>
       </div>
       <form onSubmit={handleSubmit} className={styles.newPassword}>
@@ -134,7 +134,7 @@ const NewPassword: FunctionComponent = () => {
             size={ButtonSize.Large} onClick={handleSubmit}
             type={ButtonType.Submit}
           >
-            Change Password
+            Reset Password
           </Button>
         </div>
 
@@ -142,4 +142,4 @@ const NewPassword: FunctionComponent = () => {
     </div>
   );
 };
-export default NewPassword;
+export default ResetPassword;

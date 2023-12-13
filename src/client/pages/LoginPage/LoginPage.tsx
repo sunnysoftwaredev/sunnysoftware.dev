@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import type { FunctionComponent } from 'react';
 import LoginForm from '../../components/LoginPage/LoginForm/LoginForm';
 import logo from '../../static/images/Logo.png';
 import loginPhoto from '../../static/images/LoginPhoto.png';
-import ForgotPassword from '../../components/LoginPage/ForgotPassword/ForgotPassword';
-import NewPassword from '../../components/LoginPage/NewPassword/NewPassword';
 import PopupMessage, { PopupType } from '../../components/PopupMessage/PopupMessage';
 import styles from './LoginPage.scss';
 
@@ -17,9 +15,6 @@ const LoginPage: FunctionComponent = () => {
   if (user !== null) {
     navigate('/');
   }
-  const [showLogin, setShowLogin] = useState(false);
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(true);
   const locationPath = useLocation();
   const [showPopup, setShowPopup] = useState(true);
 
@@ -54,14 +49,12 @@ const LoginPage: FunctionComponent = () => {
         </a>
         {showPopup && (
           <PopupMessage
-            type={PopupType.Failure}
-            message="This is a test"
+            type={PopupType.Success}
+            message="This is a test with a longer message so I can see it"
             onClick={popup}
           />
         )}
-        {showLogin && <LoginForm />}
-        {showForgotPassword && <ForgotPassword />}
-        {showNewPassword && <NewPassword />}
+        <LoginForm />
       </div>
       <div className={styles.loginPhoto}>
         <img src={loginPhoto} alt="Employees at planning meeting" />

@@ -24,6 +24,8 @@ import TestimonialsPage from './pages/TestimonialsPage/TestimonialsPage';
 import CareersPage from './pages/CareersPage/CareersPage';
 import ResourcesPage from './pages/ResourcesPage/ResourcesPage';
 import ShowNavBar from './components/ShowNavBar/ShowNavBar';
+import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 
 const App: FunctionComponent = () => (
   <div>
@@ -33,6 +35,8 @@ const App: FunctionComponent = () => (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="login" element={<LoginPage />} />
+      <Route path="login/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="login/reset-password" element={<ResetPasswordPage />} />
       <Route path="contact-us" element={<ContactUsPage />} />
       <Route path="get-started" element={<GetStartedPage />} />
       <Route

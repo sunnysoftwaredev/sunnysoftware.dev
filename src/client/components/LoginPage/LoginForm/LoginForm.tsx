@@ -149,7 +149,7 @@ const LoginForm: FunctionComponent = () => {
           >
             Login
           </Button>
-          <a href="/login#forgot-password">Forgot password?</a>
+          <a href="/login/forgot-password">Forgot password?</a>
         </div>
 
       </form>
