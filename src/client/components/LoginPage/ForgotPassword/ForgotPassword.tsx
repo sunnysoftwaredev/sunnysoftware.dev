@@ -6,10 +6,21 @@ import AuthContext from '../../../context/AuthContext';
 import logger from '../../../../server/logger';
 import Input, { InputSize } from '../../Input/Input';
 import Button, { ButtonSize, ButtonType } from '../../Button/Button';
+import PopupMessage, { PopupType } from '../../PopupMessage/PopupMessage';
 import styles from './ForgotPassword.scss';
 
 const ForgotPassword: FunctionComponent = () => {
   const [email, setEmail] = useState('');
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+
+  const showSuccessPopupFunction = useCallback(() => {
+    setShowSuccessPopup(!showSuccessPopup);
+  }, [showSuccessPopup]);
+
+  const showErrorPopupFunction = useCallback(() => {
+    setShowErrorPopup(!showErrorPopup);
+  }, [showErrorPopup]);
 
   const navigate = useNavigate();
 
@@ -27,10 +38,10 @@ const ForgotPassword: FunctionComponent = () => {
     [setEmail],
   );
 
-  // TODO: Update api for ForgotPassword
-  const handleSubmit = useCallback(async() => {
+  const handleSubmit = useCallback(async(e: Event) => {
+    e.preventDefault();
     try {
-      const response = await fetch('api/login', {
+      const response = await fetch('/api/forgotPassword', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,17 +64,16 @@ const ForgotPassword: FunctionComponent = () => {
         throw new Error('success variable not type boolean: ForgotPassword.tsx');
       }
       if (result.success) {
-        navigate('/');
-        window.location.reload();
+        setShowSuccessPopup(true);
       } else {
-        navigate('/contact-us');
+        setShowErrorPopup(true);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
       }
     }
-  }, [email, navigate]);
+  }, [email]);
 
   return (
     <div className={styles.container}>
@@ -71,7 +81,22 @@ const ForgotPassword: FunctionComponent = () => {
         <h2>Forgot password?</h2>
         <p>Welcome back</p>
       </div>
-      <form onSubmit={handleSubmit} className={styles.forgotPassword}>
+      {showSuccessPopup && (
+        <PopupMessage
+          type={PopupType.Success}
+          message="If you have an account we have sent a reset password link"
+          onClick={showSuccessPopupFunction}
+        />
+      ) }
+      {showErrorPopup && (
+        <PopupMessage
+          type={PopupType.Failure}
+          message="Something went wrong, please reach out to us on the contact page"
+          onClick={showErrorPopupFunction}
+        />
+      ) }
+      {/* onSubmit={handleSubmit} removed from form */}
+      <form className={styles.forgotPassword}>
         <div>
           <label className={styles.boxAndLabel}>
             Email

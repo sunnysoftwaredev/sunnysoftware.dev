@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import type { FunctionComponent } from 'react';
@@ -10,10 +10,12 @@ import styles from './ForgotPasswordPage.scss';
 const ForgotPasswordPage: FunctionComponent = () => {
   // check if user logged in already
   const navigate = useNavigate();
-  const user = localStorage.getItem('user');
-  if (user !== null) {
-    navigate('/');
-  }
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user !== null) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   return (
     <div className={styles.pageContainer}>

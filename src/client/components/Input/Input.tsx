@@ -62,7 +62,7 @@ const Input: FunctionComponent<InputProps>
      </button>
    );
    return (
-     <form >
+     <div className={styles.container}>
        {searchIcon}
        <input
          type={type}
@@ -77,7 +77,7 @@ const Input: FunctionComponent<InputProps>
          })}
        />
        {eraseButton}
-     </form>
+     </div>
    );
  };
 

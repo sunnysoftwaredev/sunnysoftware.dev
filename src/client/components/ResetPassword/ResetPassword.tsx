@@ -5,6 +5,9 @@ import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import styles from './ResetPassword.scss';
 
+// TODO: old reset password, saved for when user is logged in
+// rename to something like UserChangePassword
+
 const ResetPassword: FunctionComponent = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');

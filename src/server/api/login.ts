@@ -1,6 +1,6 @@
 import { Router as createRouter } from 'express';
 import logger from '../logger';
-import { getUserByUsername, insertToken } from '../database';
+import { getUserByEmail, insertToken } from '../database';
 import { isObjectRecord } from '../../common/utilities/types';
 import { generateSalt, saltAndHash } from '../common/utilities/crypto';
 
@@ -11,16 +11,16 @@ router.post('/', (req, res) => {
     if (!isObjectRecord(req.body)) {
       throw new Error('api/login: req.body is not object');
     }
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    if (typeof username !== 'string') {
-      throw new Error('api/login: username not type string');
+    if (typeof email !== 'string') {
+      throw new Error('api/login: email not type string');
     }
     if (typeof password !== 'string') {
       throw new Error('api/login: password not type string');
     }
 
-    const userObject = await getUserByUsername(username);
+    const userObject = await getUserByEmail(email);
 
     const { id: userID, password: passwordDB, salt: saltDB }
      = userObject;
@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
     const checkPassword = saltedAndHashedLoginPassword.toString('hex');
 
     if (checkPassword !== passwordDB) {
-      throw new Error('Unable to authenticate with the provided username and password');
+      throw new Error('Unable to authenticate with the provided email and password');
     }
 
     // create expiration date 10 days from creation

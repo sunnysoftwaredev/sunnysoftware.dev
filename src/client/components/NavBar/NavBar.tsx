@@ -127,7 +127,7 @@ const Navbar: FunctionComponent = () => {
               Log Out
             </Button>
           ) }
-        {(isMobileWidth)
+        {(isMobileWidth && !active)
             && (
               <Button
                 size={ButtonSize.Small}
