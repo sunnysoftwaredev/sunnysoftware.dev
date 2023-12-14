@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { FunctionComponent, ChangeEvent } from 'react';
+import type { FunctionComponent, ChangeEvent, FormEvent } from 'react';
 import { isObjectRecord } from '../../../../common/utilities/types';
 import AuthContext from '../../../context/AuthContext';
 import logger from '../../../../server/logger';
@@ -50,7 +50,7 @@ const LoginForm: FunctionComponent = () => {
     [setShowPassword, showPassword],
   );
 
-  const handleSubmit = useCallback(async(e: Event) => {
+  const handleSubmit = useCallback(async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await fetch('api/login', {
@@ -112,7 +112,7 @@ const LoginForm: FunctionComponent = () => {
           onClick={closeErrorPopup}
         />
       )}
-      <form className={styles.loginForm}>
+      <form onClick={handleSubmit} className={styles.loginForm}>
         <div>
           <label>
             Email:
@@ -148,7 +148,7 @@ const LoginForm: FunctionComponent = () => {
         </div>
         <div className={styles.buttons}>
           <Button
-            size={ButtonSize.Large} onClick={handleSubmit}
+            size={ButtonSize.Large}
             type={ButtonType.Submit}
           >
             Login
