@@ -62,13 +62,13 @@ Promise<UserIdNameEmailRole[]> => {
   return rows;
 };
 
-export const getUserByUsername = async(usernameInput: string):
+export const getUserByEmail = async(emailInput: string):
 Promise<UserWithId> => {
   const result: QueryResult<UserWithId> = await client.query(
     `SELECT id, username, email, password, role, salt
     FROM users
-    WHERE username=$1 AND active=true`,
-    [usernameInput],
+    WHERE email=$1 AND active=true`,
+    [emailInput],
   );
 
   const { rows } = result;
@@ -86,6 +86,29 @@ Promise<UserWithId> => {
     role,
     salt,
   };
+};
+
+export type IdByEmail = {
+  id: number;
+};
+
+export const getUserIdByEmail = async(userEmail: string):
+Promise<number> => {
+  const result: QueryResult<IdByEmail> = await client.query(
+    `SELECT id
+    FROM users
+    WHERE email=$1 AND active=true`,
+    [userEmail],
+  );
+
+  const { rows } = result;
+  if (rows.length !== 1) {
+    throw new Error('Unable to select the user.');
+  }
+  const object = rows[0];
+  const { id } = object;
+
+  return id;
 };
 
 export const insertUser = async(
@@ -510,5 +533,79 @@ Promise<void> => {
   WHERE id=$1`,
     [id, title, description, active]
   );
+};
+
+export const insertPasswordResetToken = async(
+  foreignKey: number,
+  token: string,
+): Promise<void> => {
+  // create expiration
+  const currentUnixSeconds = Math.floor(Date.now() / 1000);
+  const tenMinutesSeconds = 600;
+  const expirationTime = currentUnixSeconds + tenMinutesSeconds;
+
+  await client.query(`INSERT INTO password_reset_tokens
+   (user_id, token, expiration, active)
+  VALUES ($1, $2, $3, $4)`, [foreignKey, token, expirationTime, true]);
+};
+
+type ResetActiveStatus = {
+  active: boolean;
+  expiration: number;
+};
+
+export const checkResetTokenActive = async(resetToken: string):
+Promise<boolean> => {
+  const result: QueryResult<ResetActiveStatus> = await client.query(
+    `SELECT
+    active,
+    expiration
+    FROM password_reset_tokens
+    WHERE token=$1`,
+    [resetToken],
+  );
+  const { rows } = result;
+  if (rows.length !== 1) {
+    return false;
+  }
+  if (typeof rows[0].active !== 'boolean') {
+    return false;
+  }
+
+  // TODO: CHECK STATUS OF THIS FUNCTION
+  // check for expiration
+  if (rows[0].active) {
+    const unixSecondsExpiration = rows[0].expiration;
+    const currentUnixSeconds = Math.floor(Date.now() / 1000);
+    if (unixSecondsExpiration < currentUnixSeconds) {
+      // set token inactive
+      await client.query(`UPDATE password_reset_tokens
+      SET active = false
+      WHERE token=$1`, [resetToken]);
+      return false;
+    }
+  }
+
+  return rows[0].active;
+};
+
+type UserIdByResetToken = {
+  userId: number;
+};
+
+export const getIdFromResetToken = async(resetToken: string):
+Promise<number> => {
+  const result: QueryResult<UserIdByResetToken> = await client.query(`SELECT user_id AS "userId"
+    FROM password_reset_tokens
+    WHERE token=$1`, [resetToken]);
+  const { rows } = result;
+  if (rows.length !== 1) {
+    throw new Error('Unable to select the user_id from resetToken in DB.');
+  }
+
+  const object = rows[0];
+  const { userId } = object;
+
+  return userId;
 };
 

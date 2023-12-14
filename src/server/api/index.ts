@@ -9,6 +9,7 @@ import contacts from './contacts';
 import timesheets from './timesheets';
 import users from './users';
 import projects from './projects';
+import forgotPassword from './forgotPassword';
 
 const router = createRouter();
 
@@ -22,5 +23,6 @@ router.use('/contacts', contacts);
 router.use('/timesheets', timesheets);
 router.use('/users', users);
 router.use('/projects', projects);
+router.use('/forgotPassword', forgotPassword);
 
 export default router;
