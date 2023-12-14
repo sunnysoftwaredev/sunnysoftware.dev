@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { FunctionComponent, ChangeEvent } from 'react';
+import type { FunctionComponent, ChangeEvent, FormEvent } from 'react';
 import { isObjectRecord } from '../../../../common/utilities/types';
 import AuthContext from '../../../context/AuthContext';
 import logger from '../../../../server/logger';
@@ -38,7 +38,7 @@ const ForgotPassword: FunctionComponent = () => {
     [setEmail],
   );
 
-  const handleSubmit = useCallback(async(e: Event) => {
+  const handleSubmit = useCallback(async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await fetch('/api/forgotPassword', {
@@ -95,8 +95,10 @@ const ForgotPassword: FunctionComponent = () => {
           onClick={showErrorPopupFunction}
         />
       ) }
-      {/* onSubmit={handleSubmit} removed from form */}
-      <form className={styles.forgotPassword}>
+      <form
+        className={styles.forgotPassword}
+        onClick={handleSubmit}
+      >
         <div>
           <label className={styles.boxAndLabel}>
             Email
@@ -111,7 +113,7 @@ const ForgotPassword: FunctionComponent = () => {
         <div />
         <div className={styles.buttons}>
           <Button
-            size={ButtonSize.Large} onClick={handleSubmit}
+            size={ButtonSize.Large}
             type={ButtonType.Submit}
           >
             Reset password

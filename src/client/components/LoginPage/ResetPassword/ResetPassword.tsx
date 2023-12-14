@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useContext } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import type { FunctionComponent, ChangeEvent } from 'react';
+import type { FunctionComponent, ChangeEvent, FormEvent } from 'react';
 import { isObjectRecord } from '../../../../common/utilities/types';
 import AuthContext from '../../../context/AuthContext';
 import logger from '../../../../server/logger';
@@ -76,7 +76,7 @@ const ResetPassword: FunctionComponent = () => {
     [],
   );
 
-  const handleSubmit = useCallback(async(e: Event) => {
+  const handleSubmit = useCallback(async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const passwordsSame = comparePasswords(newPassword, confirmPassword);
     if (!passwordsSame) {
@@ -145,8 +145,10 @@ const ResetPassword: FunctionComponent = () => {
           onClick={showErrorPopupFunction}
         />
       ) }
-      {/* onSubmit={handleSubmit}  */}
-      <form className={styles.newPassword}>
+      <form
+        className={styles.newPassword}
+        onSubmit={handleSubmit}
+      >
         <div>
           <label>
             New Password:
@@ -189,7 +191,7 @@ const ResetPassword: FunctionComponent = () => {
         </div>
         <div className={styles.buttons}>
           <Button
-            size={ButtonSize.Large} onClick={handleSubmit}
+            size={ButtonSize.Large}
             type={ButtonType.Submit}
           >
             Reset Password

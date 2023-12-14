@@ -41,7 +41,7 @@ type LinkButtonProps = BaseProps & {
 };
 
 type ButtonProps = BaseProps & {
-  onClick: () => void;
+  onClick?: () => void;
   type?: ButtonType;
 };
 

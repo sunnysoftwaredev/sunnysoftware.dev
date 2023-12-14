@@ -31,3 +31,8 @@ export const generatePassword = (size = 12): string => {
   const randomString = crypt.randomBytes(size);
   return randomString.toString('base64').slice(0, size);
 };
+
+export const generateResetToken = (size = 15): string => {
+  const randomString = crypt.randomBytes(size);
+  return randomString.toString('hex').slice(0, size);
+};
