@@ -47,6 +47,7 @@ const LoginForm: FunctionComponent = () => {
 
   const handleSubmit = useCallback(async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setShowErrorPopup(false); // if prior error
     try {
       const response = await fetch('api/login', {
         method: 'POST',
@@ -63,9 +64,6 @@ const LoginForm: FunctionComponent = () => {
 
       if (!isObjectRecord(result)) {
         throw new Error('Unexpected body type: LoginForm.tsx');
-      }
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: LoginForm.tsx');
       }
 
       if (typeof result.success !== 'boolean') {

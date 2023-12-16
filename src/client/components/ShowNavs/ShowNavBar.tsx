@@ -13,7 +13,10 @@ const ShowNavBar
   useEffect(() => {
     if (locationPath.pathname === '/login'
       || locationPath.pathname === '/login/forgot-password'
-      || locationPath.pathname === '/login/reset-password') {
+      || locationPath.pathname === '/login/reset-password'
+      || locationPath.pathname === '/portal'
+      || locationPath.pathname === '/employee-portal'
+      || locationPath.pathname === '/admin-portal') {
       setShowNavBar(false);
     } else {
       setShowNavBar(true);

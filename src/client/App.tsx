@@ -24,7 +24,7 @@ import FAQPage from './pages/FAQPage/FAQPage';
 import TestimonialsPage from './pages/TestimonialsPage/TestimonialsPage';
 import CareersPage from './pages/CareersPage/CareersPage';
 import ResourcesPage from './pages/ResourcesPage/ResourcesPage';
-import ShowNavBar from './components/ShowNavBar/ShowNavBar';
+import ShowNavBar from './components/ShowNavs/ShowNavBar';
 import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 import store from './redux/store';
@@ -56,7 +56,7 @@ const App: FunctionComponent = () => (
         )}
       />
       <Route
-        path="work-portal" element={(
+        path="employee-portal" element={(
           <EmployeePrivateRoute>
 
             <WorkPortalPage />

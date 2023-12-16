@@ -1,0 +1,134 @@
+@use "../../SCSS/main";
+
+$textColor: black;
+$temporaryBacking: gray;
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+nav {
+display: flex;
+width: 80%;
+position: absolute;
+top: 0;
+height: 4.5rem;
+padding: 2rem 1rem;
+margin: 0 5vw;
+justify-content: space-between;
+align-items: center;
+flex-shrink: 0;
+border-radius: 10px;
+background: rgba(255, 255, 255, 0.90);
+backdrop-filter: blur(3.5px);
+gap: 2rem;
+z-index: 2;
+}
+
+.leftMenu {
+  display: flex;
+}
+
+.logo {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+// TEST PROPERTIES-CHANGE
+.tabNav {
+  width: 80%;
+  height: auto;
+  min-height: 400px;
+  background: #053742;
+  margin: 3.5rem auto 1.5rem;
+  padding: 2rem 1rem;
+  color: #E8F0F2;
+  border-radius: 2rem;
+  @media (max-width: 769px) {
+    padding: 2rem 0;
+  }
+}
+
+// TODO, CHANGE THESE
+.tabList {
+  width: 60%;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #39A2DB;
+  border-radius: 2rem;
+  padding-left: 0px;
+  & li {
+    width: 50%;
+    padding: 1rem;
+    list-style: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.7s;
+  }
+  & li:first-child {
+    border-bottom-left-radius: 2rem;
+    border-top-left-radius: 2rem;
+  }
+  & li:last-child {
+    border-bottom-right-radius: 2rem;
+    border-top-right-radius: 2rem;
+  }
+  & li:hover {
+    background: rgba(50, 224, 196, 0.15);
+  }
+  & li.active {
+    background: #39A2DB;
+  }
+}
+
+
+.rightMenu {
+  display: flex;
+  position: relative;
+}
+
+.profileMenuButton{
+  background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+.menuArrowPointDown {
+  rotate: (90deg);
+}
+
+.menuArrowPointUp {
+  rotate: (270deg);
+}
+
+.rightMenuLinks {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  padding: 1rem 8rem 1rem 1rem;
+  gap: 1rem;
+  border-radius: 8px;
+  top: 125%;
+  right: 20%;
+  background: #FFF;
+  box-shadow: 0px 14px 14px 0px rgba(0, 0, 0, 0.15);
+  & a {
+    text-decoration: none;
+    color: black;
+    & :hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.hidden {
+  display: none;
+}
+
