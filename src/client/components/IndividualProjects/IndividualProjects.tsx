@@ -1,7 +1,5 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useState } from 'react';
-// import { isObjectRecord } from '../../../common/utilities/types';
-// import logger from '../../../server/logger';
 import type { ClientProject } from '../../../server/database';
 import EditProject from '../EditProject/EditProject';
 import styles from './IndividualProjects.scss';
@@ -12,8 +10,8 @@ const IndividualProject: FunctionComponent<ClientProject> = (props) => {
   const [editing, setEditing] = useState(false);
 
   const handleEdit = useCallback(() => {
-    setEditing(!editing);
-  }, [editing]);
+    setEditing(prevEditingState => !prevEditingState);
+  }, []);
 
   return (
     <div
