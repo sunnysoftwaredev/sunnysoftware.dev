@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FunctionComponent, ChangeEvent, FormEvent } from 'react';
 import { isObjectRecord } from '../../../../common/utilities/types';
@@ -11,34 +11,23 @@ import styles from './ForgotPassword.scss';
 
 const ForgotPassword: FunctionComponent = () => {
   const [email, setEmail] = useState('');
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
-
-  const showSuccessPopupFunction = useCallback(() => {
-    setShowSuccessPopup(!showSuccessPopup);
-  }, [showSuccessPopup]);
-
-  const showErrorPopupFunction = useCallback(() => {
-    setShowErrorPopup(!showErrorPopup);
-  }, [showErrorPopup]);
+  const [popupMessageState, setPopupMessageState] = useState({status: false, type: null});
 
   const navigate = useNavigate();
 
-  const { active }
-  = useContext(AuthContext) ?? { active: false };
+  const { active } = useContext(AuthContext) ?? { active: false };
 
-  if (active) {
-    navigate('/');
-  }
+  useEffect(() => {
+    if (active) {
+      navigate('/');
+    }
+  },[active, navigate]);
 
-  const handleEmailChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setEmail(e.target.value);
-    },
-    [setEmail],
-  );
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setEmail(e.target.value);
+  };
 
-  const handleSubmit = useCallback(async(e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
       const response = await fetch('/api/forgotPassword', {
@@ -46,9 +35,7 @@ const ForgotPassword: FunctionComponent = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email,
-        }),
+        body: JSON.stringify({ email }),
       });
 
       const result: unknown = await response.json();
@@ -60,20 +47,21 @@ const ForgotPassword: FunctionComponent = () => {
         throw new Error('success variable not type boolean: ForgotPassword.tsx');
       }
 
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: ForgotPassword.tsx');
-      }
-      if (result.success) {
-        setShowSuccessPopup(true);
-      } else {
-        setShowErrorPopup(true);
-      }
+      setPopupMessageState({
+        status: true,
+        type: result.success ? PopupType.Success : PopupType.Failure,
+      });
+
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
       }
     }
-  }, [email]);
+  };
+
+  const handlePopupMessageClick = (): void => {
+    setPopupMessageState({status: false, type: null});
+  };
 
   return (
     <div className={styles.container}>
@@ -81,36 +69,29 @@ const ForgotPassword: FunctionComponent = () => {
         <h2>Forgot password?</h2>
         <p>Welcome back</p>
       </div>
-      {showSuccessPopup && (
+      {popupMessageState.status && (
         <PopupMessage
-          type={PopupType.Success}
-          message="If you have an account we have sent a reset password link"
-          onClick={showSuccessPopupFunction}
+          type={popupMessageState.type}
+          message={
+            popupMessageState.type === PopupType.Success
+              ? "If you have an account we have sent a reset password link"
+              : "Something went wrong, please reach out to us on the contact page"
+          }
+          onClick={handlePopupMessageClick}
         />
-      ) }
-      {showErrorPopup && (
-        <PopupMessage
-          type={PopupType.Failure}
-          message="Something went wrong, please reach out to us on the contact page"
-          onClick={showErrorPopupFunction}
-        />
-      ) }
-      <form
-        className={styles.forgotPassword}
-        onClick={handleSubmit}
-      >
+      )}
+      <form className={styles.forgotPassword} onSubmit={handleSubmit}>
         <div>
           <label className={styles.boxAndLabel}>
             Email
             <Input
               size={InputSize.Large}
-              value={email} setValue={setEmail}
+              value={email}
               onChange={handleEmailChange}
               placeholderText="example@gmail.com"
             />
           </label>
         </div>
-        <div />
         <div className={styles.buttons}>
           <Button
             size={ButtonSize.Large}
@@ -124,4 +105,5 @@ const ForgotPassword: FunctionComponent = () => {
     </div>
   );
 };
+
 export default ForgotPassword;
