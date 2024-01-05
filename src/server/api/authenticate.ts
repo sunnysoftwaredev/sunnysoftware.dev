@@ -4,11 +4,12 @@ import { checkActiveToken, getUsernameAndRole } from '../database';
 
 const router = createRouter();
 
-router.post('/', (req, res) => {
-  (async(): Promise<void> => {
+const handleAuthenticate = async (req, res): Promise<void> => {
+  try {
     if (!isObjectRecord(req.cookies)) {
       throw new Error('api/authenticate: req.cookies is not object');
     }
+
     const { authenticationToken } = req.cookies;
     if (typeof authenticationToken !== 'string') {
       throw new Error('api/authenticate: userToken not type string');
@@ -27,13 +28,14 @@ router.post('/', (req, res) => {
       role,
       active: tokenActive,
     });
-  })().catch((e: Error) => {
+  } catch (e: Error) {
     res.json({
       success: false,
       error: e.message,
     });
-  });
-});
+  }
+};
+
+router.post('/', handleAuthenticate);
 
 export default router;
-
