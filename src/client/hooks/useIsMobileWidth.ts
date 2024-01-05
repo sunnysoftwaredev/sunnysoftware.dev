@@ -1,6 +1,8 @@
 import useInnerWidth from './useInnerWidth';
 
-export default (): boolean => {
+function isMobile() {
   const width = useInnerWidth();
   return width < 1024;
-};
+}
+
+export default isMobile;
