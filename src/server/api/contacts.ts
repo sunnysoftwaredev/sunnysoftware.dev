@@ -11,31 +11,18 @@ router.post('/', (req, res) => {
     if (!isObjectRecord(req.body)) {
       throw new Error('api/contacts: req.body is not object');
     }
-    const { contactName } = req.body;
-    const { email } = req.body;
-    const { subject } = req.body;
-    const { message } = req.body;
 
-    if (typeof contactName !== 'string') {
-      throw new Error('api/contacts: contactName not type string');
-    }
-    if (typeof email !== 'string') {
-      throw new Error('api/contacts: email not type string');
-    }
-    if (typeof subject !== 'string') {
-      throw new Error('api/contacts: subject not type string');
-    }
-    if (typeof message !== 'string') {
-      throw new Error('api/contacts:message not type string');
-    }
+    const { contactName, email, subject, message } = req.body;
 
-    const result = await insertContact(
-      contactName,
-      email,
-      subject,
-      message,
-    );
+    const checkString = [contactName, email, subject, message];
 
+    checkString.forEach(field => {
+      if (typeof field !== 'string') {
+        throw new Error(`api/contacts: ${field} not type string`);
+      }
+    });
+
+    const result = await insertContact(contactName, email, subject, message);
     await mailgunMessage(contactName, email, subject, message);
 
     res.json({
