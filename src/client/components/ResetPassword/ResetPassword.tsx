@@ -1,42 +1,35 @@
 import type { ChangeEvent, FunctionComponent, SyntheticEvent } from 'react';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import styles from './ResetPassword.scss';
 
-// TODO: old reset password, saved for when user is logged in
-// rename to something like UserChangePassword
-
 const ResetPassword: FunctionComponent = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
-  const handlePasswordChange = useCallback(
+  // Abstracting password match logic into useEffect
+  useEffect(() => {
+    if (password && confirmPassword) {
+      setError(password !== confirmPassword);
+    }
+  }, [password, confirmPassword]);
+
+  const handleInputChange = useCallback((setterFunction) => 
     (e: ChangeEvent<HTMLInputElement>) => {
-      setPassword(e.target.value);
+      setterFunction(e.target.value);
       setSubmitted(false);
     },
-    [setPassword],
+    [setPassword, setConfirmPassword],
   );
-
-  const handleConfirmPasswordChange
-   = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-     setConfirmPassword(e.target.value);
-     setSubmitted(false);
-   }, [setConfirmPassword],);
 
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
-      if (password !== confirmPassword) {
-        setError(true);
-        return;
-      }
-      setError(false);
+      if (error) return;
       const response = await fetch('api/users/password', {
         method: 'POST',
         headers: {
@@ -66,7 +59,7 @@ const ResetPassword: FunctionComponent = () => {
         logger.error(err.message);
       }
     }
-  }, [password, confirmPassword]);
+  }, [password, error]);
 
   const successMessage = (): React.JSX.Element => (
     <div
@@ -95,14 +88,14 @@ const ResetPassword: FunctionComponent = () => {
         <div>
           <label className="label" htmlFor="newPassword">New Password</label>
           <input
-            onChange={handlePasswordChange} id="newPassword"
+            onChange={handleInputChange(setPassword)} id="newPassword"
             value={password} type="password"
           />
         </div>
         <div>
           <label className="label" htmlFor="retypePassword">Retype Password</label>
           <input
-            onChange={handleConfirmPasswordChange} id="retypePassword"
+            onChange={handleInputChange(setConfirmPassword)} id="retypePassword"
             value={confirmPassword} type="password"
           />
         </div>
