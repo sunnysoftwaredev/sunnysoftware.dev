@@ -1,9 +1,8 @@
+```typescript
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import EmployeePrivateRoute from './components/PrivateRoutes/EmployeePrivateRoute';
-import ClientPrivateRoute from './components/PrivateRoutes/ClientPrivateRoute';
-import AdminPrivateRoute from './components/PrivateRoutes/AdminPrivateRoute';
+import PrivateRoute from './components/PrivateRoutes/PrivateRoute';
 import LandingPage from './pages/LandingPage/LandingPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import ContactUsPage from './pages/ContactUs/ContactUsPage';
@@ -39,28 +38,11 @@ const App: FunctionComponent = () => (
       <Route path="login/reset-password" element={<ResetPasswordPage />} />
       <Route path="contact-us" element={<ContactUsPage />} />
       <Route path="get-started" element={<GetStartedPage />} />
-      <Route
-        path="portal" element={(
-          <ClientPrivateRoute>
-            <ClientPortalPage />
-          </ClientPrivateRoute>
-        )}
-      />
-      <Route
-        path="admin-portal" element={(
-          <AdminPrivateRoute>
-            <AdminPortalPage />
-          </AdminPrivateRoute>
-        )}
-      />
-      <Route
-        path="work-portal" element={(
-          <EmployeePrivateRoute>
+      
+      <PrivateRoute path="portal" element={<ClientPortalPage />} role="client" />
+      <PrivateRoute path="admin-portal" element={<AdminPortalPage />} role="admin" />
+      <PrivateRoute path="work-portal" element={<WorkPortalPage />} role="employee" />
 
-            <WorkPortalPage />
-          </EmployeePrivateRoute>
-        )}
-      />
       <Route path="about-us" element={<AboutUsPage />} />
       <Route path="services" element={<ServicesPage />} />
       <Route path="portfolio" element={<PortfolioPage />} />
@@ -77,3 +59,4 @@ const App: FunctionComponent = () => (
 );
 
 export default App;
+```
