@@ -3,18 +3,20 @@ import React from 'react';
 import Button, { ButtonSize, ButtonVariant } from '../../Button/Button';
 import styles from './PortfolioNeedHelp.scss';
 
-const PortfolioNeedHelp: FunctionComponent = () => (
+interface ContentProps {
+  header: string;
+  paragraph: string;
+  button: string;
+}
+
+const PortfolioNeedHelp: FunctionComponent<ContentProps> = ({ header, paragraph, button }) => (
   <div className={styles.container}>
     <div className={styles.text}>
-      <h2>We provide best services. Need help?</h2>
-      <p>
-        Our mission is to become an extension of your
-        team so we can help your business grow — all
-        while costing you less than a single full-time designer.
-      </p>
+      <h2>{header}</h2>
+      <p>{paragraph}</p>
     </div>
     <Button size={ButtonSize.Large} variant={ButtonVariant.Outlined} to="./contact-us">
-      Get a Quote
+      {button}
     </Button>
   </div>
 );
