@@ -9,6 +9,5 @@ const main = async(): Promise<void> => {
 
 main()
   .catch((e) => {
-    logger.fatal('Error during server startup.');
-    logger.info(e);
+    logger.fatal(`Error during server startup: ${e.message}`);
   });
