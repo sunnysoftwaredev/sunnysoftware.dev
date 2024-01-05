@@ -10,7 +10,7 @@ import styles from './ManageUsers.scss';
 const ManageUsers: FunctionComponent = () => {
   const [userList, setUserList] = useState<UserIdNameEmailRole[]>([]);
 
-  const getUserList = useCallback(async() => {
+  const getUserList = useCallback(async () => {
     try {
       const response = await fetch('api/users', {
         method: 'GET',
@@ -37,52 +37,26 @@ const ManageUsers: FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
-    getUserList().catch((err) => {
-      logger.error(err);
-    });
+    getUserList();
   }, [getUserList]);
 
-  const displayUsers = (users: UserIdNameEmailRole[]):
-  React.ReactElement[] => {
-    if (typeof users === 'undefined') {
-      return [<div key={0} />];
-    }
-    const userElements: React.ReactElement[] = [];
-
-    for (const user of users) {
-      const { username } = user;
-      const { email } = user;
-      const { id } = user;
-      const { role } = user;
-
-      userElements.push((
-        <div
-          key={`user-${id}`}
-        >
-          <IndividualUser
-            username={username} email={email}
-            role={role}
-            id={id}
-          />
-        </div>));
-    }
-    return userElements;
-  };
   return (
     <div className={styles.manageUsersContainer}>
       <h1>List of Clients and Employees</h1>
-      <h2>
-        Total Users:
-        {' '}
-        {userList.length}
-      </h2>
+      <h2>Total Users: {userList.length}</h2>
       <div className={styles.usersList}>
-
-        {displayUsers(userList)}
+        {userList.map(({id, username, email, role}) => 
+          <div key={`user-${id}`}>
+            <IndividualUser
+              username={username}
+              email={email}
+              role={role}
+              id={id}
+            />
+          </div>)}
       </div>
       <CreateProject userList={userList} />
     </div>
-
   );
 };
 
