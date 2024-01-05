@@ -60,9 +60,6 @@ const ForgotPassword: FunctionComponent = () => {
         throw new Error('success variable not type boolean: ForgotPassword.tsx');
       }
 
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: ForgotPassword.tsx');
-      }
       if (result.success) {
         setShowSuccessPopup(true);
       } else {
