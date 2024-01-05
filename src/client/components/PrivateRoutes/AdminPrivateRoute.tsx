@@ -7,7 +7,13 @@ interface IProps {
 }
 
 const AdminPrivateRoute = ({ children }: IProps): React.JSX.Element => {
-  const { role, load } = useContext(AuthContext) ?? { role: '', load: false };
+  const authContext = useContext(AuthContext);
+  let role = '';
+  let load = false;
+    
+  if(authContext !== undefined) {
+    ({ role, load } = authContext);
+  }
 
   if (!load) {
     return <div>LOADING...</div>;
