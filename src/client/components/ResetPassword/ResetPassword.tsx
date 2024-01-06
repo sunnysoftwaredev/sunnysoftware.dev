@@ -5,7 +5,7 @@ import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import styles from './ResetPassword.scss';
 
-// TODO: old reset password, saved for when user is logged in
+// TODO: old reset password, saved for when the user is logged in
 // rename to something like UserChangePassword
 
 const ResetPassword: FunctionComponent = () => {
@@ -20,14 +20,16 @@ const ResetPassword: FunctionComponent = () => {
       setPassword(e.target.value);
       setSubmitted(false);
     },
-    [setPassword],
+    [],
   );
 
-  const handleConfirmPasswordChange
-   = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-     setConfirmPassword(e.target.value);
-     setSubmitted(false);
-   }, [setConfirmPassword],);
+  const handleConfirmPasswordChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setConfirmPassword(e.target.value);
+      setSubmitted(false);
+    },
+    [],
+  );
 
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
@@ -37,6 +39,7 @@ const ResetPassword: FunctionComponent = () => {
         return;
       }
       setError(false);
+      
       const response = await fetch('api/users/password', {
         method: 'POST',
         headers: {
@@ -50,10 +53,10 @@ const ResetPassword: FunctionComponent = () => {
       const result: unknown = await response.json();
 
       if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: ResetPassword.tsx');
+        throw { type: 'response-format', message: 'Unexpected body type in response', context: 'ResetPassword.tsx' };
       }
       if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: ResetPassword.tsx');
+        throw { type: 'response-boolean', message: 'success property is not boolean', context: 'ResetPassword.tsx' };
       }
       if (result.success) {
         setSubmitted(true);
@@ -62,8 +65,9 @@ const ResetPassword: FunctionComponent = () => {
         }, 1500);
       }
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        logger.error(err.message);
+      if (err && typeof err === 'object' && 'message' in err) {
+        const typedError = err as { message: string; type?: string; context?: string };
+        logger.error(`[${typedError.type || 'error'}] ${typedError.message} ${typedError.context ? `(Context: ${typedError.context})` : ''}`);
       }
     }
   }, [password, confirmPassword]);
