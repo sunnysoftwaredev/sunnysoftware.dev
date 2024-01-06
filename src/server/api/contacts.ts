@@ -6,35 +6,32 @@ import { mailgunMessage } from '../mail';
 
 const router = createRouter();
 
+type ContactRequestBody = {
+  contactName: string;
+  email: string;
+  subject: string;
+  message: string;
+};
+
+const validateRequestBody = (body: any): ContactRequestBody => {
+  if (!isObjectRecord(body)) {
+    throw new Error('api/contacts: req.body is not an object');
+  }
+  const { contactName, email, subject, message } = body;
+  if (typeof contactName !== 'string' ||
+      typeof email !== 'string' ||
+      typeof subject !== 'string' ||
+      typeof message !== 'string') {
+    throw new Error('api/contacts: Invalid type');
+  }
+  return { contactName, email, subject, message };
+};
+
 router.post('/', (req, res) => {
   (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/contacts: req.body is not object');
-    }
-    const { contactName } = req.body;
-    const { email } = req.body;
-    const { subject } = req.body;
-    const { message } = req.body;
+    const { contactName, email, subject, message } = validateRequestBody(req.body);
 
-    if (typeof contactName !== 'string') {
-      throw new Error('api/contacts: contactName not type string');
-    }
-    if (typeof email !== 'string') {
-      throw new Error('api/contacts: email not type string');
-    }
-    if (typeof subject !== 'string') {
-      throw new Error('api/contacts: subject not type string');
-    }
-    if (typeof message !== 'string') {
-      throw new Error('api/contacts:message not type string');
-    }
-
-    const result = await insertContact(
-      contactName,
-      email,
-      subject,
-      message,
-    );
+    const result = await insertContact(contactName, email, subject, message);
 
     await mailgunMessage(contactName, email, subject, message);
 
@@ -48,6 +45,7 @@ router.post('/', (req, res) => {
       success: false,
       error: e.message,
     });
+    logger.error('Error in POST /contacts', e);
   });
 });
 
