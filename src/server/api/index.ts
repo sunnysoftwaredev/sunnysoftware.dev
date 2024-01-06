@@ -13,16 +13,22 @@ import forgotPassword from './forgotPassword';
 
 const router = createRouter();
 
-router.use('/login', login);
-router.use('/logout', logout);
-router.use('/register', register);
-router.use('/authenticate', authenticate);
-router.use('/workLogs', workLogs);
-router.use('/weeklyWorkLogs', weeklyWorkLogs);
-router.use('/contacts', contacts);
-router.use('/timesheets', timesheets);
-router.use('/users', users);
-router.use('/projects', projects);
-router.use('/forgotPassword', forgotPassword);
+const routes = [
+  { path: '/login', handler: login },
+  { path: '/logout', handler: logout },
+  { path: '/register', handler: register },
+  { path: '/authenticate', handler: authenticate },
+  { path: '/workLogs', handler: workLogs },
+  { path: '/weeklyWorkLogs', handler: weeklyWorkLogs },
+  { path: '/contacts', handler: contacts },
+  { path: '/timesheets', handler: timesheets },
+  { path: '/users', handler: users },
+  { path: '/projects', handler: projects },
+  { path: '/forgotPassword', handler: forgotPassword },
+];
+
+routes.forEach(route => {
+  router.use(route.path, route.handler);
+});
 
 export default router;
