@@ -27,50 +27,52 @@ import ShowNavBar from './components/ShowNavBar/ShowNavBar';
 import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 
+interface RouteInfo {
+  path: string;
+  element: JSX.Element;
+  wrapper?: (children: JSX.Element) => JSX.Element;
+}
+
+const routeConfig: RouteInfo[] = [
+  { path: "/", element: <LandingPage /> },
+  { path: "login", element: <LoginPage /> },
+  { path: "login/forgot-password", element: <ForgotPasswordPage /> },
+  { path: "login/reset-password", element: <ResetPasswordPage /> },
+  { path: "contact-us", element: <ContactUsPage /> },
+  { path: "get-started", element: <GetStartedPage /> },
+  { path: "portal", element: <ClientPortalPage />, wrapper: ClientPrivateRoute },
+  { path: "admin-portal", element: <AdminPortalPage />, wrapper: AdminPrivateRoute },
+  { path: "work-portal", element: <WorkPortalPage />, wrapper: EmployeePrivateRoute },
+  { path: "about-us", element: <AboutUsPage /> },
+  { path: "services", element: <ServicesPage /> },
+  { path: "portfolio", element: <PortfolioPage /> },
+  { path: "team", element: <TeamPage /> },
+  { path: "methodology", element: <MethodologyPage /> },
+  { path: "faq", element: <FAQPage /> },
+  { path: "testimonials", element: <TestimonialsPage /> },
+  { path: "careers", element: <CareersPage /> },
+  { path: "resources", element: <ResourcesPage /> },
+  { path: "*", element: <b>404 That page does not exist!</b> }
+];
+
+const renderRoute = (route: RouteInfo) => {
+  const { path, element, wrapper } = route;
+  return (
+    <Route
+      key={path}
+      path={path}
+      element={wrapper ? wrapper(element) : element}
+    />
+  );
+};
+
 const App: FunctionComponent = () => (
   <div>
     <ShowNavBar>
       <NavBar />
     </ShowNavBar>
     <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="login" element={<LoginPage />} />
-      <Route path="login/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="login/reset-password" element={<ResetPasswordPage />} />
-      <Route path="contact-us" element={<ContactUsPage />} />
-      <Route path="get-started" element={<GetStartedPage />} />
-      <Route
-        path="portal" element={(
-          <ClientPrivateRoute>
-            <ClientPortalPage />
-          </ClientPrivateRoute>
-        )}
-      />
-      <Route
-        path="admin-portal" element={(
-          <AdminPrivateRoute>
-            <AdminPortalPage />
-          </AdminPrivateRoute>
-        )}
-      />
-      <Route
-        path="work-portal" element={(
-          <EmployeePrivateRoute>
-
-            <WorkPortalPage />
-          </EmployeePrivateRoute>
-        )}
-      />
-      <Route path="about-us" element={<AboutUsPage />} />
-      <Route path="services" element={<ServicesPage />} />
-      <Route path="portfolio" element={<PortfolioPage />} />
-      <Route path="team" element={<TeamPage />} />
-      <Route path="methodology" element={<MethodologyPage />} />
-      <Route path="faq" element={<FAQPage />} />
-      <Route path="testimonials" element={<TestimonialsPage />} />
-      <Route path="careers" element={<CareersPage />} />
-      <Route path="resources" element={<ResourcesPage />} />
-      <Route path="*" element={<b>404 That page does not exist!</b>} />
+      {routeConfig.map(renderRoute)}
     </Routes>
     <Footer />
   </div>
