@@ -23,9 +23,7 @@ export const isTimeObjectWithProjectArray
 
 export const isIdArray = (value: unknown): value is IdObject[] => (
   Array.isArray(value)
-  && value[0] !== null
-  && value[0] !== undefined
-  && 'id' in value[0]
+  && value.every((item) => item !== null && item !== undefined && 'id' in item)
 );
 
 const isEmployeeTimesheet
@@ -48,12 +46,14 @@ export const isEmployeeTimesheetArray
 export const isUsersArray
  = (value: unknown): value is UserIdNameEmailRole[] => (
    Array.isArray(value)
-   && value[0] !== null
-   && value[0] !== undefined
-    && 'id' in value[0]
-    && 'username' in value[0]
-    && 'email' in value[0]
-    && 'role' in value[0]
+   && value.every((item) => 
+        item !== null &&
+        item !== undefined &&
+        'id' in item &&
+        'username' in item &&
+        'email' in item &&
+        'role' in item
+      )
  );
 
 const isClientProject
