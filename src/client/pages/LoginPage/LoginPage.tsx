@@ -1,19 +1,20 @@
-import React from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import type { FunctionComponent } from 'react';
 import LoginForm from '../../components/LoginPage/LoginForm/LoginForm';
 import logo from '../../static/images/Logo.png';
 import loginPhoto from '../../static/images/LoginPhoto.png';
 import styles from './LoginPage.scss';
 
 const LoginPage: FunctionComponent = () => {
-  // check if user logged in already
   const navigate = useNavigate();
-  const user = localStorage.getItem('user');
-  if (user !== null) {
-    navigate('/');
-  }
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   return (
     <div className={styles.pageContainer}>
