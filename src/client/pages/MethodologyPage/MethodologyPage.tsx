@@ -6,7 +6,7 @@ import MethodologyFullList from '../../components/MethodologyPage/MethodologyFul
 import MethodologyBenefits from '../../components/MethodologyPage/MethodologyBenefits/MethodologyBenefits';
 import MethodologyNeedHelp from '../../components/MethodologyPage/MethodologyNeedHelp/MethodologyNeedHelp';
 
-const MethodologyPage: FunctionComponent = () => (
+const MethodologyPageComponent: FunctionComponent = () => (
   <div>
     <Helmet>
       <meta charSet="utf-8" />
@@ -24,4 +24,4 @@ const MethodologyPage: FunctionComponent = () => (
   </div>
 );
 
-export default MethodologyPage;
+export default MethodologyPageComponent;
