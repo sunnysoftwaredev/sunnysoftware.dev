@@ -4,54 +4,42 @@ import AccordianPanel from '../../AccordianPanel/AccordianPanel';
 import styles from './FullFAQ.scss';
 
 const FullFAQ: FunctionComponent = () => {
+  const defaultAnswer = `You and your team can request design work through a
+  shared board we will set up for you in Asana. You can request as
+  many designs as you like.`;
+
   const faqData = [
     {
       question: 'Question 1',
-      answer: `You and your team can request design work through a
-      shared board we will set up for you in Asana. You can request as
-      many designs as you like.`,
+      answer: defaultAnswer,
     },
     {
       question: 'Question 2',
-      answer: `You and your team can request design work through a
-      shared board we will set up for you in Asana. You can request as
-      many designs as you like.`,
+      answer: defaultAnswer,
     },
     {
       question: 'Question 3',
-      answer: `You and your team can request design work through a
-      shared board we will set up for you in Asana. You can request as
-      many designs as you like.`,
+      answer: defaultAnswer,
     },
     {
       question: 'Question 4',
-      answer: `You and your team can request design work through a
-      shared board we will set up for you in Asana. You can request as
-      many designs as you like.`,
+      answer: defaultAnswer,
     },
     {
       question: 'Question 5',
-      answer: `You and your team can request design work through a
-      shared board we will set up for you in Asana. You can request as
-      many designs as you like.`,
+      answer: defaultAnswer,
     },
     {
       question: 'Question 6',
-      answer: `You and your team can request design work through a
-      shared board we will set up for you in Asana. You can request as
-      many designs as you like.`,
+      answer: defaultAnswer,
     },
     {
       question: 'Question 7',
-      answer: `You and your team can request design work through a
-      shared board we will set up for you in Asana. You can request as
-      many designs as you like.`,
+      answer: defaultAnswer,
     },
     {
       question: 'Question 8',
-      answer: `You and your team can request design work through a
-      shared board we will set up for you in Asana. You can request as
-      many designs as you like.`,
+      answer: defaultAnswer,
     },
   ];
 
