@@ -1,3 +1,4 @@
+```typescript
 import React, { useState, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FunctionComponent, ChangeEvent, FormEvent } from 'react';
@@ -18,8 +19,7 @@ const LoginForm: FunctionComponent = () => {
 
   const navigate = useNavigate();
 
-  const { active }
-  = useContext(AuthContext) ?? { active: false };
+  const { active } = useContext(AuthContext) ?? { active: false };
 
   if (active) {
     navigate('/');
@@ -50,7 +50,7 @@ const LoginForm: FunctionComponent = () => {
     [setShowPassword, showPassword],
   );
 
-  const handleSubmit = useCallback(async(e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await fetch('api/login', {
@@ -69,10 +69,6 @@ const LoginForm: FunctionComponent = () => {
       if (!isObjectRecord(result)) {
         throw new Error('Unexpected body type: LoginForm.tsx');
       }
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: LoginForm.tsx');
-      }
-
       if (typeof result.success !== 'boolean') {
         throw new Error('success variable not type boolean: LoginForm.tsx');
       }
@@ -131,20 +127,14 @@ const LoginForm: FunctionComponent = () => {
               type={showPassword ? 'text' : 'password'}
             />
           </label>
-          <label
-            htmlFor="check"
-            className={styles.passwordCheck}
-          >
+          <label htmlFor="check" className={styles.passwordCheck}>
             Show Password
-            {' '}
             <input
               id="check"
               type="checkbox"
               onChange={handleShowPasswordChange}
             />
-
           </label>
-
         </div>
         <div className={styles.buttons}>
           <Button
@@ -155,9 +145,9 @@ const LoginForm: FunctionComponent = () => {
           </Button>
           <a href="/login/forgot-password">Forgot password?</a>
         </div>
-
       </form>
     </div>
   );
 };
 export default LoginForm;
+```
