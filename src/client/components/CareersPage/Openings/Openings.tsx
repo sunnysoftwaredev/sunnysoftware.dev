@@ -14,55 +14,7 @@ const OPENINGS = [
     type: 'remote',
     url: '/contact-us',
     description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
+  }
 ];
 
 const Openings: React.FunctionComponent = () => (
@@ -84,7 +36,6 @@ const Openings: React.FunctionComponent = () => (
           type={card.type} description={card.description}
         />
       ))}
-
     </div>
   </div>
 );
