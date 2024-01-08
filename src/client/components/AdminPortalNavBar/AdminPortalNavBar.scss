@@ -20,7 +20,9 @@ justify-content: space-between;
 align-items: center;
 flex-shrink: 0;
 border-radius: 10px;
-background: rgba(255, 255, 255, 0.90);
+background: #FFF;
+backdrop-filter: blur(3.5px);
+box-shadow: 0px 13px 14px 0px rgba(0, 0, 0, 0.05);
 backdrop-filter: blur(3.5px);
 gap: 2rem;
 z-index: 2;
@@ -28,6 +30,9 @@ z-index: 2;
 
 .leftMenu {
   display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-left: 1rem;
 }
 
 .logo {
@@ -35,53 +40,16 @@ z-index: 2;
   height: 4.5rem;
 }
 
-// TEST PROPERTIES-CHANGE
-.tabNav {
-  width: 80%;
-  height: auto;
-  min-height: 400px;
-  background: #053742;
-  margin: 3.5rem auto 1.5rem;
-  padding: 2rem 1rem;
-  color: #E8F0F2;
-  border-radius: 2rem;
-  @media (max-width: 769px) {
-    padding: 2rem 0;
-  }
-}
-
-// TODO, CHANGE THESE
-.tabList {
-  width: 60%;
-  margin: 0 auto 2rem;
+.tabMenu {
   display: flex;
+  gap: 1rem;
+  height: 100%;
+  border-radius: 50px;
+  border: 1px solid main.$primary-color-20;
+  background: main.$neutral-color-10;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  border: 1px solid #39A2DB;
-  border-radius: 2rem;
-  padding-left: 0px;
-  & li {
-    width: 50%;
-    padding: 1rem;
-    list-style: none;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.7s;
-  }
-  & li:first-child {
-    border-bottom-left-radius: 2rem;
-    border-top-left-radius: 2rem;
-  }
-  & li:last-child {
-    border-bottom-right-radius: 2rem;
-    border-top-right-radius: 2rem;
-  }
-  & li:hover {
-    background: rgba(50, 224, 196, 0.15);
-  }
-  & li.active {
-    background: #39A2DB;
-  }
+  padding: .3rem;
 }
 
 
@@ -98,7 +66,38 @@ z-index: 2;
 	font: inherit;
 	cursor: pointer;
 	outline: inherit;
+  display: flex;
+  gap: 1rem;
 }
+
+.profileMenuButton p {
+  font-size: x-large;
+}
+
+.profileIcon {
+  position: relative;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// .profileIcon :first-child{
+//   position: relative;
+//   z-index: 0;
+// }
+
+.profileIcon :last-child{
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+
 
 .menuArrowPointDown {
   rotate: (90deg);

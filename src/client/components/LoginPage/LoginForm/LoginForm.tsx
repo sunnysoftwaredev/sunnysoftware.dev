@@ -110,7 +110,7 @@ const LoginForm: FunctionComponent = () => {
           onClick={closeErrorPopup}
         />
       )}
-      <form onClick={handleSubmit} className={styles.loginForm}>
+      <form onSubmit={handleSubmit} className={styles.loginForm}>
         <div>
           <label>
             Email:
