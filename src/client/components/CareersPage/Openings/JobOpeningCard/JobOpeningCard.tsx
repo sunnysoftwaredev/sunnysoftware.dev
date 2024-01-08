@@ -1,6 +1,7 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
-import Button, { ButtonSize } from '../../../Button/Button';
+import Button from '../../../Button/Button';
+import { ButtonSize } from '../../../Button/Button';
 import useIsMobileWidth from '../../../../hooks/useIsMobileWidth';
 import styles from './JobOpeningCard.scss';
 
@@ -11,6 +12,8 @@ type JobOpeningCardProps = {
   url: string;
 };
 
+const { Small, Medium } = ButtonSize;
+
 const JobOpeningCard: FunctionComponent<JobOpeningCardProps> = ({
   position,
   type,
@@ -18,7 +21,7 @@ const JobOpeningCard: FunctionComponent<JobOpeningCardProps> = ({
   url,
 }) => {
   const isMobileWidth = useIsMobileWidth();
-  const buttonSize = isMobileWidth ? ButtonSize.Small : ButtonSize.Medium;
+  const buttonSize = isMobileWidth ? Small : Medium;
   return (
     <div className={styles.container}>
       <div className={styles.text}>
