@@ -6,15 +6,15 @@ import AuthContext from '../../context/AuthContext';
 import Logo from '../../static/images/Logo.png';
 import useIsMobileWidth from '../../hooks/useIsMobileWidth';
 import ProfileIcon from '../../static/svgs/ProfileIcon';
-import TabMenu from '../TabMenu/TabMenu';
-import styles from './PortalNavBar.scss';
+import ProfileIconBackgroundElipse from '../../static/svgs/ProfileIconBackgroundElipse';
+import Button, { ButtonSize, ButtonVariant } from '../Button/Button';
+import styles from './AdminPortalNavBar.scss';
 
-// NEED TO FIX LINK
-
-const PortalNavBar: FunctionComponent = () => {
+const AdminPortalNavBar: FunctionComponent = () => {
   const navigate = useNavigate();
   const { active } = useContext(AuthContext) ?? { active: false, role: '' };
   const isMobileWidth = useIsMobileWidth();
+  const [topButtonSelection, setTopButtonSelection] = useState(true);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -22,6 +22,12 @@ const PortalNavBar: FunctionComponent = () => {
   useEffect(() => {
     if (!isMobileWidth) {
       setMenuOpen(false);
+    }
+    const currentUrl = window.location.pathname;
+    if (currentUrl === '/admin-portal-employee') {
+      setTopButtonSelection(true);
+    } else {
+      setTopButtonSelection(false);
     }
   }, [isMobileWidth]);
 
@@ -52,12 +58,47 @@ const PortalNavBar: FunctionComponent = () => {
         <a href="/">
           <img className={styles.logo} src={Logo} alt="Sunny Software Logo" />
         </a>
-        {/* <div className={styles.tabNav}>
-          <ul className={styles.tabList}>
-            <p>TEST</p>
-          </ul>
-        </div> */}
-        <TabMenu />
+        <div className={styles.tabMenu}>
+          {topButtonSelection
+            ? (
+              <Button
+                to="./admin-portal-employees"
+                size={ButtonSize.Medium}
+                variant={ButtonVariant.Primary}
+              >
+                Employees
+              </Button>
+            )
+            : (
+              <Button
+                to="./admin-portal-employees"
+                size={ButtonSize.Medium}
+                variant={ButtonVariant.Outlined}
+              >
+                Employees
+              </Button>
+            )}
+          {topButtonSelection
+            ? (
+              <Button
+                to="./admin-portal-projects"
+                size={ButtonSize.Medium}
+                variant={ButtonVariant.Outlined}
+              >
+                Projects
+              </Button>
+            )
+            : (
+              <Button
+                to="./admin-portal-projects"
+                size={ButtonSize.Medium}
+                variant={ButtonVariant.Primary}
+              >
+                Projects
+              </Button>
+            )}
+
+        </div>
       </div>
       <div className={styles.rightMenu}>
         <button
@@ -65,7 +106,10 @@ const PortalNavBar: FunctionComponent = () => {
           type="button"
           onClick={toggleMenu}
         >
-          <ProfileIcon />
+          <div className={styles.profileIcon}>
+            <ProfileIcon />
+            <ProfileIconBackgroundElipse />
+          </div>
           <p className={classNames({
             [styles.menuArrowPointDown]: !menuOpen,
             [styles.menuArrowPointUp]: menuOpen,
@@ -92,4 +136,4 @@ const PortalNavBar: FunctionComponent = () => {
   );
 };
 
-export default PortalNavBar;
+export default AdminPortalNavBar;

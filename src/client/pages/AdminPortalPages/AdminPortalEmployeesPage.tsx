@@ -6,22 +6,20 @@ import EmployeeWorkCalendars from '../../components/EmployeeWorkCalendars/Employ
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
 import ManageUsers from '../../components/ManageUsers/ManageUsers';
 import ResetPassword from '../../components/ResetPassword/ResetPassword';
-import ManageProjects from '../../components/MangageProjects/ManageProjects';
-import PortalNavBar from '../../components/PortalNavBar/PortalNavBar';
+import PortalNavBar from '../../components/AdminPortalNavBar/AdminPortalNavBar';
 
-const AdminPortalPage: FunctionComponent = () => (
+const AdminPortalEmployeesPage: FunctionComponent = () => (
   <div>
     <Helmet>
       <meta charSet="utf-8" />
       <title>Admin Portal-Sunny Software</title>
-      <link rel="canonical" href="https://sunnysoftware.dev/admin-portal" />
+      <link rel="canonical" href="https://sunnysoftware.dev/admin-portal-employee" />
       <meta
         name="description"
         content="Hours of all employees of Sunny Software LLC"
       />
     </Helmet>
     <PortalNavBar />
-    <ManageProjects />
     <ResetPassword />
     <WorkCalendar />
     <EmployeeWorkCalendars />
@@ -30,4 +28,4 @@ const AdminPortalPage: FunctionComponent = () => (
   </div>
 );
 
-export default AdminPortalPage;
+export default AdminPortalEmployeesPage;

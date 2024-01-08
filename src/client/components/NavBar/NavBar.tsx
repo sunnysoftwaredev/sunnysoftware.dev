@@ -60,7 +60,9 @@ const Navbar: FunctionComponent = () => {
 
   return (
     <nav>
-      <img src={Logo} alt="Sunny Software Logo" />
+      <a href="/">
+        <img src={Logo} alt="Sunny Software Logo" />
+      </a>
       <ul className={classNames(styles.menu, {
         [styles.hidden]: !hamburgerOpen && isMobileWidth,
         [styles.mobileMenu]: hamburgerOpen,
@@ -110,7 +112,7 @@ const Navbar: FunctionComponent = () => {
         )}
         {isAdmin && (
           <li>
-            <a className={styles.navItem} href="/admin-portal">
+            <a className={styles.navItem} href="/admin-portal-employee">
               Admin Portal
             </a>
           </li>

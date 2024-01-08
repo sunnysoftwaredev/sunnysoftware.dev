@@ -10,7 +10,7 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import ContactUsPage from './pages/ContactUs/ContactUsPage';
 import GetStartedPage from './pages/GetStartedPage/GetStartedPage';
 import ClientPortalPage from './pages/ClientPortalPage/ClientPortalPage';
-import AdminPortalPage from './pages/AdminPortal/AdminPortalPage';
+import AdminPortalEmployeesPage from './pages/AdminPortalPages/AdminPortalEmployeesPage';
 import WorkPortalPage from './pages/WorkPortalPage/WorkPortalPage';
 import AboutUsPage from './pages/AboutUsPage/AboutUsPage';
 import ServicesPage from './pages/ServicesPage/ServicesPage';
@@ -49,9 +49,9 @@ const App: FunctionComponent = () => (
         )}
       />
       <Route
-        path="admin-portal" element={(
+        path="admin-portal-employee" element={(
           <AdminPrivateRoute>
-            <AdminPortalPage />
+            <AdminPortalEmployeesPage />
           </AdminPrivateRoute>
         )}
       />
