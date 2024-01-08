@@ -11,16 +11,7 @@ const ManageProjects: FunctionComponent = () => {
   const [inactiveProjects, setInactiveProjects] = useState<ClientProject[]>([]);
 
   const compareObjects = (a: ClientProject, b: ClientProject): number => {
-    const projectA = a.title;
-    const projectB = b.title;
-
-    let comparison = 0;
-    if (projectA > projectB) {
-      comparison = 1;
-    } else if (projectA < projectB) {
-      comparison = -1;
-    }
-    return comparison;
+    return a.title.localeCompare(b.title);
   };
 
   const getProjects = useCallback(async() => {
