@@ -2,24 +2,24 @@ import type { FunctionComponent } from 'react';
 import React from 'react';
 import styles from './StatisticsBar.scss';
 
+type StatisticProps = {
+  value: string;
+  label: string;
+};
+
+const Statistic: FunctionComponent<StatisticProps> = ({ value, label }) => (
+  <div className={styles.statistic}>
+    <h2>{value}</h2>
+    <p>{label}</p>
+  </div>
+);
+
 const StatisticsBar: FunctionComponent = () => (
   <div className={styles.barContainer}>
-    <div className={styles.statistic}>
-      <h2>15+</h2>
-      <p>Years of experience</p>
-    </div>
-    <div className={styles.statistic}>
-      <h2>1K+</h2>
-      <p>Happy Customers</p>
-    </div>
-    <div className={styles.statistic}>
-      <h2>80+</h2>
-      <p>Completed projects</p>
-    </div>
-    <div className={styles.statistic}>
-      <h2>95%</h2>
-      <p>Positive reviews</p>
-    </div>
+    <Statistic value="15+" label="Years of experience" />
+    <Statistic value="1K+" label="Happy Customers" />
+    <Statistic value="80+" label="Completed projects" />
+    <Statistic value="95%" label="Positive reviews" />
   </div>
 );
 
