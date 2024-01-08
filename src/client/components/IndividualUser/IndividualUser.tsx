@@ -11,12 +11,14 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
 
   const [editing, setEditing] = useState(false);
   const [deactivated, setDeactivated] = useState(false);
+  const [deactivateErrorMsg, setDeactivateErrorMsg] = useState<string | null>(null);
 
   const handleEdit = useCallback(() => {
     setEditing(!editing);
   }, [editing]);
 
   const handleDeactivate = useCallback(async() => {
+    setDeactivateErrorMsg(null); // Clear any previous error messages
     try {
       const response = await fetch('api/users/deactivate', {
         method: 'POST',
@@ -33,25 +35,21 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
         throw new Error('Unexpected body type: IndividualUser.tsx');
       }
       if (typeof result.success !== 'boolean') {
-        throw new Error('IndividualUser.tsx error: result.success not boolean');
+        throw new Error('Expected "success" property to be a boolean but received something else.');
       }
       if (result.success) {
         setDeactivated(true);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
       } else {
-        logger.info('unsuccessful database update in IndividualUser.tsx');
+        logger.info('Unsuccessful database update in IndividualUser.tsx');
+        setDeactivateErrorMsg('Failed to deactivate user.');
       }
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        logger.error(err.message);
-      }
+      logger.error('An error occurred while deactivating the user.');
+      setDeactivateErrorMsg('An error occurred. Please try again.');
     }
   }, [id]);
 
   return (
-
     <div
       key={`user-${id}`}
       className={styles.user}
@@ -71,7 +69,7 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
         </h4>
       </div>
       <button type="button" onClick={handleEdit}>Edit</button>
-      <button type="button" onClick={handleDeactivate}>Deactivate</button>
+      <button type="button" onClick={handleDeactivate} disabled={deactivated}>Deactivate</button>
       {editing && (
         <EditUser
           username={username}
@@ -81,6 +79,7 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
         />
       )}
       {deactivated && <h3>User Deactivated!</h3>}
+      {deactivateErrorMsg && <h3 className={styles.errorMsg}>{deactivateErrorMsg}</h3>}
     </div>
   );
 };
