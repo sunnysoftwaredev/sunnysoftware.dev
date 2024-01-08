@@ -5,29 +5,19 @@ import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import styles from './ResetPassword.scss';
 
-// TODO: old reset password, saved for when user is logged in
-// rename to something like UserChangePassword
-
 const ResetPassword: FunctionComponent = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
-  const handlePasswordChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setPassword(e.target.value);
-      setSubmitted(false);
+  const handleChange = useCallback(
+    (valueSetter: (value: string) => void) => (e: ChangeEvent<HTMLInputElement>) => {
+      valueSetter(e.target.value);
+      if (submitted) setSubmitted(false);
     },
-    [setPassword],
+    [submitted],
   );
-
-  const handleConfirmPasswordChange
-   = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-     setConfirmPassword(e.target.value);
-     setSubmitted(false);
-   }, [setConfirmPassword],);
 
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
@@ -95,14 +85,14 @@ const ResetPassword: FunctionComponent = () => {
         <div>
           <label className="label" htmlFor="newPassword">New Password</label>
           <input
-            onChange={handlePasswordChange} id="newPassword"
+            onChange={handleChange(setPassword)} id="newPassword"
             value={password} type="password"
           />
         </div>
         <div>
           <label className="label" htmlFor="retypePassword">Retype Password</label>
           <input
-            onChange={handleConfirmPasswordChange} id="retypePassword"
+            onChange={handleChange(setConfirmPassword)} id="retypePassword"
             value={confirmPassword} type="password"
           />
         </div>
