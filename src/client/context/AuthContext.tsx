@@ -17,15 +17,15 @@ interface IProps {
 const AuthContext = createContext<nameRoleTokenLoad | undefined>(undefined);
 
 export const AuthProvider = ({ children }: IProps): React.JSX.Element => {
-  const [contextData, setContextData]
-  = useState<nameRoleTokenLoad | undefined>(undefined);
-  const [load, setLoad] = useState(false);
+  const [contextData, setContextData] = useState<nameRoleTokenLoad | undefined>(undefined);
 
   const fetchAuthData = useCallback(async() => {
+    const authCookie = getLocalCookieValue();
+    if (typeof authCookie !== 'string') {
+      return;
+    }
+
     try {
-      if (typeof getLocalCookieValue() !== 'string') {
-        return <div />;
-      }
       const response = await fetch('api/authenticate', {
         method: 'POST',
         headers: {
@@ -49,15 +49,13 @@ export const AuthProvider = ({ children }: IProps): React.JSX.Element => {
       }
 
       const { username, role, active } = result;
-      setLoad(true);
-
-      setContextData({ username, role, active, load });
+      setContextData({ username, role, active, load: true });
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
       }
     }
-  }, [load]);
+  }, []);
 
   useEffect(() => {
     fetchAuthData().catch((err) => {
