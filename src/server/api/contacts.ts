@@ -6,49 +6,45 @@ import { mailgunMessage } from '../mail';
 
 const router = createRouter();
 
+const validateStringProperty = (propertyValue: unknown, propertyName: string): string => {
+  if (typeof propertyValue !== 'string') {
+    throw new Error(`api/contacts: ${propertyName} not type string`);
+  }
+  return propertyValue;
+};
+
 router.post('/', (req, res) => {
-  (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/contacts: req.body is not object');
-    }
-    const { contactName } = req.body;
-    const { email } = req.body;
-    const { subject } = req.body;
-    const { message } = req.body;
+  (async (): Promise<void> => {
+      try {
+          if (!isObjectRecord(req.body)) {
+            res.status(400).json({ success: false, error: 'req.body is not an object' });
+            return;
+          }
+          
+          const { contactName, email, subject, message } = req.body;
 
-    if (typeof contactName !== 'string') {
-      throw new Error('api/contacts: contactName not type string');
-    }
-    if (typeof email !== 'string') {
-      throw new Error('api/contacts: email not type string');
-    }
-    if (typeof subject !== 'string') {
-      throw new Error('api/contacts: subject not type string');
-    }
-    if (typeof message !== 'string') {
-      throw new Error('api/contacts:message not type string');
-    }
+          const validatedContactName = validateStringProperty(contactName, 'contactName');
+          const validatedEmail = validateStringProperty(email, 'email');
+          const validatedSubject = validateStringProperty(subject, 'subject');
+          const validatedMessage = validateStringProperty(message, 'message');
 
-    const result = await insertContact(
-      contactName,
-      email,
-      subject,
-      message,
-    );
+          const result = await insertContact(
+            validatedContactName,
+            validatedEmail,
+            validatedSubject,
+            validatedMessage,
+          );
 
-    await mailgunMessage(contactName, email, subject, message);
+          await mailgunMessage(validatedContactName, validatedEmail, validatedSubject, validatedMessage);
 
-    res.json({
-      success: true,
-      result,
-    });
-    logger.info('res.json success in contacts.ts');
-  })().catch((e: Error) => {
-    res.json({
-      success: false,
-      error: e.message,
-    });
-  });
+          res.json({ success: true, result });
+          logger.info('res.json success in contacts.ts');
+        } catch (e) {
+          logger.error(`Failed in contacts.ts: ${e}`);
+          const statusCode = e.message.startsWith('api/contacts') ? 400 : 500;
+          res.status(statusCode).json({ success: false, error: e.message });
+        }
+  })();
 });
 
 export default router;
