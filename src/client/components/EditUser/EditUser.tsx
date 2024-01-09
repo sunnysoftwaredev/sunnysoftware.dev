@@ -1,12 +1,12 @@
 import type { ChangeEvent, FunctionComponent, SyntheticEvent } from 'react';
 import React, { useCallback, useState } from 'react';
 import classNames from 'classnames';
-import type { UserIdNameEmailRole } from '../../../server/database';
+import type { UserIdNameEmailRoleActive } from '../../../server/database';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import styles from './EditUser.scss';
 
-const EditUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
+const EditUser: FunctionComponent<UserIdNameEmailRoleActive> = (props) => {
   const { username, email, role, id } = props;
 
   const [newUsername, setNewUsername] = useState(username);

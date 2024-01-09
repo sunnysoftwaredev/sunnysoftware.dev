@@ -39,18 +39,19 @@ type UserWithId = {
 };
 export type { UserWithId };
 
-export type UserIdNameEmailRole = {
+export type UserIdNameEmailRoleActive = {
   id: number;
   username: string;
   email: string;
   role: string;
+  active: boolean;
 };
 
 export const getAllUsers = async():
-Promise<UserIdNameEmailRole[]> => {
-  const result: QueryResult<UserIdNameEmailRole> = await client.query(
-    `SELECT id, username, email, role
-    FROM users WHERE active=true`,
+Promise<UserIdNameEmailRoleActive[]> => {
+  const result: QueryResult<UserIdNameEmailRoleActive> = await client.query(
+    `SELECT id, username, email, role, active
+    FROM users`,
     [],
   );
 

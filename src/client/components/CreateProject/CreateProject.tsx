@@ -3,11 +3,11 @@ import React, { useState, useCallback, useEffect } from 'react';
 import classNames from 'classnames';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
-import type { UserIdNameEmailRole } from '../../../server/database';
+import type { UserIdNameEmailRoleActive } from '../../../server/database';
 import styles from './CreateProject.scss';
 
 type CreateProjectProps = {
-  userList: UserIdNameEmailRole[];
+  userList: UserIdNameEmailRoleActive[];
 };
 
 const CreateProject: FunctionComponent<CreateProjectProps> = (props) => {

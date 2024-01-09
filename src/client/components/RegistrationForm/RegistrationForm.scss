@@ -1,12 +1,14 @@
-.registrationForm {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin: 1rem;
-  border: solid;
-  padding: 1rem;
+@use '../../SCSS/main';
+
+.container {
+  width: 40vw;
+  height: 40vh;
+  border-radius: 20px;
+  background: #FFF;
 }
 
-form input {
-  margin-right: .5rem;
+.top {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem;
 }

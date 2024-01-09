@@ -1,20 +1,47 @@
+@use '../../SCSS/main';
+
+.manageUsersContainer {
+  margin: 7rem 2rem 2rem 2rem;
+  padding: 1rem;
+  background-color: main.$neutral-color-20;
+}
+
+.navigationBar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tabMenu {
+  display: flex;
+  gap: 1rem;
+  height: 100%;
+  border-radius: 50px;
+  border: 1px solid main.$primary-color-20;
+  background: main.$neutral-color-10;
+  justify-content: center;
+  align-items: center;
+  padding: .3rem;
+}
+
+.columnNames {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) .5fr 1fr;
+  color: main.$neutral-color-80;
+  font-size: 1rem;
+  line-height: 1rem;
+  padding: 1rem;
+  }
+
+
+  .empty {
+    color: #fff;
+  }
+
 .user {
   display: flex;
-  flex-direction: column;
   height: 200px;
   width: 200px;
   border: solid;
   margin-bottom: 3rem;
 }
 
-.usersList {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.manageUsersContainer {
-  justify-content: center;
-  border: solid;
-  margin: 2rem;
-  padding: 1rem;
-}

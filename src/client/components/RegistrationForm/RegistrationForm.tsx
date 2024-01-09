@@ -2,10 +2,12 @@ import React, { useState, useCallback } from 'react';
 import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
+import Input, { InputSize } from '../Input/Input';
+import Button, { ButtonSize, ButtonType } from '../Button/Button';
 import styles from './RegistrationForm.scss';
 
 const RegistrationForm: FunctionComponent = () => {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('client');
 
@@ -13,13 +15,13 @@ const RegistrationForm: FunctionComponent = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
-  const handleUsernameChange
+  const handleNameChange
   = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setUsername(e.target.value);
+      setName(e.target.value);
       setSubmitted(false);
     },
-    [setUsername],
+    [setName],
   );
 
   const handleEmailChange
@@ -40,15 +42,14 @@ const RegistrationForm: FunctionComponent = () => {
     [setRole]
   );
 
-  // Handling the form submission
+  // TODO: Refactor to account for phone + other possible changes
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
-      if (username === '' || email === '' || role === '') {
+      if (name === '' || email === '' || role === '') {
         setError(true);
         return;
       }
-      // setSubmitted was here (in case of break)
       setError(false);
       const response = await fetch('api/register', {
         method: 'POST',
@@ -56,7 +57,7 @@ const RegistrationForm: FunctionComponent = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username,
+          name,
           email,
           role,
         }),
@@ -78,7 +79,7 @@ const RegistrationForm: FunctionComponent = () => {
         logger.error(err.message);
       }
     }
-  }, [username, email, role]);
+  }, [name, email, role]);
 
   const successMessage = (): React.JSX.Element => (
     <div
@@ -90,7 +91,7 @@ const RegistrationForm: FunctionComponent = () => {
       <h1>
         User
         {' '}
-        {username}
+        {name}
         {' '}
         successfully registered!!
       </h1>
@@ -109,9 +110,12 @@ const RegistrationForm: FunctionComponent = () => {
   );
 
   return (
-    <div className={styles.registrationForm}>
-      <div>
+    <div className={styles.container}>
+      <div className={styles.top}>
+        <p />
         <h1>Register User</h1>
+        <button type="button" onClick={}>X</button>
+        {/* TODO: check empty p tag for spacing, create onclick event  */}
       </div>
 
       <div>
@@ -119,18 +123,35 @@ const RegistrationForm: FunctionComponent = () => {
         {successMessage()}
       </div>
 
-      <form>
-        <label className="label">Username    </label>
-        <input
-          onChange={handleUsernameChange} className="input"
-          value={username} type="text"
-        />
+      <form
+        className={styles.formContainer}
+        onSubmit={handleSubmit}
+      >
+        <label>
+          Name
+          <Input
+            size={InputSize.Large}
+            value={name}
+            setValue={setName}
+            onChange={handleNameChange}
+            placeholderText="John Smith"
+            type="text"
+          />
+        </label>
 
-        <label className="label">Email    </label>
-        <input
-          onChange={handleEmailChange} className="input"
-          value={email} type="email"
-        />
+        <label>
+          Email
+          <Input
+            size={InputSize.Large}
+            value={email}
+            setValue={setEmail}
+            onChange={handleEmailChange}
+            placeholderText="jsmith@gmail.com"
+            type="text"
+          />
+          {' '}
+
+        </label>
 
         <div>
           <label htmlFor="clientRadio">Client</label>
@@ -150,12 +171,7 @@ const RegistrationForm: FunctionComponent = () => {
 
         </div>
 
-        <button
-          onClick={handleSubmit} className="registerButton"
-          type="submit"
-        >
-          Submit
-        </button>
+        <Button type={ButtonType.Submit} size={ButtonSize.Large}>Submit</Button>
       </form>
     </div>
   );

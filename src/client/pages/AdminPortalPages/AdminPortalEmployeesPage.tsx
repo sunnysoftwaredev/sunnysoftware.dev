@@ -19,12 +19,12 @@ const AdminPortalEmployeesPage: FunctionComponent = () => (
         content="Hours of all employees of Sunny Software LLC"
       />
     </Helmet>
+    <ManageUsers />
     <PortalNavBar />
     <ResetPassword />
     <WorkCalendar />
     <EmployeeWorkCalendars />
     <RegistrationForm />
-    <ManageUsers />
   </div>
 );
 

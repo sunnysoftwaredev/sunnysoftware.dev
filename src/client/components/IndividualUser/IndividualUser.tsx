@@ -1,13 +1,19 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useState } from 'react';
-import type { UserIdNameEmailRole } from '../../../server/database';
+import type { UserIdNameEmailRoleActive } from '../../../server/database';
 import EditUser from '../EditUser/EditUser';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
-import styles from './IndividualUsers.scss';
+import RegistrationForm from '../RegistrationForm/RegistrationForm';
+import PopupMessage, { PopupType } from '../PopupMessage/PopupMessage';
+import styles from './IndividualUser.scss';
 
-const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
-  const { username, email, role, id } = props;
+const IndividualUser: FunctionComponent<UserIdNameEmailRoleActive>
+= (props) => {
+  const { username, email, role, id, active } = props;
+
+  const [registering, setRegistering] = useState(false);
+  const [userCreated, setUserCreated] = useState(false);
 
   const [editing, setEditing] = useState(false);
   const [deactivated, setDeactivated] = useState(false);
@@ -15,6 +21,10 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
   const handleEdit = useCallback(() => {
     setEditing(!editing);
   }, [editing]);
+
+  const closeUserCreatedPopup = useCallback(() => {
+    setUserCreated(!userCreated);
+  }, [userCreated]);
 
   const handleDeactivate = useCallback(async() => {
     try {
@@ -54,30 +64,47 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
 
     <div
       key={`user-${id}`}
-      className={styles.user}
     >
-      <div>
-        <h3>
-          {`Username: ${username}`}
-        </h3>
-        <h4>
-          {`Email: ${email}`}
-        </h4>
-        <h4>
-          {`Role: ${role}`}
-        </h4>
-        <h4>
-          {`ID: ${id}`}
-        </h4>
+      <div className={styles.user}>
+        <p>
+          {`${username}`}
+        </p>
+        <p>
+          {`${email}`}
+        </p>
+        <p>
+          PHONE NUMBER HERE
+        </p>
+        <p>
+          {`${role}`}
+        </p>
+        <p className={styles.empty} >EMPTY</p>
+        <div className={styles.buttons}>
+          {/* TODO: Assignment button functionality */}
+          <button type="button" onClick={}>Assignment</button>
+          <button type="button" onClick={handleEdit}>Edit</button>
+          <button type="button" onClick={handleDeactivate}>Deactivate</button>
+        </div>
       </div>
-      <button type="button" onClick={handleEdit}>Edit</button>
-      <button type="button" onClick={handleDeactivate}>Deactivate</button>
+
+      {userCreated && (
+        <PopupMessage
+          type={PopupType.Success}
+          message="User registered!"
+          onClick={closeUserCreatedPopup}
+        />
+      )}
+      {registering && (
+        <RegistrationForm />
+      )}
+
       {editing && (
         <EditUser
           username={username}
           email={email}
           role={role}
           id={id}
+          active={active}
         />
       )}
       {deactivated && <h3>User Deactivated!</h3>}

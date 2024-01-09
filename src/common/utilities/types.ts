@@ -1,4 +1,4 @@
-import type { EmployeeTimesheet, IdObject, UserIdNameEmailRole, ClientProject, TimeObjectWithProject } from '../../server/database';
+import type { EmployeeTimesheet, IdObject, UserIdNameEmailRoleActive, ClientProject, TimeObjectWithProject } from '../../server/database';
 
 export const isObjectRecord
 = (value: unknown): value is Record<string, unknown> => (
@@ -46,7 +46,7 @@ export const isEmployeeTimesheetArray
  );
 
 export const isUsersArray
- = (value: unknown): value is UserIdNameEmailRole[] => (
+ = (value: unknown): value is UserIdNameEmailRoleActive[] => (
    Array.isArray(value)
    && value[0] !== null
    && value[0] !== undefined
@@ -54,6 +54,7 @@ export const isUsersArray
     && 'username' in value[0]
     && 'email' in value[0]
     && 'role' in value[0]
+    && 'active' in value[0]
  );
 
 const isClientProject
