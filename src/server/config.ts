@@ -2,9 +2,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const getEnvironmentVariable = (key: string): string => {
+const getEnvironmentVariable = (key: string, defaultValue?: string): string => {
   const value = process.env[key];
   if (value === undefined) {
+    if (defaultValue !== undefined) {
+      return defaultValue;
+    }
     throw new Error(`Missing environment variable: ${key}`);
   }
   return value;
@@ -20,7 +23,7 @@ const getNumericEnvironmentVariable = (key: string): number => {
 };
 
 export default {
-  isProduction: getEnvironmentVariable('NODE_ENV') === 'production',
+  isProduction: getEnvironmentVariable('NODE_ENV', 'development') === 'production',
   pg: {
     host: getEnvironmentVariable('PG_HOST'),
     port: getNumericEnvironmentVariable('PG_PORT'),
