@@ -1,9 +1,9 @@
-import type { FunctionComponent } from 'react';
+import type { FunctionComponent, ReactElement } from 'react';
 import React from 'react';
 import Button, { ButtonSize, ButtonVariant } from '../../Button/Button';
 import styles from './OwnIdeasBottom.scss';
 
-const OwnIdeasBottom: FunctionComponent = () => (
+const OwnIdeasBottom: FunctionComponent = (): ReactElement => (
   <div className={styles.container}>
     <div className={styles.text}>
       <h2>Have your own ideas for our partnership?</h2>
