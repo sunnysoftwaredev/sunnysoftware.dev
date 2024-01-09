@@ -10,20 +10,20 @@ const getEnvironmentVariable = (key: string): string => {
   return value;
 };
 
-const getNumericEnvironmentVariable = (key: string): number => {
+function getEnvironmentVariableAsNumber<T extends string>(key: T, radix: number = 10): number {
   const value = getEnvironmentVariable(key);
-  const number = Number.parseInt(value, 10);
+  const number = Number.parseInt(value, radix);
   if (Number.isNaN(number)) {
-    throw new Error(`Environment variable "${key}" must be a number`);
+    throw new Error(`Environment variable "${key}" must be a valid number, but got "${value}"`);
   }
   return number;
-};
+}
 
 export default {
   isProduction: getEnvironmentVariable('NODE_ENV') === 'production',
   pg: {
     host: getEnvironmentVariable('PG_HOST'),
-    port: getNumericEnvironmentVariable('PG_PORT'),
+    port: getEnvironmentVariableAsNumber('PG_PORT'),
     database: getEnvironmentVariable('PG_DATABASE'),
     user: getEnvironmentVariable('PG_USER'),
     password: getEnvironmentVariable('PG_PASSWORD'),
