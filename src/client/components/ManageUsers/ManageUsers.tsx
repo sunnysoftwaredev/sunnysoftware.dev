@@ -42,32 +42,17 @@ const ManageUsers: FunctionComponent = () => {
     });
   }, [getUserList]);
 
-  const displayUsers = (users: UserIdNameEmailRole[]):
-  React.ReactElement[] => {
-    if (typeof users === 'undefined') {
-      return [<div key={0} />];
-    }
-    const userElements: React.ReactElement[] = [];
+  const displayUsers = (users: UserIdNameEmailRole[]): React.ReactElement[] =>
+    users.map(user => (
+      <div key={`user-${user.id}`}>
+        <IndividualUser
+          username={user.username} email={user.email}
+          role={user.role}
+          id={user.id}
+        />
+      </div>
+    ));
 
-    for (const user of users) {
-      const { username } = user;
-      const { email } = user;
-      const { id } = user;
-      const { role } = user;
-
-      userElements.push((
-        <div
-          key={`user-${id}`}
-        >
-          <IndividualUser
-            username={username} email={email}
-            role={role}
-            id={id}
-          />
-        </div>));
-    }
-    return userElements;
-  };
   return (
     <div className={styles.manageUsersContainer}>
       <h1>List of Clients and Employees</h1>
@@ -77,12 +62,10 @@ const ManageUsers: FunctionComponent = () => {
         {userList.length}
       </h2>
       <div className={styles.usersList}>
-
         {displayUsers(userList)}
       </div>
       <CreateProject userList={userList} />
     </div>
-
   );
 };
 
