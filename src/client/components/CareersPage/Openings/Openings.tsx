@@ -4,65 +4,20 @@ import JobOpeningCard from './JobOpeningCard/JobOpeningCard';
 
 const OPENINGS = [
   {
+    id: 'senior-designer-1',
     position: 'Digital Senior Designer',
     type: 'remote',
     url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
+    description: 'Description of job requirements, Description of job requirementsDescription of job requirements',
   },
   {
+    id: 'senior-designer-2',
     position: 'Digital Senior Designer2',
     type: 'remote',
     url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
+    description: 'Description of job requirements, Description of job requirementsDescription of job requirements',
   },
-  {
-    position: 'Digital Senior Designer',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
+  // ... other job postings with their respective unique `id`s
 ];
 
 const Openings: React.FunctionComponent = () => (
@@ -77,14 +32,15 @@ const Openings: React.FunctionComponent = () => (
       </p>
     </div>
     <div className={styles.openingsContainer}>
-      {OPENINGS.map(card => (
+      {OPENINGS.map((card) => (
         <JobOpeningCard
-          key={card.description}
-          url={card.url} position={card.position}
-          type={card.type} description={card.description}
+          key={card.id}
+          url={card.url}
+          position={card.position}
+          type={card.type}
+          description={card.description}
         />
       ))}
-
     </div>
   </div>
 );
