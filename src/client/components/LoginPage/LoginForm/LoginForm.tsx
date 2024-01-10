@@ -1,15 +1,17 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FunctionComponent, ChangeEvent, FormEvent } from 'react';
+import { useDispatch } from 'react-redux';
 import { isObjectRecord } from '../../../../common/utilities/types';
-import AuthContext from '../../../context/AuthContext';
 import logger from '../../../../server/logger';
 import Input, { InputSize } from '../../Input/Input';
 import Button, { ButtonSize, ButtonType } from '../../Button/Button';
 import PopupMessage, { PopupType } from '../../PopupMessage/PopupMessage';
+import { AccountActions } from '../../../redux/slices/account';
 import styles from './LoginForm.scss';
 
 const LoginForm: FunctionComponent = () => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -17,13 +19,6 @@ const LoginForm: FunctionComponent = () => {
   const [showErrorPopup, setShowErrorPopup] = useState(false);
 
   const navigate = useNavigate();
-
-  const { active }
-  = useContext(AuthContext) ?? { active: false };
-
-  if (active) {
-    navigate('/');
-  }
 
   const closeErrorPopup = useCallback(() => {
     setShowErrorPopup(!showErrorPopup);
@@ -76,12 +71,23 @@ const LoginForm: FunctionComponent = () => {
       if (typeof result.success !== 'boolean') {
         throw new Error('success variable not type boolean: LoginForm.tsx');
       }
+      if (typeof result.userId !== 'number') {
+        throw new Error('userId variable not type number: LoginForm.tsx');
+      }
+      if (typeof result.username !== 'string') {
+        throw new Error('username variable not type string: LoginForm.tsx');
+      }
+      if (typeof result.role !== 'string') {
+        throw new Error('role variable not type string: LoginForm.tsx');
+      }
       if (result.success) {
         setShowSuccessPopup(true);
-        setTimeout(() => {
-          navigate('/');
-          window.location.reload();
-        }, 2000);
+        dispatch(AccountActions.logIn({
+          userId: result.userId,
+          username: result.username,
+          role: result.role,
+        }));
+        navigate('/');
       } else {
         setShowErrorPopup(true);
       }
@@ -90,7 +96,7 @@ const LoginForm: FunctionComponent = () => {
         logger.error(err.message);
       }
     }
-  }, [email, password, navigate]);
+  }, [email, password, navigate, dispatch]);
 
   return (
     <div className={styles.container}>
@@ -112,7 +118,7 @@ const LoginForm: FunctionComponent = () => {
           onClick={closeErrorPopup}
         />
       )}
-      <form onClick={handleSubmit} className={styles.loginForm}>
+      <form onSubmit={handleSubmit} className={styles.loginForm}>
         <div>
           <label>
             Email:

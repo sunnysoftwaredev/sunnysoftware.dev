@@ -1,12 +1,13 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import type { FunctionComponent, ChangeEvent, FormEvent } from 'react';
+import { useSelector } from 'react-redux';
 import { isObjectRecord } from '../../../../common/utilities/types';
-import AuthContext from '../../../context/AuthContext';
 import logger from '../../../../server/logger';
 import Input, { InputSize } from '../../Input/Input';
 import Button, { ButtonSize, ButtonType } from '../../Button/Button';
 import PopupMessage, { PopupType } from '../../PopupMessage/PopupMessage';
+import { getLoggedIn } from '../../../redux/selectors/account';
 import styles from './ResetPassword.scss';
 
 const ResetPassword: FunctionComponent = () => {
@@ -23,10 +24,8 @@ const ResetPassword: FunctionComponent = () => {
   const [param] = useSearchParams();
   const resetToken = param.get('token');
 
-  const { active }
-  = useContext(AuthContext) ?? { active: false };
-
-  if (active) {
+  const loggedIn = useSelector(getLoggedIn);
+  if (!loggedIn) {
     navigate('/');
   }
 

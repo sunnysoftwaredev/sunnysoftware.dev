@@ -1,6 +1,6 @@
 import { Router as createRouter } from 'express';
 import { isObjectRecord } from '../../common/utilities/types';
-import { checkActiveToken, getUsernameAndRole } from '../database';
+import { checkActiveToken, getUser } from '../database';
 
 const router = createRouter();
 
@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
       throw new Error('User authentication has failed');
     }
 
-    const { username, role } = await getUsernameAndRole(authenticationToken);
+    const { username, role } = await getUser(authenticationToken);
 
     res.json({
       username,

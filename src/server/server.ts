@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import logger from './logger';
 import api from './api';
+import html from './html';
 
 export const initializeServer = async(): Promise<void> => (
   new Promise((resolve) => {
@@ -12,7 +13,6 @@ export const initializeServer = async(): Promise<void> => (
     const app = express();
 
     const clientDirectory = path.join(__dirname, './client');
-    const indexPage = path.join(clientDirectory, 'index.html');
 
     app.use(express.static(clientDirectory));
 
@@ -30,9 +30,7 @@ export const initializeServer = async(): Promise<void> => (
 
     app.use('/api', api);
 
-    app.get('*', (req, res) => {
-      res.sendFile(indexPage);
-    });
+    app.get('*', html);
 
     app.listen(PORT, () => {
       logger.info(`Server is listening on port ${PORT}`);

@@ -1,15 +1,16 @@
 import type { FunctionComponent } from 'react';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import AuthContext from '../../context/AuthContext';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import logger from '../../../server/logger';
 import TimeDropdown from '../TimeDropdown/TimeDropdown';
 import { isClientProjectArray, isObjectRecord, isTimeObjectWithProjectArray } from '../../../common/utilities/types';
 import type { ClientProject, TimeObject, TimeObjectWithProject } from '../../../server/database';
 import WorkLog from '../WorkLog/WorkLog';
+import { getUsername } from '../../redux/selectors/account';
 import styles from './WorkCalendar.scss';
 
 const WorkCalendar: FunctionComponent = () => {
-  const { username } = useContext(AuthContext) ?? { username: 'loading' };
+  const username = useSelector(getUsername);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [weeklyWorkLogs, setWeeklyWorkLogs]
    = useState<TimeObjectWithProject[]>();

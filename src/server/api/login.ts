@@ -22,8 +22,13 @@ router.post('/', (req, res) => {
 
     const userObject = await getUserByEmail(email);
 
-    const { id: userID, password: passwordDB, salt: saltDB }
-     = userObject;
+    const {
+      id: userID,
+      username,
+      role,
+      password: passwordDB,
+      salt: saltDB,
+    } = userObject;
 
     const saltedAndHashedLoginPassword: Buffer = saltAndHash(
       password,
@@ -49,6 +54,9 @@ router.post('/', (req, res) => {
     res.json({
       success: true,
       token: tokenToDatabase,
+      userId: userID,
+      username,
+      role,
     });
     logger.info('res.json success in login.ts');
   })().catch((e: Error) => {

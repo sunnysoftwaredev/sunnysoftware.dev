@@ -1,22 +1,19 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Navigate } from 'react-router-dom';
-import AuthContext from '../../context/AuthContext';
+import { useSelector } from 'react-redux';
+import { getIsEmployee } from '../../redux/selectors/account';
 
 interface IProps {
   children: React.JSX.Element;
 }
 
 const EmployeePrivateRoute = ({ children }: IProps): React.JSX.Element => {
-  const { role, load } = useContext(AuthContext) ?? { role: '', load: false };
+  const isEmployee = useSelector(getIsEmployee);
+  if (!isEmployee) {
+    return <Navigate to="/login" />;
+  }
 
-  if (!load) {
-    return <div>LOADING...</div>;
-  }
-  if (role === 'employee') {
-    return children;
-  }
-  return <Navigate to="/login" />;
+  return children;
 };
 
 export default EmployeePrivateRoute;
-
