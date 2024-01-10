@@ -1,6 +1,6 @@
 import type { QueryResult } from 'pg';
 import { Client } from 'pg';
-import { isIdArray } from '../common/utilities/types';
+import { isIdArray, isObjectRecord } from '../common/utilities/types';
 import config from './config';
 import logger from './logger';
 
@@ -211,30 +211,44 @@ export const markTokenInactive
   return true;
 };
 
-type nameRoleObject = {
+type UserObject = {
+  userId: number;
   username: string;
   role: string;
 };
 
-export const getUsernameAndRole
-= async(localToken: string): Promise<nameRoleObject> => {
-  const result: QueryResult<nameRoleObject> = await client.query(`SELECT
-  users.username, users.role
+type UserRow = {
+  id: number;
+  username: string;
+  role: string;
+};
+
+const isUserRow = (value: unknown): value is UserRow => (
+  isObjectRecord(value)
+    && typeof value.id === 'number'
+    && typeof value.username === 'string'
+    && typeof value.role === 'string'
+);
+
+export const getUser = async(localToken: string): Promise<UserObject> => {
+  const result: QueryResult = await client.query(`SELECT
+  users.id, users.username, users.role
   FROM users
   JOIN authentication_tokens
   ON authentication_tokens.user_id=users.id
   WHERE authentication_tokens.token=$1 AND users.active=true`, [localToken]);
-
   const { rows } = result;
   if (rows.length !== 1) {
-    throw new Error('Unable to select user role.');
+    throw new Error('Unable to select user.');
   }
-  const roleJSON: nameRoleObject = rows[0];
-  const { username, role } = roleJSON;
-
+  const row: unknown = rows[0];
+  if (!isUserRow(row)) {
+    throw new Error('Expected an object row');
+  }
   return {
-    username,
-    role,
+    userId: row.id,
+    username: row.username,
+    role: row.role,
   };
 };
 

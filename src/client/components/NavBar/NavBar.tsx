@@ -1,17 +1,23 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import type { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
-import AuthContext from '../../context/AuthContext';
+import { useDispatch, useSelector } from 'react-redux';
 import Button, { ButtonIcon, ButtonSize, ButtonVariant } from '../Button/Button';
 import logger from '../../../server/logger';
 import Logo from '../../static/images/Logo.png';
 import useIsMobileWidth from '../../hooks/useIsMobileWidth';
+import { getIsAdmin, getIsClient, getIsEmployee, getLoggedIn } from '../../redux/selectors/account';
+import { AccountActions } from '../../redux/slices/account';
 import styles from './NavBar.scss';
 
 const Navbar: FunctionComponent = () => {
   const navigate = useNavigate();
-  const { active, role } = useContext(AuthContext) ?? { active: false, role: '' };
+  const dispatch = useDispatch();
+  const loggedIn = useSelector(getLoggedIn);
+  const isClient = useSelector(getIsClient);
+  const isEmployee = useSelector(getIsEmployee);
+  const isAdmin = useSelector(getIsAdmin);
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const isMobileWidth = useIsMobileWidth();
 
@@ -23,7 +29,7 @@ const Navbar: FunctionComponent = () => {
   }, [hamburgerOpen, isMobileWidth]);
 
   const handleSubmit = useCallback(async(): Promise<void> => {
-    if (active) {
+    if (loggedIn) {
       await fetch('api/logout', {
         method: 'POST',
         headers: {
@@ -31,13 +37,12 @@ const Navbar: FunctionComponent = () => {
         },
         credentials: 'same-origin',
       });
+      dispatch(AccountActions.logOut());
       navigate('/');
-      window.location.reload();
     } else {
       navigate('/login');
-      window.location.reload();
     }
-  }, [navigate, active]);
+  }, [navigate, dispatch, loggedIn]);
 
   const handleLetsTalk = useCallback((): void => {
     try {
@@ -96,28 +101,28 @@ const Navbar: FunctionComponent = () => {
             Contact
           </a>
         </li>
-        {role === 'client' && (
+        {isClient && (
           <li>
             <a className={styles.navItem} href="/portal">
               Client Portal
             </a>
           </li>
         )}
-        {role === 'admin' && (
+        {isAdmin && (
           <li>
             <a className={styles.navItem} href="/admin-portal">
               Admin Portal
             </a>
           </li>
         )}
-        {role === 'employee' && (
+        {isEmployee && (
           <li>
             <a className={styles.navItem} href="/work-portal">
               Work Portal
             </a>
           </li>
         )}
-        {(isMobileWidth && active)
+        {(isMobileWidth && loggedIn)
           && (
             <Button
               size={ButtonSize.Small}
@@ -127,7 +132,7 @@ const Navbar: FunctionComponent = () => {
               Log Out
             </Button>
           ) }
-        {(isMobileWidth && !active)
+        {(isMobileWidth && !loggedIn)
             && (
               <Button
                 size={ButtonSize.Small}
@@ -151,7 +156,7 @@ const Navbar: FunctionComponent = () => {
         [styles.hidden]: !hamburgerOpen && isMobileWidth,
       })}
       >
-        {active
+        {loggedIn
           ? (
             <Button
               size={ButtonSize.Large}

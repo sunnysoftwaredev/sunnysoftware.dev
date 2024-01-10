@@ -2,16 +2,17 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import type { FunctionComponent } from 'react';
+import { useSelector } from 'react-redux';
 import LoginForm from '../../components/LoginPage/LoginForm/LoginForm';
 import logo from '../../static/images/Logo.png';
 import loginPhoto from '../../static/images/LoginPhoto.png';
+import { getLoggedIn } from '../../redux/selectors/account';
 import styles from './LoginPage.scss';
 
 const LoginPage: FunctionComponent = () => {
-  // check if user logged in already
   const navigate = useNavigate();
-  const user = localStorage.getItem('user');
-  if (user !== null) {
+  const loggedIn = useSelector(getLoggedIn);
+  if (loggedIn) {
     navigate('/');
   }
 

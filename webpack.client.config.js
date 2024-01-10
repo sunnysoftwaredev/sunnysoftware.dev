@@ -52,9 +52,6 @@ module.exports = () => {
     },
     plugins: [
       new CleanWebpackPlugin(),
-      new HtmlWebpackPlugin({
-        template: './src/client/index.html',
-      }),
       new MiniCssExtractPlugin({
         filename: 'styles.css',
       }),

@@ -1,21 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import type { FunctionComponent } from 'react';
+import { useSelector } from 'react-redux';
 import logo from '../../static/images/Logo.png';
 import loginPhoto from '../../static/images/LoginPhoto.png';
 import ForgotPassword from '../../components/LoginPage/ForgotPassword/ForgotPassword';
+import { getLoggedIn } from '../../redux/selectors/account';
 import styles from './ForgotPasswordPage.scss';
 
 const ForgotPasswordPage: FunctionComponent = () => {
-  // check if user logged in already
   const navigate = useNavigate();
-  useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user !== null) {
-      navigate('/');
-    }
-  }, [navigate]);
+  const loggedIn = useSelector(getLoggedIn);
+  if (loggedIn) {
+    navigate('/');
+  }
 
   return (
     <div className={styles.pageContainer}>

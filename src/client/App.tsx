@@ -1,6 +1,7 @@
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import EmployeePrivateRoute from './components/PrivateRoutes/EmployeePrivateRoute';
 import ClientPrivateRoute from './components/PrivateRoutes/ClientPrivateRoute';
 import AdminPrivateRoute from './components/PrivateRoutes/AdminPrivateRoute';
@@ -26,9 +27,10 @@ import ResourcesPage from './pages/ResourcesPage/ResourcesPage';
 import ShowNavBar from './components/ShowNavBar/ShowNavBar';
 import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
+import store from './redux/store';
 
 const App: FunctionComponent = () => (
-  <div>
+  <Provider store={store}>
     <ShowNavBar>
       <NavBar />
     </ShowNavBar>
@@ -73,7 +75,7 @@ const App: FunctionComponent = () => (
       <Route path="*" element={<b>404 That page does not exist!</b>} />
     </Routes>
     <Footer />
-  </div>
+  </Provider>
 );
 
 export default App;
