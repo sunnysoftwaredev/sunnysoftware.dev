@@ -41,24 +41,21 @@ router.post('/', (req, res) => {
 
     const { authenticationToken } = req.cookies;
     if (typeof authenticationToken !== 'string') {
-      throw new Error('api/users: userToken not type string');
+      throw new Error('api/users: authenticationToken not type string');
     }
-    const { id } = req.body;
-    const { newUsername } = req.body;
-    const { newEmail } = req.body;
-    const { newRole } = req.body;
+    const { id, newUsername, newEmail, newRole } = req.body;
 
     if (typeof id !== 'number') {
-      throw new Error('api/users.post: unixStart is not number');
+      throw new Error('api/users.post: id is not number');
     }
     if (typeof newUsername !== 'string') {
-      throw new Error('api/users.post: unixStart is not string');
+      throw new Error('api/users.post: newUsername is not string');
     }
     if (typeof newEmail !== 'string') {
-      throw new Error('api/users.post: unixEnd is not string');
+      throw new Error('api/users.post: newEmail is not string');
     }
     if (typeof newRole !== 'string') {
-      throw new Error('api/users.post: unixEnd is not string');
+      throw new Error('api/users.post: newRole is not string');
     }
 
     const release = await mutex.acquire();
@@ -66,7 +63,6 @@ router.post('/', (req, res) => {
       await updateUser(id, newUsername, newEmail, newRole);
       res.json({
         success: true,
-
       });
     } finally {
       release();
@@ -90,7 +86,7 @@ router.post('/deactivate', (req, res) => {
 
     const { authenticationToken } = req.cookies;
     if (typeof authenticationToken !== 'string') {
-      throw new Error('api/usersdeactivate: userToken not type string');
+      throw new Error('api/usersdeactivate: authenticationToken not type string');
     }
     const { id } = req.body;
 
@@ -103,7 +99,6 @@ router.post('/deactivate', (req, res) => {
       await deactivateUser(id);
       res.json({
         success: true,
-
       });
     } finally {
       release();
@@ -127,7 +122,7 @@ router.post('/password', (req, res) => {
 
     const { authenticationToken } = req.cookies;
     if (typeof authenticationToken !== 'string') {
-      throw new Error('api/users/password: userToken not type string');
+      throw new Error('api/users/password: authenticationToken not type string');
     }
 
     const { password } = req.body;
@@ -148,7 +143,6 @@ router.post('/password', (req, res) => {
       await updateUserPassword(idResult, finalPasswordString, saltString);
       res.json({
         success: true,
-
       });
     } finally {
       release();
