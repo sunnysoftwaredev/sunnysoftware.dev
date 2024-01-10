@@ -1,5 +1,4 @@
-import React from 'react';
-import type { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import AboutUsTop from '../../components/AboutUsPage/AboutUsTop/AboutUsTop';
 import StatisticsBar from '../../components/AboutUsPage/StatisticsBar/StatisticsBar';
@@ -12,24 +11,26 @@ import OurTeamAndOpenings from '../../components/OurTeamAndOpenings/OurTeamAndOp
 import CallToAction from '../../components/CallToAction/CallToAction';
 import styles from './AboutUsPage.scss';
 
-const AboutUsPage: FunctionComponent = () => (
-  <div>
-    <Helmet>
-      <meta charSet="utf-8" />
-      <title>About Us-Sunny Software</title>
-      <link rel="canonical" href="https://sunnysoftware.dev/about-us" />
-      <meta name="description" content="Information about Sunny Software LLC" />
-    </Helmet>
-    <AboutUsTop />
-    <StatisticsBar />
-    <MissionAndVision />
-    <CompanyTimeline />
-    <img className={styles.aboutUsPhoto} src={groupPhoto} alt="Sunny Software staff photo" />
-    <BuildAndGrow />
-    <LocationBanner />
-    <OurTeamAndOpenings />
-    <CallToAction />
-  </div>
-);
+const AboutUsPage: FunctionComponent = () => {
+  return (
+    <div>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>About Us - Sunny Software</title>
+        <link rel="canonical" href="https://sunnysoftware.dev/about-us" />
+        <meta name="description" content="Learn more about Sunny Software LLC" />
+      </Helmet>
+      <AboutUsTop />
+      <StatisticsBar />
+      <MissionAndVision />
+      <CompanyTimeline />
+      <img className={styles.aboutUsPhoto} src={groupPhoto} alt="Sunny Software staff photo" />
+      <BuildAndGrow />
+      <LocationBanner />
+      <OurTeamAndOpenings />
+      <CallToAction />
+    </div>
+  );
+};
 
 export default AboutUsPage;
