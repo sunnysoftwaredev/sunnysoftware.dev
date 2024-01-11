@@ -8,16 +8,17 @@ import html from './html';
 
 export const initializeServer = async(): Promise<void> => (
   new Promise((resolve) => {
-    const PORT = 3000;
+    const PORT = process.env.PORT || 3000;
+    const ENV_ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(',');
 
     const app = express();
 
     const clientDirectory = path.join(__dirname, './client');
-
     app.use(express.static(clientDirectory));
 
-    // CORS options
-    const allowedOrigins = ['localhost:3000'];
+    const defaultAllowedOrigins = ['http://localhost:3000'];
+    const allowedOrigins = ENV_ALLOWED_ORIGINS?.length ? ENV_ALLOWED_ORIGINS : defaultAllowedOrigins;
+
     const options: cors.CorsOptions = {
       origin: allowedOrigins,
     };
