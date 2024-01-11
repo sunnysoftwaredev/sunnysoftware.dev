@@ -8,7 +8,7 @@ const ResourcesPage: FunctionComponent = () => (
   <div>
     <Helmet>
       <meta charSet="utf-8" />
-      <title>Portfolio-Sunny Software</title>
+      <title>Resources - Sunny Software</title>
       <link rel="canonical" href="https://sunnysoftware.dev/resources" />
       <meta
         name="description"
