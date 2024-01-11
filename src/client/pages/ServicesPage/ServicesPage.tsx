@@ -5,17 +5,28 @@ import ServicesPageBanner from '../../components/ServicesPage/ServicesPageBanner
 import FullServicesList from '../../components/ServicesPage/FullServicesList/FullServicesList';
 import ServicesNeedHelp from '../../components/ServicesPage/ServicesNeedHelp/ServicesNeedHelp';
 
+interface SEOHelmetProps {
+  title: string;
+  description: string;
+  url: string;
+}
+
+const SEOHelmet: FunctionComponent<SEOHelmetProps> = ({ title, description, url }) => (
+  <Helmet>
+    <meta charSet="utf-8" />
+    <title>{title}</title>
+    <link rel="canonical" href={url} />
+    <meta name="description" content={description} />
+  </Helmet>
+);
+
 const ServicesPage: FunctionComponent = () => (
   <div>
-    <Helmet>
-      <meta charSet="utf-8" />
-      <title>Services-Sunny Software</title>
-      <link rel="canonical" href="https://sunnysoftware.dev/services" />
-      <meta
-        name="description"
-        content="Information on services offered by Sunny Software LLC"
-      />
-    </Helmet>
+    <SEOHelmet
+      title="Services - Sunny Software"
+      description="Information on services offered by Sunny Software LLC"
+      url="https://sunnysoftware.dev/services"
+    />
     <ServicesPageBanner />
     <FullServicesList />
     <ServicesNeedHelp />
