@@ -11,11 +11,11 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
 
   const getDaysInWeek = useCallback((): Date[] => {
     const days: Date[] = [];
+    const startDayOfWeek = currentDate.getDay();
     for (let i = 0; i < 7; i++) {
-      const first = currentDate.getDate() - currentDate.getDay() + i;
-      const day
-      = new Date(currentDate.setDate(first));
-      days.push(day);
+      const date = new Date(currentDate);
+      date.setDate(date.getDate() - startDayOfWeek + i);
+      days.push(date);
     }
     return days;
   }, [currentDate]);
@@ -23,21 +23,15 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
   const daysInWeek = useMemo(() => getDaysInWeek(), [getDaysInWeek]);
 
   const getUnixDayStart = (date: Date): number => {
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-
-    return Math.floor(date.getTime() / 1000);
+    const newDate = new Date(date);
+    newDate.setHours(0, 0, 0, 0);
+    return Math.floor(newDate.getTime() / 1000);
   };
 
   const getUnixDayEnd = (date: Date): number => {
-    date.setHours(23);
-    date.setMinutes(59);
-    date.setSeconds(59);
-    date.setMilliseconds(999);
-
-    return Math.floor(date.getTime() / 1000);
+    const newDate = new Date(date);
+    newDate.setHours(23, 59, 59, 999);
+    return Math.floor(newDate.getTime() / 1000);
   };
 
   const fetchAllWeekLogs = useCallback(async() => {
@@ -83,19 +77,13 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
 
   const changeToPreviousWeek = useCallback((): void => {
     setCurrentDate((currDate: Date): Date => {
-      const Year = currDate.getFullYear();
-      const Month = currDate.getMonth();
-      const Day = currDate.getDate();
-      return new Date(Year, Month, Day - 7);
+      return new Date(currDate.getFullYear(), currDate.getMonth(), currDate.getDate() - 7);
     });
   }, []);
 
   const changeToNextWeek = useCallback((): void => {
     setCurrentDate((currDate: Date): Date => {
-      const Year = currDate.getFullYear();
-      const Month = currDate.getMonth();
-      const Day = currDate.getDate();
-      return new Date(Year, Month, Day + 7);
+      return new Date(currDate.getFullYear(), currDate.getMonth(), currDate.getDate() + 7);
     });
   }, []);
 
