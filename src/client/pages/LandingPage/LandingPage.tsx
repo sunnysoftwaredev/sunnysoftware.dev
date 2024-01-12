@@ -12,7 +12,7 @@ import FrequentlyAskedQuestions from '../../components/FrequentlyAskedQuestions/
 import ResourcesPanel from '../../components/ResourcesPanel/ResourcesPanel';
 
 const LandingPage: FunctionComponent = () => (
-  <div>
+  <>
     <Helmet>
       <meta charSet="utf-8" />
       <title>Sunny Software</title>
@@ -28,7 +28,7 @@ const LandingPage: FunctionComponent = () => (
     <FrequentlyAskedQuestions />
     <ResourcesPanel />
     <CallToAction />
-  </div>
+  </>
 );
 
 export default LandingPage;
