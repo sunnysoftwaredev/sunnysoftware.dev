@@ -8,40 +8,47 @@ import logger from '../logger';
 const router = createRouter();
 const mutex = new Mutex();
 
+// Utility function to format error messages
+function formatErrorMessage(controller: string, detail: string): string {
+  return `api/${controller}: ${detail}`;
+}
+
+// Validate request properties
+function validateRequest(req: any): void {
+  if (!isObjectRecord(req.body)) {
+    throw new Error(formatErrorMessage('allWeeklyLogs', 'req.body is not object'));
+  }
+  if (!isObjectRecord(req.cookies)) {
+    throw new Error(formatErrorMessage('allWeeklyLogs', 'req.cookies is not object'));
+  }
+  if (typeof req.cookies.authenticationToken !== 'string') {
+    throw new Error(formatErrorMessage('allWeeklyLogs', 'authenticationToken not type string'));
+  }
+  if (typeof req.body.unixWeekStart !== 'number') {
+    throw new Error(formatErrorMessage('allWeeklyLogs.post', 'unixWeekStart is not number'));
+  }
+  if (typeof req.body.unixWeekEnd !== 'number') {
+    throw new Error(formatErrorMessage('allWeeklyLogs.post', 'unixWeekEnd is not number'));
+  }
+}
+
 router.post('/', (req, res) => {
   (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/allWeeklyLogs: req.body is not object');
-    }
-    if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/allWeeklyLogs: req.cookies is not object');
-    }
+    validateRequest(req);
 
     const { authenticationToken } = req.cookies;
-    if (typeof authenticationToken !== 'string') {
-      throw new Error('api/allWeeklyLogs: userToken not type string');
-    }
-    const { unixWeekStart } = req.body;
-    const { unixWeekEnd } = req.body;
-
-    if (typeof unixWeekStart !== 'number') {
-      throw new Error('api/allWeeklyLogs.post: unixStart is not number');
-    }
-    if (typeof unixWeekEnd !== 'number') {
-      throw new Error('api/allWeeklyLogs.post: unixEnd is not number');
-    }
+    const { unixWeekStart, unixWeekEnd } = req.body;
 
     const release = await mutex.acquire();
     try {
       const idResult = getIDWithToken(authenticationToken);
       if (typeof idResult !== 'object') {
-        throw new Error('api/allWeeklyLogs: no idResult found');
+        throw new Error(formatErrorMessage('allWeeklyLogs', 'no idResult found'));
       }
 
       const userIdArray = await getEmployeeIds();
-
       if (userIdArray === undefined) {
-        throw new Error('api/timesheets: userIdArray undefined');
+        throw new Error(formatErrorMessage('timesheets', 'userIdArray undefined'));
       }
 
       for await (const userId of userIdArray) {
@@ -52,25 +59,13 @@ router.post('/', (req, res) => {
         });
       }
 
-      const result = await getEmployeeTimesheets(
-        unixWeekStart,
-        unixWeekEnd,
-      );
-
-      res.json({
-        success: true,
-        listResult: result,
-      });
+      const result = await getEmployeeTimesheets(unixWeekStart, unixWeekEnd);
+      res.json({ success: true, listResult: result });
     } finally {
       release();
     }
-
-    // logger.info('res.json success in weeklyLogs.ts post');
   })().catch((e: Error) => {
-    res.json({
-      success: false,
-      error: e.message,
-    });
+    res.json({ success: false, error: e.message });
   });
 });
 
