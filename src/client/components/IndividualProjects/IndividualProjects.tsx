@@ -11,7 +11,7 @@ const IndividualProject: FunctionComponent<ClientProject> = (props) => {
 
   const [editing, setEditing] = useState(false);
 
-  const handleEdit = useCallback(() => {
+  const toggleEditState = useCallback(() => {
     setEditing(!editing);
   }, [editing]);
 
@@ -30,7 +30,7 @@ const IndividualProject: FunctionComponent<ClientProject> = (props) => {
           {active ? 'true' : 'false'}
         </h4>
       </div>
-      <button type="button" onClick={handleEdit}>More...</button>
+      <button type="button" onClick={toggleEditState}>More...</button>
       {editing && (
         <EditProject
           id={id}
