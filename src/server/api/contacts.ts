@@ -7,48 +7,41 @@ import { mailgunMessage } from '../mail';
 const router = createRouter();
 
 router.post('/', (req, res) => {
-  (async(): Promise<void> => {
+  (async (): Promise<void> => {
     if (!isObjectRecord(req.body)) {
-      throw new Error('api/contacts: req.body is not object');
-    }
-    const { contactName } = req.body;
-    const { email } = req.body;
-    const { subject } = req.body;
-    const { message } = req.body;
-
-    if (typeof contactName !== 'string') {
-      throw new Error('api/contacts: contactName not type string');
-    }
-    if (typeof email !== 'string') {
-      throw new Error('api/contacts: email not type string');
-    }
-    if (typeof subject !== 'string') {
-      throw new Error('api/contacts: subject not type string');
-    }
-    if (typeof message !== 'string') {
-      throw new Error('api/contacts:message not type string');
+      return res.status(400).json({ success: false, error: 'req.body is not an object.' });
     }
 
-    const result = await insertContact(
-      contactName,
-      email,
-      subject,
-      message,
-    );
+    const { contactName, email, subject, message } = req.body;
 
-    await mailgunMessage(contactName, email, subject, message);
+    if (
+      typeof contactName !== 'string' ||
+      typeof email !== 'string' ||
+      typeof subject !== 'string' ||
+      typeof message !== 'string'
+    ) {
+      return res.status(400).json({
+        success: false,
+        error: 'contactName, email, subject, and message must be strings.',
+      });
+    }
 
-    res.json({
-      success: true,
-      result,
-    });
-    logger.info('res.json success in contacts.ts');
-  })().catch((e: Error) => {
-    res.json({
-      success: false,
-      error: e.message,
-    });
-  });
+    try {
+      const result = await insertContact(contactName, email, subject, message);
+      await mailgunMessage(contactName, email, subject, message);
+
+      res.json({
+        success: true,
+        result,
+      });
+      logger.info('res.json success in contacts.ts');
+    } catch (e) {
+      res.status(500).json({
+        success: false,
+        error: e instanceof Error ? e.message : 'Unknown error',
+      });
+    }
+  })();
 });
 
 export default router;
