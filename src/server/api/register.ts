@@ -16,6 +16,7 @@ router.post('/', (req, res) => {
     }
     const { username } = req.body;
     const { email } = req.body;
+    const { phone } = req.body;
     const { role } = req.body;
 
     if (typeof username !== 'string') {
@@ -23,6 +24,10 @@ router.post('/', (req, res) => {
     }
     if (typeof email !== 'string') {
       throw new Error('email not type string');
+    }
+
+    if (typeof phone !== 'string') {
+      throw new Error('phone not type string');
     }
 
     if (typeof role !== 'string') {
@@ -41,9 +46,10 @@ router.post('/', (req, res) => {
       await insertUser(
         username,
         email,
-        finalPasswordString,
+        phone,
         role,
-        saltString
+        finalPasswordString,
+        saltString,
       );
 
       await mailgunRegister(email, username, password);

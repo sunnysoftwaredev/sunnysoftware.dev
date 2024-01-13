@@ -58,7 +58,6 @@ const App: FunctionComponent = () => (
       <Route
         path="employee-portal" element={(
           <EmployeePrivateRoute>
-
             <WorkPortalPage />
           </EmployeePrivateRoute>
         )}

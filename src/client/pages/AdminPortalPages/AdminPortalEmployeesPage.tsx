@@ -7,6 +7,7 @@ import RegistrationForm from '../../components/RegistrationForm/RegistrationForm
 import ManageUsers from '../../components/ManageUsers/ManageUsers';
 import ResetPassword from '../../components/ResetPassword/ResetPassword';
 import PortalNavBar from '../../components/AdminPortalNavBar/AdminPortalNavBar';
+import styles from './AdminPortalEmployeesPage.scss';
 
 const AdminPortalEmployeesPage: FunctionComponent = () => (
   <div>
@@ -19,12 +20,10 @@ const AdminPortalEmployeesPage: FunctionComponent = () => (
         content="Hours of all employees of Sunny Software LLC"
       />
     </Helmet>
-    <ManageUsers />
     <PortalNavBar />
-    <ResetPassword />
-    <WorkCalendar />
-    <EmployeeWorkCalendars />
-    <RegistrationForm />
+    <ManageUsers />
+    {/* <ResetPassword /> */}
+    {/* <EmployeeWorkCalendars /> */}
   </div>
 );
 

@@ -1,14 +1,52 @@
 @use '../../SCSS/main';
 
+* {
+  box-sizing: border-box;
+}
+
 .container {
-  width: 40vw;
-  height: 40vh;
-  border-radius: 20px;
-  background: #FFF;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background: (8, 8, 8, 0.2);
+
+}
+
+.backgroundButton {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: rgba(8, 8, 8, 0.5);
+  z-index: 2;
+  border: none;
+  padding: 0;
 }
 
 .top {
   display: flex;
   justify-content: space-between;
   margin: 2rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  z-index: 3;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: fit-content;
+  border-radius: 20px;
+  background: #FFF;
+  padding: 3rem;
+}
+
+.roleRadio {
+  display: flex;
+  gap: 2rem;
 }

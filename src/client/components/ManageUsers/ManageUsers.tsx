@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import logger from '../../../server/logger';
 import { isObjectRecord, isUsersArray } from '../../../common/utilities/types';
 import type { UserIdNameEmailRoleActive } from '../../../server/database';
@@ -7,13 +8,33 @@ import IndividualUser from '../IndividualUser/IndividualUser';
 import CreateProject from '../CreateProject/CreateProject';
 import Button, { ButtonSize, ButtonVariant } from '../Button/Button';
 import RegistrationForm from '../RegistrationForm/RegistrationForm';
+import { getShowRegistrationForm } from '../../redux/selectors/adminPortal';
+import { AdminPortalActions } from '../../redux/slices/adminPortal';
+import Pagination from '../Pagination/Pagination';
 import styles from './ManageUsers.scss';
 
 const ManageUsers: FunctionComponent = () => {
   const [userList, setUserList] = useState<UserIdNameEmailRoleActive[]>([]);
   // Below is for buttons sorting users
   const [activeOrTerminated, setActiveOrTerminated] = useState(true);
-  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+  const showRegistrationForm = useSelector(getShowRegistrationForm);
+  const dispatch = useDispatch();
+
+  const toggleRegistrationForm = useCallback(() => {
+    dispatch(AdminPortalActions.toggleShowRegistrationForm());
+  }, [dispatch]);
+
+  // pagination stuff
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage] = useState(5);
+
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = userList.slice(indexOfFirstRecord, indexOfLastRecord);
+  const totalPages = Math.ceil(userList.length / recordsPerPage);
+
+  // end pagination stuff
 
   const getUserList = useCallback(async() => {
     try {
@@ -45,7 +66,7 @@ const ManageUsers: FunctionComponent = () => {
     getUserList().catch((err) => {
       logger.error(err);
     });
-  }, [getUserList]);
+  }, [getUserList, showRegistrationForm]);
 
   const displayUsers = (users: UserIdNameEmailRoleActive[]):
   React.ReactElement[] => {
@@ -77,7 +98,8 @@ const ManageUsers: FunctionComponent = () => {
   };
   return (
     <div className={styles.manageUsersContainer}>
-      {showRegistrationForm && <RegistrationForm />}
+      {showRegistrationForm
+       && <RegistrationForm />}
       <div className={styles.navigationBar}>
         <div className={styles.tabMenu}>
           {/* TODO: change buttons to sort user list  */}
@@ -124,6 +146,7 @@ const ManageUsers: FunctionComponent = () => {
         <Button
           size={ButtonSize.Large}
           variant={ButtonVariant.Primary}
+          onClick={toggleRegistrationForm}
         >
           Add employee
         </Button>
@@ -145,7 +168,12 @@ const ManageUsers: FunctionComponent = () => {
       <div className={styles.usersList}>
         {displayUsers(userList)}
       </div>
-      <CreateProject userList={userList} />
+      {/* <CreateProject userList={userList} /> */}
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        setCurrentPage={() => 3}
+      />
     </div>
 
   );

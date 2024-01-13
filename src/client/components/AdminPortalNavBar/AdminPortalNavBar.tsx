@@ -1,18 +1,19 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import type { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
-import AuthContext from '../../context/AuthContext';
+import { useSelector } from 'react-redux';
 import Logo from '../../static/images/Logo.png';
 import useIsMobileWidth from '../../hooks/useIsMobileWidth';
 import ProfileIcon from '../../static/svgs/ProfileIcon';
 import ProfileIconBackgroundElipse from '../../static/svgs/ProfileIconBackgroundElipse';
 import Button, { ButtonSize, ButtonVariant } from '../Button/Button';
+import { getLoggedIn } from '../../redux/selectors/account';
 import styles from './AdminPortalNavBar.scss';
 
 const AdminPortalNavBar: FunctionComponent = () => {
   const navigate = useNavigate();
-  const { active } = useContext(AuthContext) ?? { active: false, role: '' };
+  const loggedIn = useSelector(getLoggedIn);
   const isMobileWidth = useIsMobileWidth();
   const [topButtonSelection, setTopButtonSelection] = useState(true);
 
@@ -36,7 +37,7 @@ const AdminPortalNavBar: FunctionComponent = () => {
   }, [menuOpen]);
 
   const handleSubmit = useCallback(async(): Promise<void> => {
-    if (active) {
+    if (loggedIn) {
       await fetch('api/logout', {
         method: 'POST',
         headers: {
@@ -50,7 +51,7 @@ const AdminPortalNavBar: FunctionComponent = () => {
       navigate('/login');
       window.location.reload();
     }
-  }, [navigate, active]);
+  }, [navigate, loggedIn]);
 
   return (
     <nav>

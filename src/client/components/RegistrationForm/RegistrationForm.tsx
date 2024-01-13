@@ -1,64 +1,93 @@
 import React, { useState, useCallback } from 'react';
 import type { FunctionComponent, ChangeEvent, SyntheticEvent } from 'react';
+import { useDispatch } from 'react-redux';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import Input, { InputSize } from '../Input/Input';
 import Button, { ButtonSize, ButtonType } from '../Button/Button';
+import { AdminPortalActions } from '../../redux/slices/adminPortal';
+import PopupMessage, { PopupType } from '../PopupMessage/PopupMessage';
 import styles from './RegistrationForm.scss';
 
 const RegistrationForm: FunctionComponent = () => {
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [role, setRole] = useState('client');
 
-  // States for checking the errors
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(false);
+  const dispatch = useDispatch();
 
-  const handleNameChange
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+
+  const closeSuccessPopup = useCallback(() => {
+    setShowSuccessPopup(!showSuccessPopup);
+  }, [showSuccessPopup]);
+
+  const closeErrorPopup = useCallback(() => {
+    setShowErrorPopup(!showErrorPopup);
+  }, [showErrorPopup]);
+
+  const handleUsernameChange
   = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setName(e.target.value);
-      setSubmitted(false);
+      setUsername(e.target.value);
+      setShowErrorPopup(false);
     },
-    [setName],
+    [setUsername],
   );
 
   const handleEmailChange
   = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setEmail(e.target.value);
-      setSubmitted(false);
+      setShowErrorPopup(false);
     },
     [setEmail],
+  );
+
+  const handlePhoneChange
+  = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setPhone(e.target.value);
+      setShowErrorPopup(false);
+    },
+    [setPhone],
   );
 
   const handleRoleChange
   = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setRole(e.target.value);
-      setSubmitted(false);
+      setShowErrorPopup(false);
     },
     [setRole]
   );
 
-  // TODO: Refactor to account for phone + other possible changes
+  const toggleRegistrationForm = useCallback(
+    () => {
+      dispatch(AdminPortalActions.toggleShowRegistrationForm());
+    },
+    [dispatch]
+  );
+
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
-      if (name === '' || email === '' || role === '') {
-        setError(true);
+      if (username === '' || email === '' || phone === '' || role === '') {
+        setShowErrorPopup(true);
         return;
       }
-      setError(false);
+      setShowErrorPopup(false);
       const response = await fetch('api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name,
+          username,
           email,
+          phone,
           role,
         }),
       });
@@ -72,68 +101,61 @@ const RegistrationForm: FunctionComponent = () => {
         throw new Error('success variable not type boolean: RegistrationForm.tsx');
       }
       if (result.success) {
-        setSubmitted(true);
+        setShowSuccessPopup(true);
+        setTimeout(() => {
+          toggleRegistrationForm();
+        }, 1000);
       }
     } catch (err: unknown) {
+      setShowErrorPopup(true);
       if (err instanceof Error) {
         logger.error(err.message);
       }
     }
-  }, [name, email, role]);
-
-  const successMessage = (): React.JSX.Element => (
-    <div
-      className="success"
-      style={{
-        display: submitted ? '' : 'none',
-      }}
-    >
-      <h1>
-        User
-        {' '}
-        {name}
-        {' '}
-        successfully registered!!
-      </h1>
-    </div>
-  );
-
-  const errorMessage = (): React.JSX.Element => (
-    <div
-      className="error"
-      style={{
-        display: error ? '' : 'none',
-      }}
-    >
-      <h1>Please enter all the fields</h1>
-    </div>
-  );
+  }, [username, email, phone, role, toggleRegistrationForm]);
 
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <p />
-        <h1>Register User</h1>
-        <button type="button" onClick={}>X</button>
-        {/* TODO: check empty p tag for spacing, create onclick event  */}
-      </div>
-
-      <div>
-        {errorMessage()}
-        {successMessage()}
-      </div>
+      <button
+        className={styles.backgroundButton}
+        type="button"
+        onClick={toggleRegistrationForm}
+      />
 
       <form
-        className={styles.formContainer}
+        className={styles.form}
         onSubmit={handleSubmit}
       >
+        <div>
+          {showSuccessPopup
+        && (
+          <PopupMessage
+            type={PopupType.Success}
+            message="User successfully registered"
+            onClick={closeSuccessPopup}
+          />
+        )}
+          {showErrorPopup
+        && (
+          <PopupMessage
+            type={PopupType.Failure}
+            message="Something went wrong, did you enter all the fields?"
+            onClick={closeErrorPopup}
+          />
+        )}
+        </div>
+        <div className={styles.top}>
+          <p />
+          <h1>Register User</h1>
+          <button type="button" onClick={toggleRegistrationForm}>X</button>
+        </div>
         <label>
           Name
           <Input
             size={InputSize.Large}
-            value={name}
-            setValue={setName}
-            onChange={handleNameChange}
+            value={username}
+            setValue={setUsername}
+            onChange={handleUsernameChange}
             placeholderText="John Smith"
             type="text"
           />
@@ -152,25 +174,44 @@ const RegistrationForm: FunctionComponent = () => {
           {' '}
 
         </label>
-
-        <div>
-          <label htmlFor="clientRadio">Client</label>
-          <input
-            type="radio" name="radioGroup" id="clientRadio"
-            value="client" onChange={handleRoleChange}
-            checked={role === 'client'}
+        <label>
+          Phone
+          <Input
+            size={InputSize.Large}
+            value={phone}
+            setValue={setPhone}
+            onChange={handlePhoneChange}
+            placeholderText="8675309"
+            type="text"
           />
+          {' '}
+        </label>
 
-          <label htmlFor="employeeRadio">Employee</label>
-          <input
-            type="radio" name="radioGroup" id="employeeRadio"
-            value="employee" onChange={handleRoleChange}
-            checked={role === 'employee'}
+        {/* radio buttons to choose client or employee  */}
+        {/* Leaving in for now so as not to create confusion in the backend */}
 
-          />
+        <div className={styles.roleRadio}>
+          <div>
+
+            <label htmlFor="clientRadio">Client</label>
+            <input
+              type="radio" name="radioGroup" id="clientRadio"
+              value="client" onChange={handleRoleChange}
+              checked={role === 'client'}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="employeeRadio">Employee</label>
+            <input
+              type="radio" name="radioGroup" id="employeeRadio"
+              value="employee" onChange={handleRoleChange}
+              checked={role === 'employee'}
+
+            />
+          </div>
 
         </div>
-
         <Button type={ButtonType.Submit} size={ButtonSize.Large}>Submit</Button>
       </form>
     </div>

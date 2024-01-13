@@ -24,6 +24,7 @@ type User = {
   username: string;
   email: string;
   password: string;
+  phone: string;
   role: string;
   salt: string;
 };
@@ -114,15 +115,16 @@ Promise<number> => {
 
 export const insertUser = async(
   username: string, email: string,
-  password: string, role: string,
-  salt: string
+  phone: string, role: string,
+  password: string, salt: string
 ): Promise<User> => {
-  await client.query(`INSERT INTO users (username, email, password, role, salt, active)
-           VALUES ($1, $2, $3, $4, $5, $6)`, [username, email, password, role, salt, true]);
+  await client.query(`INSERT INTO users (username, email, phone, role, password, salt, active)
+           VALUES ($1, $2, $3, $4, $5, $6, $7)`, [username, email, phone, role, password, salt, true]);
   return {
     username,
     email,
     password,
+    phone,
     role,
     salt,
   };
