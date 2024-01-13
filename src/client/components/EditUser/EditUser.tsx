@@ -7,11 +7,16 @@ import logger from '../../../server/logger';
 import styles from './EditUser.scss';
 
 const EditUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
-  const { username, email, role, id } = props;
+  const {
+    username: initialUsername = '',
+    email: initialEmail = '',
+    role: initialRole = '',
+    id,
+  } = props;
 
-  const [newUsername, setNewUsername] = useState(username);
-  const [newEmail, setNewEmail] = useState(email);
-  const [newRole, setNewRole] = useState(role);
+  const [newUsername, setNewUsername] = useState(initialUsername);
+  const [newEmail, setNewEmail] = useState(initialEmail);
+  const [newRole, setNewRole] = useState(initialRole);
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
@@ -27,10 +32,9 @@ const EditUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
   const handleEmailChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setNewEmail(e.target.value);
     setSubmitted(false);
-  }, [setNewEmail],);
+  }, [setNewEmail]);
 
-  const handleRoleChange
-  = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  const handleRoleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setNewRole(e.target.value);
     setSubmitted(false);
   }, [setNewRole]);
