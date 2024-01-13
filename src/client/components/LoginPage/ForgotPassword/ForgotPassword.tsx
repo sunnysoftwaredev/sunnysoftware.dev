@@ -57,10 +57,6 @@ const ForgotPassword: FunctionComponent = () => {
       if (typeof result.success !== 'boolean') {
         throw new Error('success variable not type boolean: ForgotPassword.tsx');
       }
-
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: ForgotPassword.tsx');
-      }
       if (result.success) {
         setShowSuccessPopup(true);
       } else {
@@ -85,14 +81,14 @@ const ForgotPassword: FunctionComponent = () => {
           message="If you have an account we have sent a reset password link"
           onClick={showSuccessPopupFunction}
         />
-      ) }
+      )}
       {showErrorPopup && (
         <PopupMessage
           type={PopupType.Failure}
           message="Something went wrong, please reach out to us on the contact page"
           onClick={showErrorPopupFunction}
         />
-      ) }
+      )}
       <form
         className={styles.forgotPassword}
         onClick={handleSubmit}
