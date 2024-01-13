@@ -2,24 +2,30 @@ import type { FunctionComponent } from 'react';
 import React from 'react';
 import styles from './StatisticsBar.scss';
 
+interface StatisticItemProps {
+  value: string;
+  text: string;
+}
+
+const StatisticItem: FunctionComponent<StatisticItemProps> = ({ value, text }) => (
+  <div className={styles.statistic}>
+    <h2>{value}</h2>
+    <p>{text}</p>
+  </div>
+);
+
+const statistics = [
+  { value: '15+', text: 'Years of experience' },
+  { value: '1K+', text: 'Happy Customers' },
+  { value: '80+', text: 'Completed projects' },
+  { value: '95%', text: 'Positive reviews' },
+]
+
 const StatisticsBar: FunctionComponent = () => (
   <div className={styles.barContainer}>
-    <div className={styles.statistic}>
-      <h2>15+</h2>
-      <p>Years of experience</p>
-    </div>
-    <div className={styles.statistic}>
-      <h2>1K+</h2>
-      <p>Happy Customers</p>
-    </div>
-    <div className={styles.statistic}>
-      <h2>80+</h2>
-      <p>Completed projects</p>
-    </div>
-    <div className={styles.statistic}>
-      <h2>95%</h2>
-      <p>Positive reviews</p>
-    </div>
+    {statistics.map(stat => (
+      <StatisticItem key={stat.value} value={stat.value} text={stat.text} />
+    ))}
   </div>
 );
 
