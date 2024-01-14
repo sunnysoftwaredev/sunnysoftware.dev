@@ -24,15 +24,14 @@ const EditProject: FunctionComponent<ClientProject> = (props) => {
     [setNewTitle],
   );
 
-  const handleDescriptionChange
-   = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-     setNewDescription(e.target.value);
-     setSubmitted(false);
-   }, [setNewDescription],);
+  const handleDescriptionChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+    setNewDescription(e.target.value);
+    setSubmitted(false);
+  }, [setNewDescription],);
 
   const handleActiveChange = useCallback((): void => {
-    setNewActive(!active);
-  }, [active],);
+    setNewActive(!newActive);
+  }, [newActive],);
 
   // Update Project information
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
