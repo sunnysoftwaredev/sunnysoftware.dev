@@ -4,17 +4,28 @@ import { Helmet } from 'react-helmet';
 import WorkCalendar from '../../components/WorkCalendar/WorkCalendar';
 import ResetPassword from '../../components/ResetPassword/ResetPassword';
 
+interface PageHelmetProps {
+  title: string;
+  description: string;
+  canonical: string;
+}
+
+const PageHelmet: FunctionComponent<PageHelmetProps> = ({ title, description, canonical }) => (
+  <Helmet>
+    <meta charSet="utf-8" />
+    <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    <meta name="description" content={description} />
+  </Helmet>
+);
+
 const ClientPortalPage: FunctionComponent = () => (
   <div>
-    <Helmet>
-      <meta charSet="utf-8" />
-      <title>Work Portal-Sunny Software</title>
-      <link rel="canonical" href="https://sunnysoftware.dev/work-portal" />
-      <meta
-        name="description"
-        content="Work portal for employees of Sunny Software LLC"
-      />
-    </Helmet>
+    <PageHelmet
+      title="Work Portal-Sunny Software"
+      description="Work portal for employees of Sunny Software LLC"
+      canonical="https://sunnysoftware.dev/work-portal"
+    />
     <h1>Work Portal</h1>
     <ResetPassword />
     <WorkCalendar />
