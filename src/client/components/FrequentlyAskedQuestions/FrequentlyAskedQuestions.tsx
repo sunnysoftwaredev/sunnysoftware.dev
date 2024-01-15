@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
-import AccordianPanel from '../AccordianPanel/AccordianPanel';
+import AccordionPanel from '../AccordionPanel/AccordionPanel';
 import Button, { ButtonSize } from '../Button/Button';
 import styles from './FrequentlyAskedQuestions.scss';
 
@@ -39,7 +39,7 @@ const FrequentlyAskedQuestions: FunctionComponent = () => {
       </p>
       <div className={styles.faqPanelsContainer}>
         {faqData.map(faq => (
-          <AccordianPanel
+          <AccordionPanel
             key={faq.question}
             question={faq.question} answer={faq.answer}
           />
