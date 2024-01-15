@@ -1,9 +1,9 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
 import Button, { ButtonSize, ButtonVariant } from '../../Button/Button';
-import styles from './OwnIdeasBottom.scss';
+import styles from './PartnershipInquirySection.scss';
 
-const OwnIdeasBottom: FunctionComponent = () => (
+const PartnershipInquirySection: FunctionComponent = () => (
   <div className={styles.container}>
     <div className={styles.text}>
       <h2>Have your own ideas for our partnership?</h2>
@@ -19,4 +19,4 @@ const OwnIdeasBottom: FunctionComponent = () => (
   </div>
 );
 
-export default OwnIdeasBottom;
+export default PartnershipInquirySection;
