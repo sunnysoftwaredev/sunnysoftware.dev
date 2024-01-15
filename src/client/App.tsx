@@ -31,50 +31,51 @@ import store from './redux/store';
 
 const App: FunctionComponent = () => (
   <Provider store={store}>
-    <ShowNavBar>
-      <NavBar />
-    </ShowNavBar>
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="login" element={<LoginPage />} />
-      <Route path="login/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="login/reset-password" element={<ResetPasswordPage />} />
-      <Route path="contact-us" element={<ContactUsPage />} />
-      <Route path="get-started" element={<GetStartedPage />} />
-      <Route
-        path="portal" element={(
-          <ClientPrivateRoute>
-            <ClientPortalPage />
-          </ClientPrivateRoute>
-        )}
-      />
-      <Route
-        path="admin-portal" element={(
-          <AdminPrivateRoute>
-            <AdminPortalPage />
-          </AdminPrivateRoute>
-        )}
-      />
-      <Route
-        path="work-portal" element={(
-          <EmployeePrivateRoute>
-
-            <WorkPortalPage />
-          </EmployeePrivateRoute>
-        )}
-      />
-      <Route path="about-us" element={<AboutUsPage />} />
-      <Route path="services" element={<ServicesPage />} />
-      <Route path="portfolio" element={<PortfolioPage />} />
-      <Route path="team" element={<TeamPage />} />
-      <Route path="methodology" element={<MethodologyPage />} />
-      <Route path="faq" element={<FAQPage />} />
-      <Route path="testimonials" element={<TestimonialsPage />} />
-      <Route path="careers" element={<CareersPage />} />
-      <Route path="resources" element={<ResourcesPage />} />
-      <Route path="*" element={<b>404 That page does not exist!</b>} />
-    </Routes>
-    <Footer />
+    <>
+      <ShowNavBar>
+        <NavBar />
+      </ShowNavBar>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="login/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="login/reset-password" element={<ResetPasswordPage />} />
+        <Route path="contact-us" element={<ContactUsPage />} />
+        <Route path="get-started" element={<GetStartedPage />} />
+        <Route
+          path="portal" element={(
+            <ClientPrivateRoute>
+              <ClientPortalPage />
+            </ClientPrivateRoute>
+          )}
+        />
+        <Route
+          path="admin-portal" element={(
+            <AdminPrivateRoute>
+              <AdminPortalPage />
+            </AdminPrivateRoute>
+          )}
+        />
+        <Route
+          path="work-portal" element={(
+            <EmployeePrivateRoute>
+              <WorkPortalPage />
+            </EmployeePrivateRoute>
+          )}
+        />
+        <Route path="about-us" element={<AboutUsPage />} />
+        <Route path="services" element={<ServicesPage />} />
+        <Route path="portfolio" element={<PortfolioPage />} />
+        <Route path="team" element={<TeamPage />} />
+        <Route path="methodology" element={<MethodologyPage />} />
+        <Route path="faq" element={<FAQPage />} />
+        <Route path="testimonials" element={<TestimonialsPage />} />
+        <Route path="careers" element={<CareersPage />} />
+        <Route path="resources" element={<ResourcesPage />} />
+        <Route path="*" element={<b>404 That page does not exist!</b>} />
+      </Routes>
+      <Footer />
+    </>
   </Provider>
 );
 
