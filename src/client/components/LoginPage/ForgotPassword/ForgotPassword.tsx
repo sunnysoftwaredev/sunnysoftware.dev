@@ -52,10 +52,10 @@ const ForgotPassword: FunctionComponent = () => {
       const result: unknown = await response.json();
 
       if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: ForgotPassword.tsx');
+        throw new Error('Unexpected body type.');
       }
       if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: ForgotPassword.tsx');
+        throw new Error('Expected "success" to be a boolean.');
       }
 
       if (result.success) {
@@ -82,14 +82,14 @@ const ForgotPassword: FunctionComponent = () => {
           message="If you have an account we have sent a reset password link"
           onClick={showSuccessPopupFunction}
         />
-      ) }
+      )}
       {showErrorPopup && (
         <PopupMessage
           type={PopupType.Failure}
           message="Something went wrong, please reach out to us on the contact page"
           onClick={showErrorPopupFunction}
         />
-      ) }
+      )}
       <form
         className={styles.forgotPassword}
         onClick={handleSubmit}
@@ -99,7 +99,8 @@ const ForgotPassword: FunctionComponent = () => {
             Email
             <Input
               size={InputSize.Large}
-              value={email} setValue={setEmail}
+              value={email}
+              setValue={setEmail}
               onChange={handleEmailChange}
               placeholderText="example@gmail.com"
             />
