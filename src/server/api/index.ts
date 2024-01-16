@@ -1,4 +1,5 @@
-import { Router as createRouter } from 'express';
+import { Router } from 'express';
+
 import login from './login';
 import logout from './logout';
 import register from './register';
@@ -11,18 +12,24 @@ import users from './users';
 import projects from './projects';
 import forgotPassword from './forgotPassword';
 
-const router = createRouter();
+const routeMappings: Array<[string, Router]> = [
+  ['/login', login],
+  ['/logout', logout],
+  ['/register', register],
+  ['/authenticate', authenticate],
+  ['/workLogs', workLogs],
+  ['/weeklyWorkLogs', weeklyWorkLogs],
+  ['/contacts', contacts],
+  ['/timesheets', timesheets],
+  ['/users', users],
+  ['/projects', projects],
+  ['/forgotPassword', forgotPassword]
+];
 
-router.use('/login', login);
-router.use('/logout', logout);
-router.use('/register', register);
-router.use('/authenticate', authenticate);
-router.use('/workLogs', workLogs);
-router.use('/weeklyWorkLogs', weeklyWorkLogs);
-router.use('/contacts', contacts);
-router.use('/timesheets', timesheets);
-router.use('/users', users);
-router.use('/projects', projects);
-router.use('/forgotPassword', forgotPassword);
+const router = Router();
+
+routeMappings.forEach(([path, handler]) => {
+  router.use(path, handler);
+});
 
 export default router;
