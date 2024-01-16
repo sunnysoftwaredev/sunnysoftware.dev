@@ -22,7 +22,7 @@ const ResourcesPanels: FunctionComponent = () => (
         </p>
       </div>
       <div className={styles.buttonContainer}>
-        <Button to="/" size={ButtonSize.Large}>See Docs</Button>
+        <Button to="/" size={ButtonSize.Large}>Read More</Button>
       </div>
     </div>
     <div className={styles.panel}>
@@ -41,7 +41,7 @@ const ResourcesPanels: FunctionComponent = () => (
         </p>
       </div>
       <div className={styles.buttonContainer}>
-        <Button to="/" size={ButtonSize.Large}>See Docs</Button>
+        <Button to="/" size={ButtonSize.Large}>Read More</Button>
       </div>
     </div>
     <div className={styles.panel}>
@@ -60,7 +60,7 @@ const ResourcesPanels: FunctionComponent = () => (
         </p>
       </div>
       <div className={styles.buttonContainer}>
-        <Button to="/" size={ButtonSize.Large}>See Docs</Button>
+        <Button to="/" size={ButtonSize.Large}>Read More</Button>
       </div>
     </div>
   </div>
