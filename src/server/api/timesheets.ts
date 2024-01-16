@@ -8,8 +8,16 @@ import logger from '../logger';
 const router = createRouter();
 const mutex = new Mutex();
 
-router.post('/', (req, res) => {
-  (async(): Promise<void> => {
+function validateUnixTimestamp(variable: any, variableName: string): number {
+  if (typeof variable !== 'number' || isNaN(variable)) {
+    logger.error(`api/allWeeklyLogs.post: ${variableName} is not a valid number`);
+    throw new Error(`api/allWeeklyLogs.post: ${variableName} is not a valid number`);
+  }
+  return variable;
+}
+
+router.post('/', async (req, res) => {
+  try {
     if (!isObjectRecord(req.body)) {
       throw new Error('api/allWeeklyLogs: req.body is not object');
     }
@@ -21,15 +29,9 @@ router.post('/', (req, res) => {
     if (typeof authenticationToken !== 'string') {
       throw new Error('api/allWeeklyLogs: userToken not type string');
     }
-    const { unixWeekStart } = req.body;
-    const { unixWeekEnd } = req.body;
-
-    if (typeof unixWeekStart !== 'number') {
-      throw new Error('api/allWeeklyLogs.post: unixStart is not number');
-    }
-    if (typeof unixWeekEnd !== 'number') {
-      throw new Error('api/allWeeklyLogs.post: unixEnd is not number');
-    }
+    
+    const unixWeekStart = validateUnixTimestamp(req.body.unixWeekStart, 'unixWeekStart');
+    const unixWeekEnd = validateUnixTimestamp(req.body.unixWeekEnd, 'unixWeekEnd');
 
     const release = await mutex.acquire();
     try {
@@ -39,7 +41,6 @@ router.post('/', (req, res) => {
       }
 
       const userIdArray = await getEmployeeIds();
-
       if (userIdArray === undefined) {
         throw new Error('api/timesheets: userIdArray undefined');
       }
@@ -52,11 +53,7 @@ router.post('/', (req, res) => {
         });
       }
 
-      const result = await getEmployeeTimesheets(
-        unixWeekStart,
-        unixWeekEnd,
-      );
-
+      const result = await getEmployeeTimesheets(unixWeekStart, unixWeekEnd);
       res.json({
         success: true,
         listResult: result,
@@ -64,14 +61,13 @@ router.post('/', (req, res) => {
     } finally {
       release();
     }
-
-    // logger.info('res.json success in weeklyLogs.ts post');
-  })().catch((e: Error) => {
-    res.json({
+  } catch (error) {
+    logger.error(error.message);
+    res.status(400).json({
       success: false,
-      error: e.message,
+      error: error.message,
     });
-  });
+  }
 });
 
 export default router;
