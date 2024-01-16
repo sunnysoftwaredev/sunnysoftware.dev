@@ -18,7 +18,6 @@ const JobOpeningCard: FunctionComponent<JobOpeningCardProps> = ({
   url,
 }) => {
   const isMobileWidth = useIsMobileWidth();
-  const buttonSize = isMobileWidth ? ButtonSize.Small : ButtonSize.Medium;
   return (
     <div className={styles.container}>
       <div className={styles.text}>
@@ -27,7 +26,7 @@ const JobOpeningCard: FunctionComponent<JobOpeningCardProps> = ({
         <p>{description}</p>
       </div>
       <div className={styles.buttonContainer}>
-        <Button size={buttonSize} to={url}>
+        <Button size={isMobileWidth ? ButtonSize.Small : ButtonSize.Medium} to={url}>
           Apply
         </Button>
       </div>
