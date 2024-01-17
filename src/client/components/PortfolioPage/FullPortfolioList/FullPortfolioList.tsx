@@ -4,6 +4,31 @@ import Button, { ButtonSize, ButtonVariant } from '../../Button/Button';
 import styles from './FullPortfolioList.scss';
 import projectImage from './projectImage.png';
 
+type ProjectCardProps = {
+  title: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  buttonTo: string;
+};
+
+const ProjectCard: FunctionComponent<ProjectCardProps> = ({ title, description, image, imageAlt, buttonTo }) => (
+  <div className={styles.projectContainer}>
+    <div className={styles.projectText}>
+      <h3>{title}</h3>
+      <p>{description}</p>
+      <Button
+        size={ButtonSize.Large}
+        variant={ButtonVariant.Outlined}
+        to={buttonTo}
+      >
+        See more
+      </Button>
+    </div>
+    <img src={image} alt={imageAlt} />
+  </div>
+);
+
 const FullPortfolioList: FunctionComponent = () => (
   <div className={styles.container}>
     <div className={styles.text}>
@@ -16,91 +41,34 @@ const FullPortfolioList: FunctionComponent = () => (
       </p>
     </div>
     <div className={styles.portfolioCardsContainer}>
-      <div className={styles.projectContainer1}>
-        <div className={styles.projectOneText}>
-          <h3>Project 1</h3>
-          <p>
-            Manage, edit, and sync productinformation across
-            all your . nc productinformation across all your .
-            Manage, edit, and sync productinformation across
-            all your Manage, edit, and sync productinformation
-            across all your . nc productinformation across all
-            your .Manage, edit, and sync productinformation across all your .
-          </p>
-          <Button
-            size={ButtonSize.Large}
-            variant={ButtonVariant.Outlined}
-            to="/contact-us"
-          >
-            See more
-          </Button>
-        </div>
-        <img src={projectImage} alt="picture of sunny software project" />
-      </div>
-      <div className={styles.projectContainer2}>
-        <div className={styles.projectTwoText}>
-          <h3>Project 1</h3>
-          <p>
-            Manage, edit, and sync productinformation across all your
-            . nc productinformation across all your .Manage, edit, an
-            d sync productinformation across all your Manage, edit,
-            and sync productinformation across all your . nc product
-            information across all your .Manage, edit, and sync
-            productinformation across all your .
-          </p>
-          <Button
-            size={ButtonSize.Large}
-            variant={ButtonVariant.Outlined}
-            to="/contact-us"
-          >
-            See more
-          </Button>
-        </div>
-        <img src={projectImage} alt="picture of sunny software project" />
-      </div>
-      <div className={styles.projectContainer1}>
-        <div className={styles.projectOneText}>
-          <h3>Project 1</h3>
-          <p>
-            Manage, edit, and sync productinformation across all your
-            . nc productinformation across all your .Manage, edit,
-            and sync productinformation across all your Manage, edit,
-            and sync productinformation across all your . nc product
-            information across all your .Manage, edit, and sync prod
-            uctinformation across all your .
-          </p>
-          <Button
-            size={ButtonSize.Large}
-            variant={ButtonVariant.Outlined}
-            to="/contact-us"
-          >
-            See more
-          </Button>
-        </div>
-        <img src={projectImage} alt="picture of sunny software project" />
-      </div>
-      <div className={styles.projectContainer2}>
-        <div className={styles.projectTwoText}>
-          <h3>Project 1</h3>
-          <p>
-            Manage, edit, and sync productinformation across all your
-            . nc productinformation across all your .Manage, edit,
-            and sync productinformation across all your Manage, edit,
-            and sync productinformation across all your . nc
-            productinformation across all your .Manage, edit,
-            and sync productinformation across all your .
-          </p>
-          <Button
-            size={ButtonSize.Large}
-            variant={ButtonVariant.Outlined}
-            to="/contact-us"
-          >
-            See more
-          </Button>
-        </div>
-        <img src={projectImage} alt="picture of sunny software project" />
-      </div>
-
+      <ProjectCard
+        title="Project 1"
+        description="Manage, edit, and sync product information across all your..."
+        image={projectImage}
+        imageAlt="picture of sunny software project"
+        buttonTo="/contact-us"
+      />
+      <ProjectCard
+        title="Project 2"
+        description="Manage, edit, and sync product information across all your..."
+        image={projectImage}
+        imageAlt="picture of sunny software project"
+        buttonTo="/contact-us"
+      />
+      <ProjectCard
+        title="Project 3"
+        description="Manage, edit, and sync product information across all your..."
+        image={projectImage}
+        imageAlt="picture of sunny software project"
+        buttonTo="/contact-us"
+      />
+      <ProjectCard
+        title="Project 4"
+        description="Manage, edit, and sync product information across all your..."
+        image={projectImage}
+        imageAlt="picture of sunny software project"
+        buttonTo="/contact-us"
+      />
     </div>
   </div>
 );
