@@ -16,6 +16,27 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
     setEditing(!editing);
   }, [editing]);
 
+  const handleDeactivationResponse = async (response: Response) => {
+    if (!response.ok) {
+      throw new Error(`Server responded with status: ${response.status}`);
+    }
+    const result: unknown = await response.json();
+    if (!isObjectRecord(result)) {
+      throw new Error('Unexpected body type: IndividualUser.tsx');
+    }
+    if (typeof result.success !== 'boolean') {
+      throw new Error('IndividualUser.tsx error: result.success not boolean');
+    }
+    if (result.success) {
+      setDeactivated(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } else {
+      logger.info('unsuccessful database update in IndividualUser.tsx');
+    }
+  };
+
   const handleDeactivate = useCallback(async() => {
     try {
       const response = await fetch('api/users/deactivate', {
@@ -26,32 +47,15 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
         body: JSON.stringify({ id }),
         credentials: 'same-origin',
       });
-
-      const result: unknown = await response.json();
-
-      if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: IndividualUser.tsx');
-      }
-      if (typeof result.success !== 'boolean') {
-        throw new Error('IndividualUser.tsx error: result.success not boolean');
-      }
-      if (result.success) {
-        setDeactivated(true);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      } else {
-        logger.info('unsuccessful database update in IndividualUser.tsx');
-      }
+      await handleDeactivationResponse(response);
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
       }
     }
-  }, [id]);
+  }, [id, handleDeactivationResponse]);
 
   return (
-
     <div
       key={`user-${id}`}
       className={styles.user}
