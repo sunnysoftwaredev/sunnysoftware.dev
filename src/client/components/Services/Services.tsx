@@ -10,15 +10,15 @@ import mobileMiddleLeftBottom from './mobileEmptySignupImage.jpg';
 import mobileMiddleRightTop from './mobileSignupFilledImage.jpg';
 import mobileMiddleRightBottom from './mobileExpenseGraphImage.jpg';
 import mobileRight from './mobileQrCodeImage.jpg';
-import cryptoImg1 from './cyrptoImage1.jpg';
-import cryptoImg2 from './cyrptoImage2.jpg';
+import cryptoImg1 from './cryptoImage1.jpg';
+import cryptoImg2 from './cryptoImage2.jpg';
 
 const Services: FunctionComponent = () => (
   <div className={styles.servicesContainer}>
     <div className={styles.servicesTextCard}>
       <h2>Save time and get more done</h2>
       <p>
-        Our mission is to become an extension of yoru team so we can
+        Our mission is to become an extension of your team so we can
         help your business grow - all while costing you less than a full-time
         developer.
       </p>
