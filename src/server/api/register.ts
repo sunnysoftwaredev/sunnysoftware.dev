@@ -9,25 +9,29 @@ import { mailgunRegister } from '../mail';
 const router = createRouter();
 const mutex = new Mutex();
 
+// This function will validate the user data object
+function validateUserData(userData: Record<string, unknown>): { username: string; email: string; role: string } {
+  if (!isObjectRecord(userData)) {
+    throw new Error('api/register: req.body is not object');
+  }
+  const { username, email, role } = userData;
+
+  if (typeof username !== 'string') {
+    throw new Error('username not type string');
+  }
+  if (typeof email !== 'string') {
+    throw new Error('email not type string');
+  }
+  if (typeof role !== 'string') {
+    throw new Error('role not type string');
+  }
+
+  return { username, email, role };
+}
+
 router.post('/', (req, res) => {
   (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/register: req.body is not object');
-    }
-    const { username } = req.body;
-    const { email } = req.body;
-    const { role } = req.body;
-
-    if (typeof username !== 'string') {
-      throw new Error('user not type string');
-    }
-    if (typeof email !== 'string') {
-      throw new Error('email not type string');
-    }
-
-    if (typeof role !== 'string') {
-      throw new Error('role not type string');
-    }
+    const { username, email, role } = validateUserData(req.body);
 
     const release = await mutex.acquire();
 
