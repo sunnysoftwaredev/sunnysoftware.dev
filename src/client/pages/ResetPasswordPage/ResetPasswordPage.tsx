@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import type { FunctionComponent } from 'react';
 import { useSelector } from 'react-redux';
 import logo from '../../static/images/Logo.png';
 import loginPhoto from '../../static/images/LoginPhoto.png';
@@ -12,9 +11,12 @@ import styles from './ResetPasswordPage.scss';
 const ResetPasswordPage: FunctionComponent = () => {
   const navigate = useNavigate();
   const loggedIn = useSelector(getLoggedIn);
-  if (loggedIn) {
-    navigate('/');
-  }
+
+  useEffect(() => {
+    if (loggedIn) {
+      navigate('/');
+    }
+  }, [loggedIn, navigate]);
 
   return (
     <div className={styles.pageContainer}>
