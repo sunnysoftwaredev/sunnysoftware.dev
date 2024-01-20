@@ -1,4 +1,4 @@
-import { Router as createRouter } from 'express';
+import { Router as createRouter, Request, Response, NextFunction } from 'express';
 import { Mutex } from 'async-mutex';
 import { isObjectRecord } from '../../common/utilities/types';
 import { deleteWorkLog, getIDWithToken, postWorkLog, updateWorkLog } from '../database';
@@ -7,157 +7,104 @@ import logger from '../logger';
 const router = createRouter();
 const mutex = new Mutex();
 
-router.post('/', (req, res) => {
-  (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/workLogs: req.body is not object');
-    }
-    if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/workLogs: req.cookies is not object');
-    }
+// Middleware for request validation
+const validateWorkLogsRequest = (req: Request, res: Response, next: NextFunction): void => {
+  if (!isObjectRecord(req.body) || !isObjectRecord(req.cookies)) {
+    return next(new Error('Request body or cookies are not an object'));
+  }
 
-    const { authenticationToken } = req.cookies;
-    if (typeof authenticationToken !== 'string') {
-      throw new Error('api/workLogs: userToken not type string');
-    }
+  const { authenticationToken } = req.cookies;
+  const { unixStart, unixEnd, projectId, oldUnixStart } = req.body;
+  if (typeof authenticationToken !== 'string' ||
+      typeof unixStart !== 'number' ||
+      typeof unixEnd !== 'number' ||
+      (req.method === "PUT" && typeof oldUnixStart !== 'number') ||
+      typeof projectId !== 'number') {
+    return next(new Error('Invalid request parameters'));
+  }
+  next();
+};
 
-    const release = await mutex.acquire();
-    try {
-      const idResult = getIDWithToken(authenticationToken);
-      const id = await idResult;
-      const { unixStart, unixEnd, projectId } = req.body;
+router.post('/', validateWorkLogsRequest, async (req: Request, res: Response) => {
+  const { authenticationToken } = req.cookies;
+  const { unixStart, unixEnd, projectId } = req.body;
 
-      if (typeof unixStart !== 'number') {
-        throw new Error('api/workLogs.post: unixStart is not number');
-      }
-      if (typeof unixEnd !== 'number') {
-        throw new Error('api/workLogs.post: unixEnd is not number');
-      }
-      if (typeof projectId !== 'number') {
-        throw new Error('api/workLogs.post: projectId is not number');
-      }
+  const release = await mutex.acquire();
+  try {
+    const id = await getIDWithToken(authenticationToken);
 
-      const result = await postWorkLog(
-        id,
-        unixStart,
-        unixEnd,
-        projectId,
-      );
-      res.json({
-        success: true,
-        createdWorkLog: result,
-      });
-    } finally {
-      release();
-    }
-    logger.debug('res.json success in workLogs.ts post');
-  })().catch((e: Error) => {
-    res.json({
-      success: false,
-      error: e.message,
-    });
-  });
-});
-
-router.put('/', (req, res) => {
-  (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/workLogs: req.body is not object');
-    }
-    if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/workLogs: req.cookies is not object');
-    }
-
-    const { authenticationToken } = req.cookies;
-    if (typeof authenticationToken !== 'string') {
-      throw new Error('api/workLogs: userToken not type string');
-    }
-
-    const release = await mutex.acquire();
-    try {
-      const idResult = getIDWithToken(authenticationToken);
-      const id = await idResult;
-      const { oldUnixStart, unixStart, unixEnd, projectId } = req.body;
-
-      if (typeof oldUnixStart !== 'number') {
-        throw new Error('api/workLogs.put: unixStart is not number');
-      }
-      if (typeof unixStart !== 'number') {
-        throw new Error('api/workLogs.put: unixStart is not number');
-      }
-      if (typeof unixEnd !== 'number') {
-        throw new Error('api/workLogs.put: unixEnd is not number');
-      }
-      if (typeof projectId !== 'number') {
-        throw new Error('api/workLogs.post: projectId is not number');
-      }
-
-      const result = await updateWorkLog(
-        id,
-        oldUnixStart,
-        unixStart,
-        unixEnd,
-        projectId,
-      );
-
-      res.json({
-        success: true,
-        createdWorkLog: result,
-      });
-    } finally {
-      release();
-    }
-    logger.debug('res.json success in workLogs.ts put');
-  })().catch((e: Error) => {
-    res.json({
-      success: false,
-      error: e.message,
-    });
-  });
-});
-
-router.delete('/', (req, res) => {
-  (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/workLogs: req.body is not object');
-    }
-    if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/workLogs: req.cookies is not object');
-    }
-
-    const { authenticationToken } = req.cookies;
-    if (typeof authenticationToken !== 'string') {
-      throw new Error('api/workLogs: userToken not type string');
-    }
-
-    const idResult = getIDWithToken(authenticationToken);
-    const id = await idResult;
-    const { unixStart } = req.body;
-    const { unixEnd } = req.body;
-
-    if (typeof unixStart !== 'number') {
-      throw new Error('api/workLogs.delete: unixStart is not number');
-    }
-    if (typeof unixEnd !== 'number') {
-      throw new Error('api/workLogs.delete: unixEnd is not number');
-    }
-
-    const result = await deleteWorkLog(
+    const result = await postWorkLog(
       id,
       unixStart,
       unixEnd,
+      projectId,
     );
-
     res.json({
       success: true,
-      deletedWorkLog: result,
+      createdWorkLog: result,
     });
-    logger.debug('res.json success in workLogs.ts delete');
-  })().catch((e: Error) => {
-    res.json({
-      success: false,
-      error: e.message,
-    });
+  } finally {
+    release();
+  }
+  logger.debug('res.json success in workLogs.ts post');
+}, (error: Error, req: Request, res: Response, next: NextFunction) => {
+  res.status(400).json({
+    success: false,
+    error: error.message,
   });
 });
+
+router.put('/', validateWorkLogsRequest, async (req: Request, res: Response) => {
+  const { authenticationToken } = req.cookies;
+  const { oldUnixStart, unixStart, unixEnd, projectId } = req.body;
+
+  const release = await mutex.acquire();
+  try {
+    const id = await getIDWithToken(authenticationToken);
+
+    const result = await updateWorkLog(
+      id,
+      oldUnixStart,
+      unixStart,
+      unixEnd,
+      projectId,
+    );
+    res.json({
+      success: true,
+      updatedWorkLog: result,
+    });
+  } finally {
+    release();
+  }
+  logger.debug('res.json success in workLogs.ts put');
+}, (error: Error, req: Request, res: Response, next: NextFunction) => {
+  res.status(400).json({
+    success: false,
+    error: error.message,
+  });
+});
+
+router.delete('/', validateWorkLogsRequest, async (req: Request, res: Response) => {
+  const { authenticationToken } = req.cookies;
+  const { unixStart, unixEnd } = req.body;
+
+  const id = await getIDWithToken(authenticationToken);
+
+  const result = await deleteWorkLog(
+    id,
+    unixStart,
+    unixEnd,
+  );
+  res.json({
+    success: true,
+    deletedWorkLog: result,
+  });
+  logger.debug('res.json success in workLogs.ts delete');
+}, (error: Error, req: Request, res: Response, next: NextFunction) => {
+  res.status(400).json({
+    success: false,
+    error: error.message,
+  });
+});
+
 export default router;
