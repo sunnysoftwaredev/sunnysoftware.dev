@@ -9,9 +9,9 @@ import styles from './EditProject.scss';
 const EditProject: FunctionComponent<ClientProject> = (props) => {
   const { id, title, description, active, username, email } = props;
 
-  const [newTitle, setNewTitle] = useState(title);
-  const [newDescription, setNewDescription] = useState(description);
-  const [newActive, setNewActive] = useState(active);
+  const [newTitle, setNewTitle] = useState(() => title);
+  const [newDescription, setNewDescription] = useState(() => description);
+  const [newActive, setNewActive] = useState(() => active);
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
@@ -24,15 +24,14 @@ const EditProject: FunctionComponent<ClientProject> = (props) => {
     [setNewTitle],
   );
 
-  const handleDescriptionChange
-   = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-     setNewDescription(e.target.value);
-     setSubmitted(false);
-   }, [setNewDescription],);
+  const handleDescriptionChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+    setNewDescription(e.target.value);
+    setSubmitted(false);
+  }, [setNewDescription],);
 
   const handleActiveChange = useCallback((): void => {
-    setNewActive(!active);
-  }, [active],);
+    setNewActive(!newActive);
+  }, [newActive],);
 
   // Update Project information
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
@@ -159,7 +158,6 @@ const EditProject: FunctionComponent<ClientProject> = (props) => {
             type="radio" name="activeRadioGroup" id="inactiveRadio"
             value="false" onChange={handleActiveChange}
             checked={!newActive}
-
           />
 
         </div>
