@@ -5,20 +5,20 @@ interface IProps {
   children: React.JSX.Element;
 }
 
-const ShowNavBar
-= ({ children }: IProps): React.JSX.Element => {
+const noNavBarRoutes = new Set([
+  '/login',
+  '/login/forgot-password',
+  '/login/reset-password',
+]);
+
+const ShowNavBar = ({ children }: IProps): React.JSX.Element => {
   const [showNavBar, setShowNavBar] = useState(true);
   const locationPath = useLocation();
 
   useEffect(() => {
-    if (locationPath.pathname === '/login'
-      || locationPath.pathname === '/login/forgot-password'
-      || locationPath.pathname === '/login/reset-password') {
-      setShowNavBar(false);
-    } else {
-      setShowNavBar(true);
-    }
+    setShowNavBar(!noNavBarRoutes.has(locationPath.pathname));
   }, [locationPath]);
+
   return (
     <div>{showNavBar && children}</div>
   );
