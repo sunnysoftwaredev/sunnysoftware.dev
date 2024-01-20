@@ -1,5 +1,4 @@
-import React from 'react';
-import type { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import Button, { ButtonSize } from '../Button/Button';
 import styles from './Hero.scss';
 import heroPicture from './HeroPicture.png';
