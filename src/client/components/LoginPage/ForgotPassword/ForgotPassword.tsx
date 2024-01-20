@@ -14,6 +14,7 @@ const ForgotPassword: FunctionComponent = () => {
   const [email, setEmail] = useState('');
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const showSuccessPopupFunction = useCallback(() => {
     setShowSuccessPopup(!showSuccessPopup);
@@ -25,6 +26,7 @@ const ForgotPassword: FunctionComponent = () => {
 
   const navigate = useNavigate();
   const loggedIn = useSelector(getLoggedIn);
+
   if (loggedIn) {
     navigate('/');
   }
@@ -44,32 +46,47 @@ const ForgotPassword: FunctionComponent = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email,
-        }),
+        body: JSON.stringify({ email }),
       });
+
+      if (!response.ok) {
+        switch (response.status) {
+          case 400:
+            setErrorMessage("Bad Request: Please verify the email and try again.");
+            break;
+          case 404:
+            setErrorMessage("Not Found: The requested resource was not found.");
+            break;
+          case 500:
+            setErrorMessage("Internal Server Error: Please try again later.");
+            break;
+          default:
+            setErrorMessage("An error occurred: Please try again or contact support.");
+        }
+        setShowErrorPopup(true);
+        return;
+      }
 
       const result: unknown = await response.json();
 
-      if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: ForgotPassword.tsx');
-      }
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: ForgotPassword.tsx');
+      if (!isObjectRecord(result) || typeof result.success !== 'boolean') {
+        throw new Error(`Invalid response structure or type: ${JSON.stringify(result)}`);
       }
 
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: ForgotPassword.tsx');
-      }
       if (result.success) {
         setShowSuccessPopup(true);
       } else {
+        setErrorMessage("Failed to send reset link: Please verify your email or try again later.");
         setShowErrorPopup(true);
       }
     } catch (err: unknown) {
+      let message = 'An error occurred during the reset password process.';
       if (err instanceof Error) {
-        logger.error(err.message);
+        message += ` Error: ${err.message}`;
       }
+      logger.error(message);
+      setErrorMessage(message);
+      setShowErrorPopup(true);
     }
   }, [email]);
 
@@ -85,14 +102,14 @@ const ForgotPassword: FunctionComponent = () => {
           message="If you have an account we have sent a reset password link"
           onClick={showSuccessPopupFunction}
         />
-      ) }
+      )}
       {showErrorPopup && (
         <PopupMessage
           type={PopupType.Failure}
-          message="Something went wrong, please reach out to us on the contact page"
+          message={errorMessage}
           onClick={showErrorPopupFunction}
         />
-      ) }
+      )}
       <form
         className={styles.forgotPassword}
         onClick={handleSubmit}
@@ -102,7 +119,8 @@ const ForgotPassword: FunctionComponent = () => {
             Email
             <Input
               size={InputSize.Large}
-              value={email} setValue={setEmail}
+              value={email}
+              setValue={setEmail}
               onChange={handleEmailChange}
               placeholderText="example@gmail.com"
             />
@@ -122,4 +140,5 @@ const ForgotPassword: FunctionComponent = () => {
     </div>
   );
 };
+
 export default ForgotPassword;
