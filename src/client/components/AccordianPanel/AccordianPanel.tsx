@@ -10,12 +10,12 @@ type AccordianPanelProps = {
 const AccordianPanel: FunctionComponent<AccordianPanelProps>
  = ({ question, answer }) => {
    const [isOpen, setIsOpen] = useState(false);
-   const openClosePanel = useCallback(() => {
+   const togglePanel = useCallback(() => {
      setIsOpen(!isOpen);
    }, [isOpen]);
    return (
      <div className={styles.accordianPanelContainer}>
-       <div className={styles.accordianQuestion} onClick={openClosePanel}>
+       <div className={styles.accordianQuestion} onClick={togglePanel}>
          <h3>{question}</h3>
          <div className={styles.panelArrow}>
            {'>'}
