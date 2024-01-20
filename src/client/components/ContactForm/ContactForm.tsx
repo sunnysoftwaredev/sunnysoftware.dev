@@ -16,7 +16,7 @@ const ContactForm: FunctionComponent = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
-  const handleNameChange = useCallback(
+  const handleContactNameChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setContactName(e.target.value);
       setSubmitted(false);
@@ -29,14 +29,12 @@ const ContactForm: FunctionComponent = () => {
     setSubmitted(false);
   }, [setEmail],);
 
-  const handleSubjectChange
-  = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  const handleSubjectChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSubject(e.target.value);
     setSubmitted(false);
   }, [setSubject]);
 
-  const handleMessageChange
-  = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleMessageChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     setSubmitted(false);
   }, [setMessage]);
@@ -115,7 +113,7 @@ const ContactForm: FunctionComponent = () => {
 
       <form className={styles.formContainer}>
         <Input
-          size={InputSize.Large} onChange={handleNameChange}
+          size={InputSize.Large} onChange={handleContactNameChange}
           setValue={setContactName} placeholderText="Name"
           value={contactName}
         />
