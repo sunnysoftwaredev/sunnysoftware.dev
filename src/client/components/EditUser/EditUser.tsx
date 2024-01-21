@@ -119,7 +119,7 @@ const EditUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
         <label className="label">Role</label>
         <input
           onChange={handleRoleChange} className="input"
-          value={newRole} type="subject"
+          value={newRole} type="text"
         />
         <button
           onClick={handleSubmit}
