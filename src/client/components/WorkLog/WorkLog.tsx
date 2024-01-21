@@ -9,43 +9,33 @@ import styles from './WorkLog.scss';
 type WorkLogProps = {
   log: TimeObjectWithProject;
   activeProjects: ClientProject[];
-
 };
-const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
+
+const WorkLog: FunctionComponent<WorkLogProps> = ({ log, activeProjects }) => {
   const [updating, setUpdating] = useState(false);
   const [deleted, setDeleted] = useState(false);
-  const [projectExists, setProjectExists] = useState(false);
   const [projectName, setProjectName] = useState('');
 
-  const { log, activeProjects } = props;
   const { unixStart, unixEnd, projectId } = log;
 
   useEffect(() => {
-    if (typeof projectId === 'number') {
-      if (projectId !== 0) {
-        setProjectExists(true);
-      }
-    }
-
-    const logProject
-    = activeProjects.filter(project => project.id === projectId);
-
-    if (logProject.length === 1) {
-      setProjectName(logProject[0].title);
+    const project = activeProjects.find((project) => project.id === projectId);
+    if (project) {
+      setProjectName(project.title);
     }
   }, [activeProjects, projectId]);
 
-  const unixToTimeString = (unix: number): string => new Date(unix
-    * 1000).toLocaleString('default', {
-    hour: 'numeric',
-    minute: 'numeric',
-  });
+  const unixToTimeString = (unix: number): string =>
+    new Date(unix * 1000).toLocaleString('default', {
+      hour: 'numeric',
+      minute: 'numeric',
+    });
 
   const handleUpdateClick = useCallback((): void => {
     setUpdating(!updating);
   }, [updating]);
 
-  const deleteTime = useCallback(async() => {
+  const deleteTime = useCallback(async () => {
     try {
       const response = await fetch('api/workLogs', {
         method: 'DELETE',
@@ -81,11 +71,9 @@ const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
 
   return (
     <div key={log.unixStart} className={styles.workLogContainer}>
-      {projectExists && (
+      {projectId !== 0 && projectName && (
         <p>
-          Project for:
-          {' '}
-          {projectName}
+          Project for: {projectName}
         </p>
       )}
       <div className={styles.workLog}>
@@ -101,7 +89,8 @@ const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
           dayLogs={undefined}
           defaultStart={log.unixStart}
           defaultEnd={log.unixEnd}
-          updating activeProjects={activeProjects}
+          updating
+          activeProjects={activeProjects}
         />
       )}
       {deleted && <h3>Record Deleted!</h3>}
