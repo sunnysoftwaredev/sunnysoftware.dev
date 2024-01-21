@@ -39,7 +39,7 @@ export default (req: ExpressRequest, res: ExpressResponse): void => {
     try {
       const { authenticationToken } = req.cookies;
       if (typeof authenticationToken !== 'string') {
-        throw new Error('api/authenticate: userToken not type string');
+        throw new Error('Expected authenticationToken to be a string');
       }
       const tokenActive = await checkActiveToken(authenticationToken);
       if (!tokenActive) {
