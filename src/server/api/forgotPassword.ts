@@ -9,16 +9,22 @@ import { checkResetTokenActive, getIdFromResetToken, getUserIdByEmail, insertPas
 const router = createRouter();
 const mutex = new Mutex();
 
-router.post('/', (req, res) => {
-  (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/forgotPassword: req.body is not object');
-    }
-    const { email } = req.body;
+function validateRequestBody(body: unknown, fields: string[]): asserts body is Record<string, unknown> {
+  if (!isObjectRecord(body)) {
+    throw new Error('api/forgotPassword: req.body is not object');
+  }
 
-    if (typeof email !== 'string') {
-      throw new Error('api/forgotPassword: email not type string');
+  fields.forEach(field => {
+    if (typeof body[field] !== 'string') {
+      throw new Error(`api/forgotPassword: ${field} not type string`);
     }
+  });
+}
+
+router.post('/', (req, res) => {
+  (async (): Promise<void> => {
+    validateRequestBody(req.body, ['email']);
+    const { email } = req.body;
 
     const release = await mutex.acquire();
 
@@ -31,6 +37,7 @@ router.post('/', (req, res) => {
     } finally {
       release();
     }
+
     res.json({
       success: true,
     });
@@ -44,18 +51,9 @@ router.post('/', (req, res) => {
 });
 
 router.post('/reset', (req, res) => {
-  (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/forgotPassword: req.body is not object');
-    }
+  (async (): Promise<void> => {
+    validateRequestBody(req.body, ['newPassword', 'resetToken']);
     const { newPassword, resetToken } = req.body;
-
-    if (typeof newPassword !== 'string') {
-      throw new Error('api/forgotPassword/reset: newPassword not type string');
-    }
-    if (typeof resetToken !== 'string') {
-      throw new Error('api/forgotPassword/reset: resetToken not type string');
-    }
 
     const release = await mutex.acquire();
 
@@ -75,6 +73,7 @@ router.post('/reset', (req, res) => {
     } finally {
       release();
     }
+
     res.json({
       success: true,
     });
