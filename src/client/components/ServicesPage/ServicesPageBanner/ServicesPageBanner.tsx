@@ -24,25 +24,23 @@ const BackgroundSVG: FunctionComponent = () => (
   </svg>
 );
 
-const ServicesPageBanner: FunctionComponent = () => {
-  return (
-    <div className={styles.container}>
-      <img className={styles.leftImage} src={papersImage} alt="picture of papers" />
-      <div className={styles.textAndButton}>
-        <h1>Our Services</h1>
-        <p>
-          Step into the future with our cutting-edge
-          technology solutions tailored for your
-          business needs.
-        </p>
-        <Button size={ButtonSize.Large} to="./contact-us">
-          Get a quote
-        </Button>
-      </div>
-      <img className={styles.rightImage} src={textAndEmojisImage} alt="emojies graphic" />
-      <BackgroundSVG />
+const ServicesPageBanner: FunctionComponent = () => (
+  <div className={styles.container}>
+    <img className={styles.leftImage} src={papersImage} alt="picture of papers" />
+    <div className={styles.textAndButton}>
+      <h1>Our Services</h1>
+      <p>
+        Step into the future with our cutting-edge
+        technology solutions tailored for your
+        business needs.
+      </p>
+      <Button size={ButtonSize.Large} to="./contact-us">
+        Get a quote
+      </Button>
     </div>
-  );
-};
+    <img className={styles.rightImage} src={textAndEmojisImage} alt="emojies graphic" />
+    <BackgroundSVG />
+  </div>
+);
 
 export default ServicesPageBanner;

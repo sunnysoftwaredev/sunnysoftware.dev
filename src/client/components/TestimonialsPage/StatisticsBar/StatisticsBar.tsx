@@ -16,7 +16,7 @@ const statistics: Statistic[] = [
 
 const StatisticsBar: FunctionComponent = () => (
   <div className={styles.barContainer}>
-    {statistics.map((stat) => (
+    {statistics.map(stat => (
       <div key={stat.description} className={styles.statistic}>
         <h2>{stat.value}</h2>
         <p>{stat.description}</p>
