@@ -10,9 +10,9 @@ const ManageProjects: FunctionComponent = () => {
   const [activeProjects, setActiveProjects] = useState<ClientProject[]>([]);
   const [inactiveProjects, setInactiveProjects] = useState<ClientProject[]>([]);
 
-  const compareObjects = (a: ClientProject, b: ClientProject): number => {
-    return a.title.localeCompare(b.title);
-  };
+  const compareProjects = (a: ClientProject, b: ClientProject): number => (
+    a.title.localeCompare(b.title)
+  );
 
   const getProjects = useCallback(async() => {
     try {
@@ -34,11 +34,11 @@ const ManageProjects: FunctionComponent = () => {
       if (isClientProjectArray(projectList)) {
         const activeProjectList
          = projectList.filter(project => project.active);
-        const sortedActive = activeProjectList.sort(compareObjects);
+        const sortedActive = activeProjectList.sort(compareProjects);
 
         const inactiveProjectList
          = projectList.filter(project => !project.active);
-        const sortedInactive = inactiveProjectList.sort(compareObjects);
+        const sortedInactive = inactiveProjectList.sort(compareProjects);
 
         setActiveProjects(sortedActive);
         setInactiveProjects(sortedInactive);

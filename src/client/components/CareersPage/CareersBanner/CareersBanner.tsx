@@ -22,23 +22,21 @@ const backgroundSvg = (
   </svg>
 );
 
-const CareersBanner: FunctionComponent = () => {
-  return (
-    <div className={styles.container}>
-      <div className={styles.textAndButton}>
-        <h1>Careers</h1>
-        <p>
-          Step into the future with our cutting-edge
-          technology solutions tailored for your
-          business needs.
-        </p>
-        <Button size={ButtonSize.Large} to="/contact-us">
-          Join our team
-        </Button>
-      </div>
-      {backgroundSvg}
+const CareersBanner: FunctionComponent = () => (
+  <div className={styles.container}>
+    <div className={styles.textAndButton}>
+      <h1>Careers</h1>
+      <p>
+        Step into the future with our cutting-edge
+        technology solutions tailored for your
+        business needs.
+      </p>
+      <Button size={ButtonSize.Large} to="/contact-us">
+        Join our team
+      </Button>
     </div>
-  );
-};
+    {backgroundSvg}
+  </div>
+);
 
 export default CareersBanner;

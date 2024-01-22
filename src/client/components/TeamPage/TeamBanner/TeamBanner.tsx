@@ -26,41 +26,39 @@ const BackgroundSvg: FunctionComponent = () => (
   </svg>
 );
 
-const PortfolioBanner: FunctionComponent = () => {
-  return (
-    <div className={styles.container}>
-      <div className={styles.textAndButton}>
-        <h1>Team</h1>
-        <p>
-          Step into the future with our cutting-edge
-          technology solutions tailored for your
-          business needs.
-        </p>
-        <Button size={ButtonSize.Large} to="./contact-us">
-          Get a quote
-        </Button>
-      </div>
-      <div className={styles.teamStatsContainer}>
-        <div className={styles.statsImages}>
-          <img className={styles.bannerImg1} src={BannerImg1} alt="Sunny Software Employee" />
-          <img className={styles.bannerImg2} src={BannerImg2} alt="Sunny Software Employee" />
-          <img className={styles.bannerImg3} src={BannerImg3} alt="Sunny Software Employee" />
-          <img className={styles.bannerImg4} src={BannerImg4} alt="Sunny Software Employee" />
-        </div>
-        <div className={styles.statsDivs}>
-          <div className={styles.statsFonts}>
-            <p>Creative</p>
-            <h4>32</h4>
-          </div>
-          <div className={styles.statsFonts}>
-            <p>Professional</p>
-            <h4>12</h4>
-          </div>
-        </div>
-      </div>
-      <BackgroundSvg />
+const PortfolioBanner: FunctionComponent = () => (
+  <div className={styles.container}>
+    <div className={styles.textAndButton}>
+      <h1>Team</h1>
+      <p>
+        Step into the future with our cutting-edge
+        technology solutions tailored for your
+        business needs.
+      </p>
+      <Button size={ButtonSize.Large} to="./contact-us">
+        Get a quote
+      </Button>
     </div>
-  );
-};
+    <div className={styles.teamStatsContainer}>
+      <div className={styles.statsImages}>
+        <img className={styles.bannerImg1} src={BannerImg1} alt="Sunny Software Employee" />
+        <img className={styles.bannerImg2} src={BannerImg2} alt="Sunny Software Employee" />
+        <img className={styles.bannerImg3} src={BannerImg3} alt="Sunny Software Employee" />
+        <img className={styles.bannerImg4} src={BannerImg4} alt="Sunny Software Employee" />
+      </div>
+      <div className={styles.statsDivs}>
+        <div className={styles.statsFonts}>
+          <p>Creative</p>
+          <h4>32</h4>
+        </div>
+        <div className={styles.statsFonts}>
+          <p>Professional</p>
+          <h4>12</h4>
+        </div>
+      </div>
+    </div>
+    <BackgroundSvg />
+  </div>
+);
 
 export default PortfolioBanner;
