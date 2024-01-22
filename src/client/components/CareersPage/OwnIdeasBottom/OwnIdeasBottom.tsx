@@ -13,7 +13,7 @@ const OwnIdeasBottom: FunctionComponent = () => (
         while costing you less than a single full-time designer.
       </p>
     </div>
-    <Button size={ButtonSize.Large} variant={ButtonVariant.Outlined} to="./contact-us">
+    <Button size={ButtonSize.Large} variant={ButtonVariant.Outlined} href="./contact-us">
       Get a Quote
     </Button>
   </div>
