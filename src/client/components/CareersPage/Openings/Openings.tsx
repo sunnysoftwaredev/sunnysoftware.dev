@@ -7,62 +7,15 @@ const OPENINGS = [
     position: 'Digital Senior Designer',
     type: 'remote',
     url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
+    description: 'Looking for a creative and experienced designer to lead our digital campaigns.',
   },
   {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
+    position: 'Frontend Developer',
+    type: 'on-site',
+    url: '/apply',
+    description: 'Frontend Developer with a passion for building user-focused web applications.',
   },
-  {
-    position: 'Digital Senior Designer',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
-  {
-    position: 'Digital Senior Designer2',
-    type: 'remote',
-    url: '/contact-us',
-    description: 'Description of job requirements , Description of job requirementsDescription of job requirements',
-  },
+  // More job openings...
 ];
 
 const Openings: React.FunctionComponent = () => (
@@ -77,14 +30,15 @@ const Openings: React.FunctionComponent = () => (
       </p>
     </div>
     <div className={styles.openingsContainer}>
-      {OPENINGS.map(card => (
+      {OPENINGS.map((card, index) => (
         <JobOpeningCard
-          key={card.description}
-          url={card.url} position={card.position}
-          type={card.type} description={card.description}
+          key={`${card.position}-${index}`}
+          url={card.url}
+          position={card.position}
+          type={card.type}
+          description={card.description}
         />
       ))}
-
     </div>
   </div>
 );
