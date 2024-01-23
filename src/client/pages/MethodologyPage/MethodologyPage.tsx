@@ -6,17 +6,18 @@ import MethodologyFullList from '../../components/MethodologyPage/MethodologyFul
 import MethodologyBenefits from '../../components/MethodologyPage/MethodologyBenefits/MethodologyBenefits';
 import MethodologyNeedHelp from '../../components/MethodologyPage/MethodologyNeedHelp/MethodologyNeedHelp';
 
+const MethodologyPageHelmet: FunctionComponent = () => (
+  <Helmet>
+    <meta charSet="utf-8" />
+    <title>Methodology-Sunny Software</title>
+    <link rel="canonical" href="https://sunnysoftware.dev/methodology" />
+    <meta name="description" content="The methodology of Sunny Software LLC" />
+  </Helmet>
+);
+
 const MethodologyPage: FunctionComponent = () => (
   <div>
-    <Helmet>
-      <meta charSet="utf-8" />
-      <title>Methodology-Sunny Software</title>
-      <link rel="canonical" href="https://sunnysoftware.dev/methodology" />
-      <meta
-        name="description"
-        content="The methodology of Sunny Software LLC"
-      />
-    </Helmet>
+    <MethodologyPageHelmet />
     <MethodologyBanner />
     <MethodologyFullList />
     <MethodologyBenefits />
