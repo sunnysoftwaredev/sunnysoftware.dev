@@ -1,6 +1,5 @@
-import React from 'react';
-import type { FunctionComponent } from 'react';
-import { Helmet } from 'react-helmet';
+import React, { FunctionComponent, Fragment } from 'react';
+import { Helmet } from 'react-helmet-async';
 import AboutUsTop from '../../components/AboutUsPage/AboutUsTop/AboutUsTop';
 import StatisticsBar from '../../components/AboutUsPage/StatisticsBar/StatisticsBar';
 import MissionAndVision from '../../components/AboutUsPage/MissionAndVision/MissionAndVision';
@@ -13,7 +12,7 @@ import CallToAction from '../../components/CallToAction/CallToAction';
 import styles from './AboutUsPage.scss';
 
 const AboutUsPage: FunctionComponent = () => (
-  <div>
+  <Fragment>
     <Helmet>
       <meta charSet="utf-8" />
       <title>About Us-Sunny Software</title>
@@ -29,7 +28,7 @@ const AboutUsPage: FunctionComponent = () => (
     <LocationBanner />
     <OurTeamAndOpenings />
     <CallToAction />
-  </div>
+  </Fragment>
 );
 
 export default AboutUsPage;
