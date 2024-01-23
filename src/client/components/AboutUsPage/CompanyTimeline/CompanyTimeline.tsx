@@ -17,10 +17,9 @@ const CompanyTimeline: FunctionComponent = () => {
   const eliminateScrollWhitespace = 2 - mobileSpaceSubtraction;
   const handleLeftClick = useCallback(() => {
     if (currentIndex > 0) {
-      setCurrentIndex((currentIndex - 1)
-      % (milestones.length - eliminateScrollWhitespace));
+      setCurrentIndex(currentIndex - 1);
     }
-  }, [milestones, currentIndex, eliminateScrollWhitespace]);
+  }, [currentIndex]);
   const handleRightClick = useCallback(() => {
     setCurrentIndex((currentIndex + 1)
     % (milestones.length - eliminateScrollWhitespace));
@@ -33,7 +32,7 @@ const CompanyTimeline: FunctionComponent = () => {
   return (
     <div className={styles.companyTimelineContainer}>
       <div className={styles.timelineTop}>
-        <h2>Timeline of milestones in the company&#39;s history</h2>
+        <h2>Timeline of milestones in the company's history</h2>
         <p>
           Our mission is to become an extension of your team so we can help
           your business grow -- all while costing you less than a single full-
