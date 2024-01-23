@@ -41,7 +41,7 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
           window.location.reload();
         }, 1500);
       } else {
-        logger.info('unsuccessful database update in IndividualUser.tsx');
+        logger.info('Unsuccessful user deactivation attempt in IndividualUser.tsx');
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -51,7 +51,6 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
   }, [id]);
 
   return (
-
     <div
       key={`user-${id}`}
       className={styles.user}
