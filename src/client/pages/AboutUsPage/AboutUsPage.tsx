@@ -13,7 +13,7 @@ import CallToAction from '../../components/CallToAction/CallToAction';
 import styles from './AboutUsPage.scss';
 
 const AboutUsPage: FunctionComponent = () => (
-  <div>
+  <>
     <Helmet>
       <meta charSet="utf-8" />
       <title>About Us-Sunny Software</title>
@@ -29,7 +29,7 @@ const AboutUsPage: FunctionComponent = () => (
     <LocationBanner />
     <OurTeamAndOpenings />
     <CallToAction />
-  </div>
+  </>
 );
 
 export default AboutUsPage;
