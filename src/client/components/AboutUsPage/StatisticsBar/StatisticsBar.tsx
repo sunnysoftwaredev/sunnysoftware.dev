@@ -2,24 +2,26 @@ import type { FunctionComponent } from 'react';
 import React from 'react';
 import styles from './StatisticsBar.scss';
 
+type StatisticData = {
+  value: string;
+  description: string;
+};
+
+const STATISTICS_DATA: StatisticData[] = [
+  { value: '15+', description: 'Years of experience' },
+  { value: '1K+', description: 'Happy Customers' },
+  { value: '80+', description: 'Completed projects' },
+  { value: '95%', description: 'Positive reviews' }
+];
+
 const StatisticsBar: FunctionComponent = () => (
   <div className={styles.barContainer}>
-    <div className={styles.statistic}>
-      <h2>15+</h2>
-      <p>Years of experience</p>
-    </div>
-    <div className={styles.statistic}>
-      <h2>1K+</h2>
-      <p>Happy Customers</p>
-    </div>
-    <div className={styles.statistic}>
-      <h2>80+</h2>
-      <p>Completed projects</p>
-    </div>
-    <div className={styles.statistic}>
-      <h2>95%</h2>
-      <p>Positive reviews</p>
-    </div>
+    {STATISTICS_DATA.map((statistic) => (
+      <div className={styles.statistic} key={statistic.description}>
+        <h2>{statistic.value}</h2>
+        <p>{statistic.description}</p>
+      </div>
+    ))}
   </div>
 );
 
