@@ -64,22 +64,22 @@ const LoginForm: FunctionComponent = () => {
       if (!isObjectRecord(result)) {
         throw new Error('Unexpected body type: LoginForm.tsx');
       }
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: LoginForm.tsx');
+
+      const expectedTypes = {
+        success: 'boolean',
+        userId: 'number',
+        username: 'string',
+        role: 'string',
+      };
+
+      for (const [key, type] of Object.entries(expectedTypes)) {
+        if (typeof result[key] !== type) {
+          throw new Error(
+            `${key} variable not of type ${type}: LoginForm.tsx`
+          );
+        }
       }
 
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: LoginForm.tsx');
-      }
-      if (typeof result.userId !== 'number') {
-        throw new Error('userId variable not type number: LoginForm.tsx');
-      }
-      if (typeof result.username !== 'string') {
-        throw new Error('username variable not type string: LoginForm.tsx');
-      }
-      if (typeof result.role !== 'string') {
-        throw new Error('role variable not type string: LoginForm.tsx');
-      }
       if (result.success) {
         setShowSuccessPopup(true);
         dispatch(AccountActions.logIn({
@@ -94,6 +94,7 @@ const LoginForm: FunctionComponent = () => {
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
+        setShowErrorPopup(true);
       }
     }
   }, [email, password, navigate, dispatch]);
