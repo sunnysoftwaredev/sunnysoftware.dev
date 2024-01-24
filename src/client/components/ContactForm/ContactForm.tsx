@@ -16,7 +16,7 @@ const ContactForm: FunctionComponent = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
-  const handleNameChange = useCallback(
+  const updateContactNameOnChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setContactName(e.target.value);
       setSubmitted(false);
@@ -24,18 +24,18 @@ const ContactForm: FunctionComponent = () => {
     [setContactName],
   );
 
-  const handleEmailChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  const updateEmailOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     setSubmitted(false);
   }, [setEmail],);
 
-  const handleSubjectChange
+  const updateSubjectOnChange
   = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSubject(e.target.value);
     setSubmitted(false);
   }, [setSubject]);
 
-  const handleMessageChange
+  const updateMessageOnChange
   = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     setSubmitted(false);
@@ -115,23 +115,23 @@ const ContactForm: FunctionComponent = () => {
 
       <form className={styles.formContainer}>
         <Input
-          size={InputSize.Large} onChange={handleNameChange}
+          size={InputSize.Large} onChange={updateContactNameOnChange}
           setValue={setContactName} placeholderText="Name"
           value={contactName}
         />
         <Input
-          size={InputSize.Large} onChange={handleEmailChange}
+          size={InputSize.Large} onChange={updateEmailOnChange}
           setValue={setEmail} placeholderText="Email"
           value={email}
         />
 
         <Input
-          size={InputSize.Large} onChange={handleSubjectChange}
+          size={InputSize.Large} onChange={updateSubjectOnChange}
           setValue={setSubject} placeholderText="Subject"
           value={subject}
         />
         <textarea
-          onChange={handleMessageChange} className={styles.message}
+          onChange={updateMessageOnChange} className={styles.message}
           value={message}
           placeholder="Your message here..."
         />
