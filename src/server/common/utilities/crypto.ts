@@ -8,13 +8,13 @@ export const hash = (input: Buffer): Buffer => {
   return result;
 };
 // changed from 256 to 128: salt.toString(hex) returns 512 char
-export const generateSalt
-= async(): Promise<Buffer> => new Promise((resolve, reject) => {
+export const generateSalt = async(): Promise<Buffer> => new Promise((resolve, reject) => {
   crypt.randomBytes(128, (err, buf) => {
-    if (err !== null) {
+    if (err) {
       reject(err);
+    } else {
+      resolve(buf);
     }
-    resolve(buf);
   });
 });
 
