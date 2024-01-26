@@ -2,39 +2,98 @@ import type { FunctionComponent } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import logger from '../../../server/logger';
-import { isObjectRecord, isUsersArray } from '../../../common/utilities/types';
-import type { UserIdNameEmailRoleActive } from '../../../server/database';
-import IndividualUser from '../IndividualUser/IndividualUser';
-import CreateProject from '../CreateProject/CreateProject';
+import { isObjectRecord, isProjectArray, isProjectWithEmployeeIdArray, isUsersArray } from '../../../common/utilities/types';
+import type { UserIdNameEmailRoleActivePhone } from '../../../server/database';
 import Button, { ButtonSize, ButtonVariant } from '../Button/Button';
 import RegistrationForm from '../RegistrationForm/RegistrationForm';
-import { getShowRegistrationForm } from '../../redux/selectors/adminPortal';
+import { getListOfUsers, getShowRegistrationForm } from '../../redux/selectors/adminPortal';
 import { AdminPortalActions } from '../../redux/slices/adminPortal';
 import Pagination from '../Pagination/Pagination';
+import AdminDisplayUsers from '../AdminDisplayUsers/AdminDisplayUsers';
+import useNumberChangeHandler from '../../hooks/useNumberChangeHandler';
+import useIsMobileWidth from '../../hooks/useIsMobileWidth';
 import styles from './ManageUsers.scss';
 
 const ManageUsers: FunctionComponent = () => {
-  const [userList, setUserList] = useState<UserIdNameEmailRoleActive[]>([]);
-  // Below is for buttons sorting users
+  // activeOrTerminated button to sort users
   const [activeOrTerminated, setActiveOrTerminated] = useState(true);
   const showRegistrationForm = useSelector(getShowRegistrationForm);
+  const userList = useSelector(getListOfUsers);
+
   const dispatch = useDispatch();
+  const isMobileWidth = useIsMobileWidth();
+
+  const compareUserObjects = (
+    a: UserIdNameEmailRoleActivePhone,
+    b: UserIdNameEmailRoleActivePhone
+  ): number => {
+    const userA = a.username;
+    const userB = b.username;
+
+    if (userA > userB) {
+      return 1;
+    }
+    if (userA < userB) {
+      return -1;
+    }
+    return 0;
+  };
+
+  const sortedUserList = [...userList].sort(compareUserObjects);
+
+  const toggleActiveOrTerminated = useCallback(() => {
+    setActiveOrTerminated(!activeOrTerminated);
+  }, [activeOrTerminated]);
 
   const toggleRegistrationForm = useCallback(() => {
     dispatch(AdminPortalActions.toggleShowRegistrationForm());
   }, [dispatch]);
 
-  // pagination stuff
+  // pagination
+  const [recordsPerPage, setRecordsPerPage] = useState(5);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [recordsPerPage] = useState(5);
+  const recordOptions = [
+    { label: '5', value: 5 },
+    { label: '10', value: 10 },
+    { label: '25', value: 25 },
+    { label: '100', value: 100 },
+  ];
 
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = userList.slice(indexOfFirstRecord, indexOfLastRecord);
-  const totalPages = Math.ceil(userList.length / recordsPerPage);
+  const handleRecordsPerPageChange = useNumberChangeHandler(setRecordsPerPage);
 
-  // end pagination stuff
+  // active pagination
+  const [currentActivePage, setCurrentActivePage] = useState(1);
+  const activeUserList = sortedUserList.filter(user => user.active);
+
+  const activeLastIndex = currentActivePage * recordsPerPage;
+  const activeFirstIndex = activeLastIndex - recordsPerPage;
+
+  const currentActiveRecords
+  = activeUserList.slice(activeFirstIndex, activeLastIndex);
+
+  const totalActivePages = Math.ceil(activeUserList.length / recordsPerPage);
+
+  const changeActivePage = useCallback((newPage: number): void => {
+    setCurrentActivePage(newPage);
+  }, []);
+
+  // terminated pagination:
+  const [currentTerminatedPage, setCurrentTerminatedPage] = useState(1);
+  const terminatedUserList = sortedUserList.filter(user => !user.active);
+
+  const terminatedLastIndex
+  = currentTerminatedPage * recordsPerPage;
+  const terminatedFirstIndex = terminatedLastIndex - recordsPerPage;
+
+  const currentTerminatedRecords
+  = terminatedUserList.slice(terminatedFirstIndex, terminatedLastIndex);
+
+  const totalTerminatedPages
+  = Math.ceil(terminatedUserList.length / recordsPerPage);
+
+  const changeTerminatedPage = useCallback((newPage: number): void => {
+    setCurrentTerminatedPage(newPage);
+  }, []);
 
   const getUserList = useCallback(async() => {
     try {
@@ -53,71 +112,107 @@ const ManageUsers: FunctionComponent = () => {
       }
       const { usersArray } = result;
       if (isUsersArray(usersArray)) {
-        setUserList(usersArray);
+        dispatch(AdminPortalActions.populateUserList({ usersArray }));
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
       }
     }
-  }, []);
+  }, [dispatch]);
+
+  const getProjectsWithEmployee = useCallback(async() => {
+    try {
+      const response = await fetch('api/projects/junction', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin',
+      });
+
+      const result: unknown = await response.json();
+
+      if (!isObjectRecord(result)) {
+        throw new Error('Unexpected body type: ManageProjects.tsx');
+      }
+
+      const { projectsWithId } = result;
+
+      if (isProjectWithEmployeeIdArray(projectsWithId)) {
+        dispatch(AdminPortalActions.populateProjectList({ projectsWithId }));
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        logger.error(err.message);
+      }
+    }
+  }, [dispatch]);
+
+  const getAllProjects = useCallback(async() => {
+    try {
+      const response = await fetch('api/projects/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin',
+      });
+
+      const result: unknown = await response.json();
+
+      if (!isObjectRecord(result)) {
+        throw new Error('Unexpected body type: ManageProjects.tsx');
+      }
+
+      const { fullProjectList } = result;
+
+      if (isProjectArray(fullProjectList)) {
+        dispatch(AdminPortalActions.populateProjectsArray({ fullProjectList }));
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        logger.error(err.message);
+      }
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     getUserList().catch((err) => {
       logger.error(err);
     });
-  }, [getUserList, showRegistrationForm]);
+    getProjectsWithEmployee().catch((err) => {
+      logger.error(err);
+    });
+    getAllProjects().catch((err) => {
+      logger.error(err);
+    });
+  }, [getUserList,
+    showRegistrationForm,
+    getProjectsWithEmployee,
+    getAllProjects]);
 
-  const displayUsers = (users: UserIdNameEmailRoleActive[]):
-  React.ReactElement[] => {
-    if (typeof users === 'undefined') {
-      return [<div key={0} />];
-    }
-    const userElements: React.ReactElement[] = [];
-
-    for (const user of users) {
-      const { username } = user;
-      const { email } = user;
-      const { id } = user;
-      const { role } = user;
-      const { active } = user;
-
-      userElements.push((
-        <div
-          key={`user-${id}`}
-        >
-          <IndividualUser
-            username={username} email={email}
-            role={role}
-            id={id}
-            active={active}
-          />
-        </div>));
-    }
-    return userElements;
-  };
   return (
     <div className={styles.manageUsersContainer}>
       {showRegistrationForm
        && <RegistrationForm />}
       <div className={styles.navigationBar}>
         <div className={styles.tabMenu}>
-          {/* TODO: change buttons to sort user list  */}
           {activeOrTerminated
             ? (
               <Button
-                to="./admin-portal-employees"
                 size={ButtonSize.Medium}
                 variant={ButtonVariant.Primary}
+                onClick={toggleActiveOrTerminated}
               >
                 Active
               </Button>
             )
             : (
               <Button
-                to="./admin-portal-employees"
                 size={ButtonSize.Medium}
                 variant={ButtonVariant.Outlined}
+                onClick={toggleActiveOrTerminated}
               >
                 Active
               </Button>
@@ -125,18 +220,18 @@ const ManageUsers: FunctionComponent = () => {
           {activeOrTerminated
             ? (
               <Button
-                to="./admin-portal-projects"
                 size={ButtonSize.Medium}
                 variant={ButtonVariant.Outlined}
+                onClick={toggleActiveOrTerminated}
               >
                 Terminated
               </Button>
             )
             : (
               <Button
-                to="./admin-portal-projects"
                 size={ButtonSize.Medium}
                 variant={ButtonVariant.Primary}
+                onClick={toggleActiveOrTerminated}
               >
                 Terminated
               </Button>
@@ -151,29 +246,58 @@ const ManageUsers: FunctionComponent = () => {
           Add employee
         </Button>
       </div>
-      <h2>
-        Total Users:
-        {' '}
-        {userList.length}
-      </h2>
-      <div className={styles.columnNames}>
-        <p>Name</p>
-        <p>Email</p>
-        <p>Phone number</p>
-        <p>Project name(s)</p>
-        <p className={styles.empty}>EMPTY</p>
-        <p className={styles.empty}>EMPTY</p>
-        {/* NB: p's empty to line up with IndividualUser grid */}
+      <div className={styles.recordsPerPageDropdown}>
+        <label >Records per page:</label>
+        <select value={recordsPerPage} onChange={handleRecordsPerPageChange}>
+          {recordOptions.map(option => (
+            <option
+              key={option.value}
+              value={option.value}
+            >
+              {option.label}
+            </option>
+          ))}
+        </select>
       </div>
-      <div className={styles.usersList}>
-        {displayUsers(userList)}
+      {isMobileWidth
+        ? (
+          <div className={styles.mobileColumnNames}>
+            <p>Name</p>
+            <p>Email</p>
+          </div>
+        )
+        : (
+          <div className={styles.columnNames}>
+            <p>Name</p>
+            <p>Email</p>
+            <p>Phone number</p>
+            {activeOrTerminated ? (<p>Project name(s)</p>) : (<p>Note</p>)}
+            <p className={styles.empty}>EMPTY</p>
+            <p className={styles.actionsTitle}>Actions</p>
+            {/* NB: p's empty to line up with IndividualUser grid */}
+          </div>
+        )}
+      <div>
+        {activeOrTerminated
+          ? (<AdminDisplayUsers userListSlice={currentActiveRecords} />)
+          : (<AdminDisplayUsers userListSlice={currentTerminatedRecords} />)}
       </div>
-      {/* <CreateProject userList={userList} /> */}
-      <Pagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        setCurrentPage={() => 3}
-      />
+      {activeOrTerminated
+        ? (
+          <Pagination
+            totalPages={totalActivePages}
+            currentPage={currentActivePage}
+            changePage={changeActivePage}
+          />
+        )
+        : (
+          <Pagination
+            totalPages={totalTerminatedPages}
+            currentPage={currentTerminatedPage}
+            changePage={changeTerminatedPage}
+          />
+        )}
+
     </div>
 
   );

@@ -1,5 +1,6 @@
 import type { QueryResult } from 'pg';
 import { Client } from 'pg';
+import type { Project, ProjectWithEmployeeId } from '../common/utilities/types';
 import { isIdArray, isObjectRecord } from '../common/utilities/types';
 import config from './config';
 import logger from './logger';
@@ -40,21 +41,24 @@ type UserWithId = {
 };
 export type { UserWithId };
 
-export type UserIdNameEmailRoleActive = {
+export type UserIdNameEmailRoleActivePhone = {
   id: number;
   username: string;
   email: string;
   role: string;
   active: boolean;
+  phone?: string;
+  reason?: string;
 };
 
 export const getAllUsers = async():
-Promise<UserIdNameEmailRoleActive[]> => {
-  const result: QueryResult<UserIdNameEmailRoleActive> = await client.query(
-    `SELECT id, username, email, role, active
+Promise<UserIdNameEmailRoleActivePhone[]> => {
+  const result: QueryResult<UserIdNameEmailRoleActivePhone>
+   = await client.query(
+     `SELECT id, username, email, role, active, phone, reason_for_deactivation AS reason
     FROM users`,
-    [],
-  );
+     [],
+   );
 
   const { rows } = result;
   if (rows.length === 0) {
@@ -131,24 +135,34 @@ export const insertUser = async(
 };
 
 export const updateUser = async(
-  id: number,
-  username: string,
-  email: string, role: string,
+  id: number, username: string,
+  email: string, phone: string,
+  role: string,
 ):
 Promise<void> => {
   await client.query(
     `UPDATE users
-  SET username=$2, email=$3, role=$4
+  SET username=$2, email=$3, phone=$4, role=$5
   WHERE id=$1`,
-    [id, username, email, role]
+    [id, username, email, phone, role]
   );
 };
 
-export const deactivateUser = async(id: number):
+export const deactivateUser = async(id: number, reason: string):
 Promise<void> => {
   await client.query(
     `UPDATE users
-    SET active=false
+    SET active=false, reason_for_deactivation=$2
+    WHERE id=$1`,
+    [id, reason]
+  );
+};
+
+export const activateUser = async(id: number):
+Promise<void> => {
+  await client.query(
+    `UPDATE users
+    SET active=true
     WHERE id=$1`,
     [id]
   );
@@ -523,16 +537,47 @@ export type ClientProject = {
   email: string;
 };
 
-export const getAllClientProjects = async():
-Promise<ClientProject[]> => {
-  const result: QueryResult<ClientProject> = await client.query(`
+// Function to get projects with clients attached-may not need
+// export const getAllClientProjects = async():
+// Promise<ClientProject[]> => {
+//   const result: QueryResult<ClientProject> = await client.query(`
+//   SELECT
+//     client_projects.id, client_projects.client_id AS clientId,
+//   client_projects.title, client_projects.description, client_projects.active,
+//     users.username, users.email
+//   FROM client_projects
+//   INNER JOIN users
+//     ON client_projects.client_id=users.id`);
+
+//   const { rows } = result;
+//   return rows;
+// };
+
+export const getAllProjects = async():
+Promise<Project[]> => {
+  const result: QueryResult<Project> = await client.query(`
+  SELECT id, client_id AS "clientId", title, description, active
+  FROM client_projects`);
+
+  const { rows } = result;
+  return rows;
+};
+
+export const getProjectsWithEmployeeId = async():
+Promise<ProjectWithEmployeeId[]> => {
+  const result: QueryResult<ProjectWithEmployeeId> = await client.query(`
   SELECT
-    client_projects.id, client_projects.client_id AS clientId,
-    client_projects.title, client_projects.description, client_projects.active,
-    users.username, users.email
-  FROM client_projects
-  INNER JOIN users
-    ON client_projects.client_id=users.id`);
+    p.id,
+    p.client_id "clientId",
+    p.title,
+    p.description,
+    p.active,
+    u.id "userId"
+FROM client_projects p
+INNER JOIN
+  users_projects_junction upj ON p.id = upj.project_id
+INNER JOIN
+  users u ON u.id = upj.user_id`);
 
   const { rows } = result;
   return rows;
@@ -625,4 +670,31 @@ Promise<number> => {
 
   return userId;
 };
+
+export const updateProjectAssignments
+ = async(userId: number, projectIds: number[]):
+ Promise<undefined> => {
+   if (projectIds.length === 0) {
+     await client.query(`
+      DELETE FROM users_projects_junction
+      WHERE user_id = $1;
+    `, [userId]);
+   } else {
+     await client.query(`
+    DELETE FROM users_projects_junction
+     WHERE user_id = $1
+     AND project_id NOT IN (${projectIds.map((value, index) => `$${index + 2}`).join(', ')});
+     `, [userId, ...projectIds]);
+   }
+
+   if (projectIds.length !== 0) {
+     await client.query(`
+    INSERT INTO users_projects_junction
+    (user_id, project_id)
+    VALUES
+    ${projectIds.map((value, index) => `($1, $${index + 2})`).join(', ')}
+    ON CONFLICT (user_id, project_id) DO NOTHING
+  `, [userId, ...projectIds]);
+   }
+ };
 

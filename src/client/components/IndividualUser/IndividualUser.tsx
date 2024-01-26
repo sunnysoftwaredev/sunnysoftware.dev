@@ -1,67 +1,79 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useState } from 'react';
-import type { UserIdNameEmailRoleActive } from '../../../server/database';
+import { useSelector } from 'react-redux';
+import type { UserIdNameEmailRoleActivePhone } from '../../../server/database';
 import EditUser from '../EditUser/EditUser';
-import { isObjectRecord } from '../../../common/utilities/types';
-import logger from '../../../server/logger';
-import RegistrationForm from '../RegistrationForm/RegistrationForm';
+import type { ProjectWithEmployeeId } from '../../../common/utilities/types';
 import PopupMessage, { PopupType } from '../PopupMessage/PopupMessage';
+import { getProjectsWithId } from '../../redux/selectors/adminPortal';
+import AssignmentForm from '../AssignmentForm/AssignmentForm';
+import DeactivateUser from '../DeactivateUser/DeactivateUser';
+import ActivateUser from '../ActivateUser/ActivateUser';
 import styles from './IndividualUser.scss';
 
-const IndividualUser: FunctionComponent<UserIdNameEmailRoleActive>
+const IndividualUser: FunctionComponent<UserIdNameEmailRoleActivePhone>
 = (props) => {
-  const { username, email, role, id, active } = props;
+  const { username, email, role, id, active, phone, reason } = props;
 
-  const [registering, setRegistering] = useState(false);
   const [userCreated, setUserCreated] = useState(false);
 
+  const [assigning, setAssigning] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [deactivated, setDeactivated] = useState(false);
+  const [deactivating, setDeactivating] = useState(false);
+  const [activating, setActivating] = useState(false);
 
-  const handleEdit = useCallback(() => {
-    setEditing(!editing);
-  }, [editing]);
+  const compareObjects = (
+    a: ProjectWithEmployeeId,
+    b: ProjectWithEmployeeId
+  ): number => {
+    const projectA = a.title;
+    const projectB = b.title;
+
+    let comparison = 0;
+    if (projectA > projectB) {
+      comparison = 1;
+    } else if (projectA < projectB) {
+      comparison = -1;
+    }
+    return comparison;
+  };
+
+  const projectsWithUserId = useSelector(getProjectsWithId);
+  const activeFilterList
+  = projectsWithUserId.filter(project => project.active);
+  const unsorterUserList
+  = activeFilterList.filter(project => project.userId === id);
+  const userProjectList = unsorterUserList.sort(compareObjects);
 
   const closeUserCreatedPopup = useCallback(() => {
     setUserCreated(!userCreated);
   }, [userCreated]);
 
-  const handleDeactivate = useCallback(async() => {
-    try {
-      const response = await fetch('api/users/deactivate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id }),
-        credentials: 'same-origin',
-      });
+  const toggleAssigning = useCallback(() => {
+    setAssigning(!assigning);
+  }, [assigning]);
 
-      const result: unknown = await response.json();
+  const toggleEditing = useCallback(() => {
+    setEditing(!editing);
+  }, [editing]);
 
-      if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: IndividualUser.tsx');
-      }
-      if (typeof result.success !== 'boolean') {
-        throw new Error('IndividualUser.tsx error: result.success not boolean');
-      }
-      if (result.success) {
-        setDeactivated(true);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      } else {
-        logger.info('unsuccessful database update in IndividualUser.tsx');
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        logger.error(err.message);
-      }
+  const toggleDeactivating = useCallback(() => {
+    setDeactivating(!deactivating);
+  }, [deactivating]);
+
+  const toggleActivating = useCallback(() => {
+    setActivating(!activating);
+  }, [activating]);
+
+  const displayUserProjects = (projects: ProjectWithEmployeeId[]):
+  React.JSX.Element[] => {
+    if (typeof projects === 'undefined') {
+      return [<div key={0} />];
     }
-  }, [id]);
+    return projects.map(project => <p key={project.id}>{project.title}</p>);
+  };
 
   return (
-
     <div
       key={`user-${id}`}
     >
@@ -73,18 +85,26 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRoleActive>
           {`${email}`}
         </p>
         <p>
-          PHONE NUMBER HERE
+          {`${phone ?? 'None provided'}`}
         </p>
-        <p>
-          {`${role}`}
-        </p>
-        <p className={styles.empty} >EMPTY</p>
-        <div className={styles.buttons}>
-          {/* TODO: Assignment button functionality */}
-          <button type="button" onClick={}>Assignment</button>
-          <button type="button" onClick={handleEdit}>Edit</button>
-          <button type="button" onClick={handleDeactivate}>Deactivate</button>
+        <div>
+          {active ? (displayUserProjects(userProjectList)) : (reason ?? 'None provided')}
         </div>
+        <p className={styles.empty} >EMPTY</p>
+        {/* p is empty to align spacing with MangeUsers.tsx headings */}
+        {active
+          ? (
+            <div className={styles.buttons}>
+              <button type="button" onClick={toggleAssigning}>Assignment</button>
+              <button type="button" onClick={toggleEditing}>Edit</button>
+              <button type="button" onClick={toggleDeactivating}>Deactivate</button>
+            </div>
+          )
+          : (
+            <div className={styles.activateButton}>
+              <button type="button" onClick={toggleActivating}>Activate</button>
+            </div>
+          )}
       </div>
 
       {userCreated && (
@@ -94,8 +114,13 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRoleActive>
           onClick={closeUserCreatedPopup}
         />
       )}
-      {registering && (
-        <RegistrationForm />
+      {assigning && (
+        <AssignmentForm
+          username={username}
+          id={id}
+          toggleAssigning={toggleAssigning}
+          userProjectList={userProjectList}
+        />
       )}
 
       {editing && (
@@ -105,9 +130,24 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRoleActive>
           role={role}
           id={id}
           active={active}
+          phone={phone}
+          toggleEditing={toggleEditing}
         />
       )}
-      {deactivated && <h3>User Deactivated!</h3>}
+      {deactivating
+     && (
+       <DeactivateUser
+         id={id}
+         toggleDeactivating={toggleDeactivating}
+       />
+     )}
+      {activating
+     && (
+       <ActivateUser
+         id={id}
+         toggleActivating={toggleActivating}
+       />
+     )}
     </div>
   );
 };

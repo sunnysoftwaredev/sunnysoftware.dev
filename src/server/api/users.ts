@@ -1,6 +1,6 @@
 import { Router as createRouter } from 'express';
 import { Mutex } from 'async-mutex';
-import { deactivateUser, getAllUsers, getIDWithToken, updateUser, updateUserPassword } from '../database';
+import { activateUser, deactivateUser, getAllUsers, getIDWithToken, updateUser, updateUserPassword } from '../database';
 import { isObjectRecord } from '../../common/utilities/types';
 import { generateSalt, saltAndHash } from '../common/utilities/crypto';
 
@@ -43,27 +43,62 @@ router.post('/', (req, res) => {
     if (typeof authenticationToken !== 'string') {
       throw new Error('api/users: userToken not type string');
     }
-    const { id } = req.body;
-    const { newUsername } = req.body;
-    const { newEmail } = req.body;
-    const { newRole } = req.body;
+    const { id, newUsername, newEmail, newPhone, newRole } = req.body;
 
     if (typeof id !== 'number') {
-      throw new Error('api/users.post: unixStart is not number');
+      throw new Error('api/users.post: id is not number');
     }
     if (typeof newUsername !== 'string') {
-      throw new Error('api/users.post: unixStart is not string');
+      throw new Error('api/users.post: newUsername is not string');
     }
     if (typeof newEmail !== 'string') {
-      throw new Error('api/users.post: unixEnd is not string');
+      throw new Error('api/users.post: newEmail is not string');
+    }
+    if (typeof newPhone !== 'string') {
+      throw new Error('api/users.post: newPhone is not string');
     }
     if (typeof newRole !== 'string') {
-      throw new Error('api/users.post: unixEnd is not string');
+      throw new Error('api/users.post: newRole is not string');
     }
 
     const release = await mutex.acquire();
     try {
-      await updateUser(id, newUsername, newEmail, newRole);
+      await updateUser(id, newUsername, newEmail, newPhone, newRole);
+      res.json({
+        success: true,
+      });
+    } finally {
+      release();
+    }
+  })().catch((e: Error) => {
+    res.json({
+      success: false,
+      error: e.message,
+    });
+  });
+});
+
+router.post('/activate', (req, res) => {
+  (async(): Promise<void> => {
+    if (!isObjectRecord(req.body)) {
+      throw new Error('api/users/activate: req.body is not object');
+    }
+    if (!isObjectRecord(req.cookies)) {
+      throw new Error('api/users/activate: req.cookies is not object');
+    }
+    const { authenticationToken } = req.cookies;
+    if (typeof authenticationToken !== 'string') {
+      throw new Error('api/user/sactivate: userToken not type string');
+    }
+    const { id } = req.body;
+
+    if (typeof id !== 'number') {
+      throw new Error('api/users/activate.post: id is not number');
+    }
+
+    const release = await mutex.acquire();
+    try {
+      await activateUser(id);
       res.json({
         success: true,
 
@@ -78,29 +113,30 @@ router.post('/', (req, res) => {
     });
   });
 });
-
 router.post('/deactivate', (req, res) => {
   (async(): Promise<void> => {
     if (!isObjectRecord(req.body)) {
-      throw new Error('api/usersdeactivate: req.body is not object');
+      throw new Error('api/users/deactivate: req.body is not object');
     }
     if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/usersdeactivate: req.cookies is not object');
+      throw new Error('api/users/deactivate: req.cookies is not object');
     }
-
     const { authenticationToken } = req.cookies;
     if (typeof authenticationToken !== 'string') {
-      throw new Error('api/usersdeactivate: userToken not type string');
+      throw new Error('api/users/deactivate: userToken not type string');
     }
-    const { id } = req.body;
+    const { id, reason } = req.body;
 
     if (typeof id !== 'number') {
       throw new Error('api/users/deactivate.post: id is not number');
     }
+    if (typeof reason !== 'string') {
+      throw new Error('api/users/deactivate.post: reason is not string');
+    }
 
     const release = await mutex.acquire();
     try {
-      await deactivateUser(id);
+      await deactivateUser(id, reason);
       res.json({
         success: true,
 

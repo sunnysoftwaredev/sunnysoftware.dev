@@ -9,7 +9,6 @@
   width: 100vw;
   height: 100vh;
   background: (8, 8, 8, 0.2);
-
 }
 
 .backgroundButton {
@@ -27,7 +26,11 @@
 .top {
   display: flex;
   justify-content: space-between;
-  margin: 2rem;
+  margin: 1.5rem;
+}
+
+.top button {
+  font-size: 2rem;
 }
 
 .form {
@@ -44,6 +47,9 @@
   border-radius: 20px;
   background: #FFF;
   padding: 3rem;
+  @include main.mobile{
+    padding: 5rem;
+  }
 }
 
 .roleRadio {

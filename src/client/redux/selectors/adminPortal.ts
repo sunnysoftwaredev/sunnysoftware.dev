@@ -10,3 +10,18 @@ export const getShowRegistrationForm = createSelector(
   getAdminPortal,
   adminPortal => adminPortal.showRegistrationForm,
 );
+
+export const getListOfUsers = createSelector(
+  getAdminPortal,
+  adminPortal => adminPortal.userList,
+);
+
+export const getProjectsWithId = createSelector(
+  getAdminPortal,
+  adminPortal => adminPortal.projectsWithId,
+);
+
+export const getAllProjects = createSelector(
+  getAdminPortal,
+  adminPortal => adminPortal.projects,
+);

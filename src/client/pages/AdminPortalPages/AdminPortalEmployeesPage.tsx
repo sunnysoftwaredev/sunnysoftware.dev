@@ -1,13 +1,8 @@
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
-import WorkCalendar from '../../components/WorkCalendar/WorkCalendar';
-import EmployeeWorkCalendars from '../../components/EmployeeWorkCalendars/EmployeeWorkCalendars';
-import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
 import ManageUsers from '../../components/ManageUsers/ManageUsers';
-import ResetPassword from '../../components/ResetPassword/ResetPassword';
 import PortalNavBar from '../../components/AdminPortalNavBar/AdminPortalNavBar';
-import styles from './AdminPortalEmployeesPage.scss';
 
 const AdminPortalEmployeesPage: FunctionComponent = () => (
   <div>
@@ -22,8 +17,6 @@ const AdminPortalEmployeesPage: FunctionComponent = () => (
     </Helmet>
     <PortalNavBar />
     <ManageUsers />
-    {/* <ResetPassword /> */}
-    {/* <EmployeeWorkCalendars /> */}
   </div>
 );
 

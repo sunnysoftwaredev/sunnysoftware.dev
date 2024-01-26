@@ -116,9 +116,8 @@ const RegistrationForm: FunctionComponent = () => {
 
   return (
     <div className={styles.container}>
-      <button
+      <div
         className={styles.backgroundButton}
-        type="button"
         onClick={toggleRegistrationForm}
       />
 

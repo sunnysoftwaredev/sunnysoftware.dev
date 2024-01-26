@@ -1,64 +1,69 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback } from 'react';
+import classNames from 'classnames';
+import ChevronLeftIcon from '../../static/svgs/ChevronLeftIcon';
+import ChevronRightIcon from '../../static/svgs/ChevronRightIcon';
 import styles from './Pagination.scss';
 
 type PaginationProps = {
   totalPages: number;
   currentPage: number;
-  setCurrentPage: (a: number) => number;
+  changePage: (a: number) => void;
 };
 
 const Pagination: FunctionComponent<PaginationProps>
-= ({ totalPages, currentPage, setCurrentPage }) => {
-  const pageNumbers = [...Array(totalPages + 1).keys()].slice(1);
+= ({ totalPages, currentPage, changePage }) => {
+  const pageNumbersArray = [...Array(totalPages + 1).keys()].slice(1);
 
   const goToNextPage = useCallback(() => {
     if (currentPage !== totalPages) {
-      setCurrentPage(currentPage + 1);
+      changePage(currentPage + 1);
     }
-  }, [currentPage, setCurrentPage, totalPages]);
+  }, [currentPage, changePage, totalPages]);
+
   const goToPrevPage = useCallback(() => {
     if (currentPage !== 1) {
-      setCurrentPage(currentPage - 1);
+      changePage(currentPage - 1);
     }
-  }, [currentPage, setCurrentPage]);
+  }, [currentPage, changePage]);
+
+  const setPage = (pageNumber: number):
+  () => void => (): void => {
+    changePage(pageNumber);
+  };
   return (
     <div className={styles.container}>
-      <ul className="pagination justify-content-center">
-        <li className="page-item">
+      <ul className={styles.list}>
+        <li className={styles.pageLink}>
           <a
-            className="page-link"
             onClick={goToPrevPage}
             href="#"
           >
-
-            Previous
+            <ChevronLeftIcon />
           </a>
         </li>
-        {pageNumbers.map(pgNumber => (
+        {pageNumbersArray.map(pgNumber => (
           <li
             key={pgNumber}
-            className={`page-item ${currentPage == pgNumber ? 'active' : ''} `}
+            className={classNames({
+              [styles.currentPageLink]: currentPage === pgNumber,
+              [styles.pageLink]: !(currentPage === pgNumber),
+            })}
           >
-
             <a
-              onClick={() => setCurrentPage(pgNumber)}
-              className="page-link"
+              onClick={setPage(pgNumber)}
               href="#"
             >
-
               {pgNumber}
             </a>
           </li>
         ))}
-        <li className="page-item">
+        <li className={styles.pageLink}>
           <a
-            className="page-link"
             onClick={goToNextPage}
             href="#"
           >
-
-            Next
+            <ChevronRightIcon />
           </a>
         </li>
       </ul>

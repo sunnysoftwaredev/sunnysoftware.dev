@@ -1,4 +1,4 @@
-import type { EmployeeTimesheet, IdObject, UserIdNameEmailRoleActive, ClientProject, TimeObjectWithProject } from '../../server/database';
+import type { EmployeeTimesheet, IdObject, UserIdNameEmailRoleActivePhone, ClientProject, TimeObjectWithProject } from '../../server/database';
 
 export const isObjectRecord
 = (value: unknown): value is Record<string, unknown> => (
@@ -45,8 +45,9 @@ export const isEmployeeTimesheetArray
   && value.every(isEmployeeTimesheet)
  );
 
+// add in 'reason' column?
 export const isUsersArray
- = (value: unknown): value is UserIdNameEmailRoleActive[] => (
+ = (value: unknown): value is UserIdNameEmailRoleActivePhone[] => (
    Array.isArray(value)
    && value[0] !== null
    && value[0] !== undefined
@@ -55,8 +56,35 @@ export const isUsersArray
     && 'email' in value[0]
     && 'role' in value[0]
     && 'active' in value[0]
+    && 'phone' in value[0]
  );
 
+export type Project = {
+  id: number;
+  clientId: number;
+  title: string;
+  description: string;
+  active: boolean;
+};
+
+const isProject
+ = (currentValue: Record<string, unknown>): boolean => (
+   isObjectRecord(currentValue)
+  && 'id' in currentValue
+  && 'clientId' in currentValue
+  && 'title' in currentValue
+  && 'description' in currentValue
+  && 'active' in currentValue
+ );
+
+export const isProjectArray
+ = (value: unknown): value is Project[] => (
+   Array.isArray(value)
+  && value.every(isProject)
+ );
+
+// below is currently used in ManageProjects.tsx and
+// WorkCalendar.tsx: may no longer be relevant/needed
 const isClientProject
  = (currentValue: Record<string, unknown>): boolean => (
    isObjectRecord(currentValue)
@@ -68,8 +96,36 @@ const isClientProject
   && 'email' in currentValue
  );
 
+// see above
 export const isClientProjectArray
  = (value: unknown): value is ClientProject[] => (
    Array.isArray(value)
   && value.every(isClientProject)
  );
+
+export type ProjectWithEmployeeId = {
+  id: number;
+  clientId: number;
+  title: string;
+  description: string;
+  active: boolean;
+  userId: number;
+};
+
+const isProjectWithEmployeeId
+ = (currentValue: Record<string, unknown>): boolean => (
+   isObjectRecord(currentValue)
+  && 'id' in currentValue
+  && 'clientId' in currentValue
+  && 'title' in currentValue
+  && 'description' in currentValue
+  && 'active' in currentValue
+  && 'userId' in currentValue
+ );
+
+export const isProjectWithEmployeeIdArray
+ = (value: unknown): value is ProjectWithEmployeeId[] => (
+   Array.isArray(value)
+  && value.every(isProjectWithEmployeeId)
+ );
+

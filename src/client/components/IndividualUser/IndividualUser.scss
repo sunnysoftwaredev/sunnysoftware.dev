@@ -11,6 +11,28 @@
   background-color: #FFF;
   border-radius: 10px;
   margin: 1rem 0;
+  @include main.mobile {
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    p:nth-child(1),
+    p:nth-child(2) {
+      grid-row: 1;
+    }
+    p:nth-child(3) {
+      grid-row: 2;
+    }
+    div:nth-child(4)
+    {
+      grid-row: 3;
+    }
+    div:nth-child(6),p:nth-child(5) {
+      grid-row: 4;
+    }
+  }
 }
 
 .empty {
@@ -19,6 +41,14 @@
 
 .buttons {
   display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: main.$primary-color-60;
+}
+
+.activateButton {
+  display: flex;
+  justify-content: flex-end;
   gap: 1rem;
   color: main.$primary-color-60;
 }

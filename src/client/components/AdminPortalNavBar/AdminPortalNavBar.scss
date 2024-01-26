@@ -8,7 +8,7 @@ $temporaryBacking: gray;
   box-sizing: border-box;
 }
 
-nav {
+.container {
 display: flex;
 width: 80%;
 position: absolute;
@@ -26,6 +26,10 @@ box-shadow: 0px 13px 14px 0px rgba(0, 0, 0, 0.05);
 backdrop-filter: blur(3.5px);
 gap: 2rem;
 z-index: 2;
+@include main.mobile{
+  width: 95%;
+  margin: auto;
+}
 }
 
 .leftMenu {
@@ -68,6 +72,7 @@ z-index: 2;
 	outline: inherit;
   display: flex;
   gap: 1rem;
+  align-items: center;
 }
 
 .profileMenuButton p {
@@ -83,11 +88,6 @@ z-index: 2;
   align-items: center;
 }
 
-// .profileIcon :first-child{
-//   position: relative;
-//   z-index: 0;
-// }
-
 .profileIcon :last-child{
   position: absolute;
   z-index: -1;
@@ -95,16 +95,6 @@ z-index: 2;
   top: 0;
   right: 0;
   bottom: 0;
-}
-
-
-
-.menuArrowPointDown {
-  rotate: (90deg);
-}
-
-.menuArrowPointUp {
-  rotate: (270deg);
 }
 
 .rightMenuLinks {
@@ -125,6 +115,59 @@ z-index: 2;
       text-decoration: underline;
     }
   }
+}
+
+.hamburgerMenuLinks {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  padding: 1rem 8rem 1rem 1rem;
+  gap: 1rem;
+  border-radius: 8px;
+  top: 125%;
+  right: 20%;
+  background: #FFF;
+  box-shadow: 0px 14px 14px 0px rgba(0, 0, 0, 0.15);
+  & a {
+    text-decoration: none;
+    color: black;
+    & :hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.hamburger {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: space-around;
+  flex-flow: column nowrap;
+  z-index: 1;
+  cursor: pointer;
+  @include main.desktop {
+    display: none;
+  }
+}
+
+.burger {
+  width: 2rem;
+  height: 0.25rem;
+  border-radius: 10px;
+  background-color: black;
+  transform-origin: 1px;
+  transition: all 0.3s linear;
+}
+.burgerOne {
+  transform: rotate(45deg)
+}
+
+.burgerTwo {
+  opacity: 0;
+}
+
+.burgerThree {
+  transform: rotate(-45deg)
 }
 
 .hidden {

@@ -9,6 +9,8 @@ import ProfileIcon from '../../static/svgs/ProfileIcon';
 import ProfileIconBackgroundElipse from '../../static/svgs/ProfileIconBackgroundElipse';
 import Button, { ButtonSize, ButtonVariant } from '../Button/Button';
 import { getLoggedIn } from '../../redux/selectors/account';
+import ChevronUpIcon from '../../static/svgs/ChevronUpIcon';
+import ChevronDownIcon from '../../static/svgs/ChevronDownIcon';
 import styles from './AdminPortalNavBar.scss';
 
 const AdminPortalNavBar: FunctionComponent = () => {
@@ -18,11 +20,13 @@ const AdminPortalNavBar: FunctionComponent = () => {
   const [topButtonSelection, setTopButtonSelection] = useState(true);
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hamburgerOpen, setHamburgerOpen] = useState(false);
 
   // close mobile menu when resize to desktop
   useEffect(() => {
     if (!isMobileWidth) {
       setMenuOpen(false);
+      setHamburgerOpen(false);
     }
     const currentUrl = window.location.pathname;
     if (currentUrl === '/admin-portal-employee') {
@@ -35,6 +39,10 @@ const AdminPortalNavBar: FunctionComponent = () => {
   const toggleMenu = useCallback(() => {
     setMenuOpen(!menuOpen);
   }, [menuOpen]);
+
+  const toggleHamburger = useCallback(() => {
+    setHamburgerOpen(!hamburgerOpen);
+  }, [hamburgerOpen]);
 
   const handleSubmit = useCallback(async(): Promise<void> => {
     if (loggedIn) {
@@ -54,7 +62,7 @@ const AdminPortalNavBar: FunctionComponent = () => {
   }, [navigate, loggedIn]);
 
   return (
-    <nav>
+    <nav className={styles.container}>
       <div className={styles.leftMenu}>
         <a href="/">
           <img className={styles.logo} src={Logo} alt="Sunny Software Logo" />
@@ -101,38 +109,69 @@ const AdminPortalNavBar: FunctionComponent = () => {
 
         </div>
       </div>
-      <div className={styles.rightMenu}>
-        <button
-          className={styles.profileMenuButton}
-          type="button"
-          onClick={toggleMenu}
-        >
-          <div className={styles.profileIcon}>
-            <ProfileIcon />
-            <ProfileIconBackgroundElipse />
+      {isMobileWidth
+        ? (
+          <div className={styles.hamburger} onClick={toggleHamburger}>
+            <div className={classNames(
+              styles.burger,
+              { [styles.burgerOne]: hamburgerOpen }
+            )}
+            />
+            <div className={classNames(
+              styles.burger,
+              { [styles.burgerTwo]: hamburgerOpen }
+            )}
+            />
+            <div className={classNames(
+              styles.burger,
+              { [styles.burgerThree]: hamburgerOpen }
+            )}
+            />
+            <div className={classNames(styles.hamburgerMenuLinks, {
+              [styles.hidden]: !hamburgerOpen,
+            })}
+            >
+              <a href="/settings">
+                <p>Settings</p>
+              </a>
+              <a href="" onClick={handleSubmit}>
+                <p>Log out</p>
+              </a>
+            </div>
           </div>
-          <p className={classNames({
-            [styles.menuArrowPointDown]: !menuOpen,
-            [styles.menuArrowPointUp]: menuOpen,
-          })}
-          >
-            {'>'}
 
-          </p>
-        </button>
-        <div className={classNames(styles.rightMenuLinks, {
-          [styles.hidden]: !menuOpen,
-        })}
-        >
-          <a href="/settings">
-            <p>Settings</p>
-          </a>
-          <a href="" onClick={handleSubmit}>
-            <p>Log out</p>
-          </a>
-        </div>
-
-      </div>
+        )
+        : (
+          <div className={styles.rightMenu}>
+            <button
+              className={styles.profileMenuButton}
+              type="button"
+              onClick={toggleMenu}
+            >
+              <div className={styles.profileIcon}>
+                <ProfileIcon />
+                <ProfileIconBackgroundElipse />
+              </div>
+              <div
+                className={styles.chevron}
+                onClick={toggleMenu}
+              >
+                {menuOpen ? (<ChevronUpIcon />) : (<ChevronDownIcon />)}
+              </div>
+            </button>
+            <div className={classNames(styles.rightMenuLinks, {
+              [styles.hidden]: !menuOpen,
+            })}
+            >
+              <a href="/settings">
+                <p>Settings</p>
+              </a>
+              <a href="" onClick={handleSubmit}>
+                <p>Log out</p>
+              </a>
+            </div>
+          </div>
+        )}
     </nav>
   );
 };
