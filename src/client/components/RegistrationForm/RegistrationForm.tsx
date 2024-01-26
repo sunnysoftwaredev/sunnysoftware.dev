@@ -13,43 +13,37 @@ const RegistrationForm: FunctionComponent = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
-  const handleUsernameChange
-  = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setUsername(e.target.value);
-      setSubmitted(false);
-    },
-    [setUsername],
-  );
+  const handleUsernameChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+    setSubmitted(false);
+  }, []);
 
-  const handleEmailChange
-  = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setEmail(e.target.value);
-      setSubmitted(false);
-    },
-    [setEmail],
-  );
+  const handleEmailChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    setSubmitted(false);
+  }, []);
 
-  const handleRoleChange
-  = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setRole(e.target.value);
-      setSubmitted(false);
-    },
-    [setRole]
-  );
+  const handleRoleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setRole(e.target.value);
+    setSubmitted(false);
+  }, []);
+
+  const validateFormFields = () => {
+    return username !== '' && email !== '' && role !== '';
+  };
 
   // Handling the form submission
-  const handleSubmit = useCallback(async(e: SyntheticEvent) => {
+  const handleSubmit = useCallback(async (e: SyntheticEvent) => {
     try {
       e.preventDefault();
-      if (username === '' || email === '' || role === '') {
-        setError(true);
+      
+      const isFormValid = validateFormFields();
+      setError(!isFormValid);
+      
+      if (!isFormValid) {
         return;
       }
-      // setSubmitted was here (in case of break)
-      setError(false);
+      
       const response = await fetch('api/register', {
         method: 'POST',
         headers: {
@@ -88,11 +82,7 @@ const RegistrationForm: FunctionComponent = () => {
       }}
     >
       <h1>
-        User
-        {' '}
-        {username}
-        {' '}
-        successfully registered!!
+        User {username} successfully registered!!
       </h1>
     </div>
   );
@@ -110,9 +100,7 @@ const RegistrationForm: FunctionComponent = () => {
 
   return (
     <div className={styles.registrationForm}>
-      <div>
-        <h1>Register User</h1>
-      </div>
+      <div><h1>Register User</h1></div>
 
       <div>
         {errorMessage()}
@@ -120,13 +108,13 @@ const RegistrationForm: FunctionComponent = () => {
       </div>
 
       <form>
-        <label className="label">Username    </label>
+        <label className="label">Username</label>
         <input
           onChange={handleUsernameChange} className="input"
           value={username} type="text"
         />
 
-        <label className="label">Email    </label>
+        <label className="label">Email</label>
         <input
           onChange={handleEmailChange} className="input"
           value={email} type="email"
@@ -145,15 +133,10 @@ const RegistrationForm: FunctionComponent = () => {
             type="radio" name="radioGroup" id="employeeRadio"
             value="employee" onChange={handleRoleChange}
             checked={role === 'employee'}
-
           />
-
         </div>
 
-        <button
-          onClick={handleSubmit} className="registerButton"
-          type="submit"
-        >
+        <button onClick={handleSubmit} className="registerButton" type="submit">
           Submit
         </button>
       </form>
