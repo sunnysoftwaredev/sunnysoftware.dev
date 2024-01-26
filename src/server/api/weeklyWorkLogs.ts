@@ -1,5 +1,4 @@
 import { Router as createRouter } from 'express';
-// import logger from '../logger';
 import { Mutex } from 'async-mutex';
 import { isObjectRecord } from '../../common/utilities/types';
 import { getIDWithToken, getWeeklyWorkLogs } from '../database';
@@ -11,58 +10,51 @@ const mutex = new Mutex();
 
 router.post('/', (req, res) => {
   (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/weeklyLogs: req.body is not object');
-    }
-    if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/weeklyLogs: req.cookies is not object');
-    }
-
-    const { authenticationToken } = req.cookies;
-    if (typeof authenticationToken !== 'string') {
-      throw new Error('api/weeklyLogs: userToken not type string');
-    }
-
-    const release = await mutex.acquire();
     try {
-      const idResult = getIDWithToken(authenticationToken);
-      const userId = await idResult;
-
-      const { unixWeekStart } = req.body;
-      const { unixWeekEnd } = req.body;
-
-      if (typeof unixWeekStart !== 'number') {
-        throw new Error('api/weeklyLogs.post: unixStart is not number');
+      if (!isObjectRecord(req.body)) {
+        return res.status(400).json({ success: false, error: 'api/weeklyLogs: req.body is not object' });
       }
-      if (typeof unixWeekEnd !== 'number') {
-        throw new Error('api/weeklyLogs.post: unixEnd is not number');
+      if (!isObjectRecord(req.cookies)) {
+        return res.status(400).json({ success: false, error: 'api/weeklyLogs: req.cookies is not object' });
       }
 
-      await createTimesheet(userId, unixWeekStart, unixWeekEnd).catch((err) => {
-        if (err instanceof Error) {
-          logger.error(err.message);
+      const { authenticationToken } = req.cookies;
+      if (typeof authenticationToken !== 'string') {
+        return res.status(400).json({ success: false, error: 'api/weeklyLogs: authenticationToken not type string' });
+      }
+
+      const release = await mutex.acquire();
+      try {
+        const userId = await getIDWithToken(authenticationToken);
+
+        const { unixWeekStart, unixWeekEnd } = req.body;
+
+        if (typeof unixWeekStart !== 'number' || typeof unixWeekEnd !== 'number') {
+          throw new Error('api/weeklyLogs.post: unixWeekStart and unixWeekEnd must be numbers');
         }
-      });
 
-      const result = await getWeeklyWorkLogs(
-        userId,
-        unixWeekStart,
-        unixWeekEnd,
-      );
-      res.json({
-        success: true,
-        listResult: result,
+        await createTimesheet(userId, unixWeekStart, unixWeekEnd).catch((err) => {
+          if (err instanceof Error) {
+            logger.error(err.message);
+          }
+        });
+
+        const result = await getWeeklyWorkLogs(userId, unixWeekStart, unixWeekEnd);
+        res.json({
+          success: true,
+          listResult: result,
+        });
+      } finally {
+        release();
+      }
+    } catch (e) {
+      logger.error(`error in weeklyLogs post: ${e.message}`);
+      res.status(500).json({
+        success: false,
+        error: `Internal server error: ${e.message}`,
       });
-    } finally {
-      release();
     }
-    // logger.info('res.json success in weeklyLogs.ts post');
-  })().catch((e: Error) => {
-    res.json({
-      success: false,
-      error: e.message,
-    });
-  });
+  })();
 });
 
 export default router;
