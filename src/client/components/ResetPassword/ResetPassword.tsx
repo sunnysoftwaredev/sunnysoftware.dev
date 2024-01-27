@@ -5,9 +5,6 @@ import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import styles from './ResetPassword.scss';
 
-// TODO: old reset password, saved for when user is logged in
-// rename to something like UserChangePassword
-
 const ResetPassword: FunctionComponent = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -23,20 +20,22 @@ const ResetPassword: FunctionComponent = () => {
     [setPassword],
   );
 
-  const handleConfirmPasswordChange
-   = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-     setConfirmPassword(e.target.value);
-     setSubmitted(false);
-   }, [setConfirmPassword],);
+  const handleConfirmPasswordChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+    setSubmitted(false);
+  }, [setConfirmPassword]);
 
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
+    e.preventDefault();
+
+    const passwordsMatch = password === confirmPassword;
+    setError(!passwordsMatch);
+
+    if (!passwordsMatch) {
+      return;
+    }
+
     try {
-      e.preventDefault();
-      if (password !== confirmPassword) {
-        setError(true);
-        return;
-      }
-      setError(false);
       const response = await fetch('api/users/password', {
         method: 'POST',
         headers: {
@@ -69,17 +68,13 @@ const ResetPassword: FunctionComponent = () => {
   }, [password, confirmPassword]);
 
   const successMessage = (): React.JSX.Element => (
-    <div
-      className={classNames({ [styles.hidden]: !submitted })}
-    >
+    <div className={classNames({ [styles.hidden]: !submitted })}>
       <h3>Password Changed</h3>
     </div>
   );
 
   const errorMessage = (): React.JSX.Element => (
-    <div
-      className={classNames({ [styles.hidden]: !error })}
-    >
+    <div className={classNames({ [styles.hidden]: !error })}>
       <h1>Error, passwords do not match</h1>
     </div>
   );
