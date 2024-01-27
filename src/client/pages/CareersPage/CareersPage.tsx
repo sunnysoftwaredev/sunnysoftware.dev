@@ -10,11 +10,11 @@ const CareersPage: FunctionComponent = () => (
   <div>
     <Helmet>
       <meta charSet="utf-8" />
-      <title>Testimonials-Sunny Software</title>
-      <link rel="canonical" href="https://sunnysoftware.dev/team" />
+      <title>Careers at Sunny Software</title>
+      <link rel="canonical" href="https://sunnysoftware.dev/careers" />
       <meta
         name="description"
-        content="Testimonails describing the good work of Sunny Software"
+        content="Explore current job openings and our culture to start your career with Sunny Software. Join a team that values innovation and collaboration."
       />
     </Helmet>
     <CareersBanner />
