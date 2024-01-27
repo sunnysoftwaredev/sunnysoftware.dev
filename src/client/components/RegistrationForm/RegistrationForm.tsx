@@ -9,7 +9,6 @@ const RegistrationForm: FunctionComponent = () => {
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('client');
 
-  // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
@@ -40,42 +39,40 @@ const RegistrationForm: FunctionComponent = () => {
     [setRole]
   );
 
-  // Handling the form submission
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
+    e.preventDefault();
+    if (username === '' || email === '' || role === '') {
+      setError(true);
+      return;
+    }
+
+    setError(false);
+    setSubmitted(false);
+
     try {
-      e.preventDefault();
-      if (username === '' || email === '' || role === '') {
-        setError(true);
-        return;
-      }
-      // setSubmitted was here (in case of break)
-      setError(false);
       const response = await fetch('api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username,
-          email,
-          role,
-        }),
+        body: JSON.stringify({ username, email, role }),
       });
 
       const result: unknown = await response.json();
 
-      if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: RegistrationForm.tsx');
+      if (!isObjectRecord(result) || typeof result.success !== 'boolean') {
+        throw new Error('Server response format is invalid: RegistrationForm.tsx');
       }
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: RegistrationForm.tsx');
-      }
+
       if (result.success) {
-        setSubmitted(true);
+      setSubmitted(true);
+      } else {
+        setError(true);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
+        setError(true);
       }
     }
   }, [username, email, role]);
@@ -87,13 +84,7 @@ const RegistrationForm: FunctionComponent = () => {
         display: submitted ? '' : 'none',
       }}
     >
-      <h1>
-        User
-        {' '}
-        {username}
-        {' '}
-        successfully registered!!
-      </h1>
+      <h1>User {username} successfully registered!!</h1>
     </div>
   );
 
@@ -120,13 +111,13 @@ const RegistrationForm: FunctionComponent = () => {
       </div>
 
       <form>
-        <label className="label">Username    </label>
+        <label className="label">Username</label>
         <input
           onChange={handleUsernameChange} className="input"
           value={username} type="text"
         />
 
-        <label className="label">Email    </label>
+        <label className="label">Email</label>
         <input
           onChange={handleEmailChange} className="input"
           value={email} type="email"
@@ -145,9 +136,7 @@ const RegistrationForm: FunctionComponent = () => {
             type="radio" name="radioGroup" id="employeeRadio"
             value="employee" onChange={handleRoleChange}
             checked={role === 'employee'}
-
           />
-
         </div>
 
         <button
