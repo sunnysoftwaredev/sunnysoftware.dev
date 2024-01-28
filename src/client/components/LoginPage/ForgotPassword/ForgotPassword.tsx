@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FunctionComponent, ChangeEvent, FormEvent } from 'react';
 import { useSelector } from 'react-redux';
@@ -15,6 +15,15 @@ const ForgotPassword: FunctionComponent = () => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
 
+  const navigate = useNavigate();
+  const loggedIn = useSelector(getLoggedIn);
+
+  useEffect(() => {
+    if (loggedIn) {
+      navigate('/');
+    }
+  }, [loggedIn, navigate]);
+
   const showSuccessPopupFunction = useCallback(() => {
     setShowSuccessPopup(!showSuccessPopup);
   }, [showSuccessPopup]);
@@ -22,12 +31,6 @@ const ForgotPassword: FunctionComponent = () => {
   const showErrorPopupFunction = useCallback(() => {
     setShowErrorPopup(!showErrorPopup);
   }, [showErrorPopup]);
-
-  const navigate = useNavigate();
-  const loggedIn = useSelector(getLoggedIn);
-  if (loggedIn) {
-    navigate('/');
-  }
 
   const handleEmailChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +95,7 @@ const ForgotPassword: FunctionComponent = () => {
       )}
       <form
         className={styles.forgotPassword}
-        onClick={handleSubmit}
+        onSubmit={handleSubmit}
       >
         <div>
           <label className={styles.boxAndLabel}>
@@ -106,11 +109,10 @@ const ForgotPassword: FunctionComponent = () => {
             />
           </label>
         </div>
-        <div />
         <div className={styles.buttons}>
           <Button
-            size={ButtonSize.Large}
-            type={ButtonType.Submit}
+            size={ButtonSize.large}
+            type={ButtonType.submit}
           >
             Reset password
           </Button>
