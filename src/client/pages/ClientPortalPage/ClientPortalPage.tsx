@@ -7,12 +7,12 @@ const ClientPortalPage: FunctionComponent = () => (
   <div>
     <Helmet>
       <meta charSet="utf-8" />
-      <title>Portal-Sunny Software</title>
+      <title>Client Portal | Manage Your Account | Sunny Software</title>
       <link rel="canonical" href="https://sunnysoftware.dev/portal" />
-      <meta name="description" content="Client portal for Sunny Software LLC" />
+      <meta name="description" content="Access the Sunny Software client portal to manage your projects, settings, and personal information securely." />
     </Helmet>
     <h1>Portal</h1>
-    <p>For logged in clients</p>
+    <p>Welcome to the client portal. Please log in to manage your account and projects.</p>
     <ResetPassword />
   </div>
 );
