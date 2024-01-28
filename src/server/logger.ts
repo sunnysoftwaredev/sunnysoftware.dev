@@ -1,5 +1,5 @@
-import logger, { LogLevel } from 'eleventh';
+import defaultLogger, { LogLevel } from 'eleventh';
 
-logger.setLogLevel(LogLevel.debug);
+defaultLogger.setLogLevel(LogLevel.debug);
 
-export default logger;
+export default defaultLogger;
