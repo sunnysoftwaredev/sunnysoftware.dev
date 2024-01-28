@@ -24,15 +24,14 @@ const EditProject: FunctionComponent<ClientProject> = (props) => {
     [setNewTitle],
   );
 
-  const handleDescriptionChange
-   = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-     setNewDescription(e.target.value);
-     setSubmitted(false);
-   }, [setNewDescription],);
+  const handleDescriptionChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+    setNewDescription(e.target.value);
+    setSubmitted(false);
+  }, [setNewDescription],);
 
   const handleActiveChange = useCallback((): void => {
-    setNewActive(!active);
-  }, [active],);
+    setNewActive(currentActive => !currentActive);
+  }, [setNewActive],);
 
   // Update Project information
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
@@ -159,7 +158,6 @@ const EditProject: FunctionComponent<ClientProject> = (props) => {
             type="radio" name="activeRadioGroup" id="inactiveRadio"
             value="false" onChange={handleActiveChange}
             checked={!newActive}
-
           />
 
         </div>
