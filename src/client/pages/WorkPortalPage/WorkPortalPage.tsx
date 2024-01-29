@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 import WorkCalendar from '../../components/WorkCalendar/WorkCalendar';
 import ResetPassword from '../../components/ResetPassword/ResetPassword';
 
-const ClientPortalPage: FunctionComponent = () => (
+const WorkPortalPage: FunctionComponent = () => (
   <div>
     <Helmet>
       <meta charSet="utf-8" />
@@ -21,4 +21,4 @@ const ClientPortalPage: FunctionComponent = () => (
   </div>
 );
 
-export default ClientPortalPage;
+export default WorkPortalPage;
