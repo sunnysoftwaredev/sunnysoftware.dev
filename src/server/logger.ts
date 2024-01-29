@@ -1,5 +1,7 @@
-import logger, { LogLevel } from 'eleventh';
+import logger, { Logger, LogLevel } from 'eleventh';
 
 logger.setLogLevel(LogLevel.debug);
 
-export default logger;
+const typedLogger: Logger = logger;
+
+export default typedLogger;
