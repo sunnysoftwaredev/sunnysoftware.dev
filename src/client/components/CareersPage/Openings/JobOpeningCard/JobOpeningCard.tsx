@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import Button, { ButtonSize } from '../../../Button/Button';
 import useIsMobileWidth from '../../../../hooks/useIsMobileWidth';
 import styles from './JobOpeningCard.scss';
@@ -18,7 +18,10 @@ const JobOpeningCard: FunctionComponent<JobOpeningCardProps> = ({
   url,
 }) => {
   const isMobileWidth = useIsMobileWidth();
-  const buttonSize = isMobileWidth ? ButtonSize.Small : ButtonSize.Medium;
+  const buttonSize = useMemo(() => {
+    return isMobileWidth ? ButtonSize.Small : ButtonSize.Medium;
+  }, [isMobileWidth]);
+
   return (
     <div className={styles.container}>
       <div className={styles.text}>
