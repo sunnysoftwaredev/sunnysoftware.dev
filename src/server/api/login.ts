@@ -6,21 +6,26 @@ import { generateSalt, saltAndHash } from '../common/utilities/crypto';
 
 const router = createRouter();
 
-router.post('/', (req, res) => {
-  (async(): Promise<void> => {
+router.post('/', async (req, res) => {
+  try {
     if (!isObjectRecord(req.body)) {
-      throw new Error('api/login: req.body is not object');
+      res.status(400).json({ success: false, message: 'Request body must be an object.' });
+      return;
     }
+  
     const { email, password } = req.body;
 
-    if (typeof email !== 'string') {
-      throw new Error('api/login: email not type string');
-    }
-    if (typeof password !== 'string') {
-      throw new Error('api/login: password not type string');
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      res.status(400).json({ success: false, message: 'Email and password must be strings.' });
+      return;
     }
 
     const userObject = await getUserByEmail(email);
+
+    if (!userObject) {
+      res.status(401).json({ success: false, message: 'Invalid email or password.' });
+      return;
+    }
 
     const {
       id: userID,
@@ -37,15 +42,16 @@ router.post('/', (req, res) => {
     const checkPassword = saltedAndHashedLoginPassword.toString('hex');
 
     if (checkPassword !== passwordDB) {
-      throw new Error('Unable to authenticate with the provided email and password');
+      res.status(401).json({ success: false, message: 'Invalid email or password.' });
+      return;
     }
 
-    // create expiration date 10 days from creation
     const expiration = new Date();
     expiration.setDate(expiration.getDate() + 10);
-    // create and send cookie to browser
+
     const token = (await generateSalt()).toString('hex');
-    const tokenToDatabase = insertToken(userID, token, expiration);
+    await insertToken(userID, token, expiration);
+
     res.cookie('authenticationToken', token, {
       expires: expiration,
       sameSite: 'lax',
@@ -53,18 +59,20 @@ router.post('/', (req, res) => {
 
     res.json({
       success: true,
-      token: tokenToDatabase,
+      token,
       userId: userID,
       username,
       role,
     });
-    logger.info('res.json success in login.ts');
-  })().catch((e: Error) => {
-    res.json({
+
+    logger.info('User logged in successfully.', { userId: userID });
+  } catch (error) {
+    logger.error('Login failed.', { error: error instanceof Error ? error.message : error });
+    res.status(500).json({
       success: false,
-      error: e.message,
+      message: 'An unexpected error occurred during login.',
     });
-  });
+  }
 });
 
 export default router;
