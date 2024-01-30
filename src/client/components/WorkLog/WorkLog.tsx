@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import type { FunctionComponent } from 'react';
 import TimeDropdown from '../TimeDropdown/TimeDropdown';
 import type { ClientProject, TimeObjectWithProject } from '../../../server/database';
@@ -14,26 +14,12 @@ type WorkLogProps = {
 const WorkLog: FunctionComponent<WorkLogProps> = (props) => {
   const [updating, setUpdating] = useState(false);
   const [deleted, setDeleted] = useState(false);
-  const [projectExists, setProjectExists] = useState(false);
-  const [projectName, setProjectName] = useState('');
 
   const { log, activeProjects } = props;
   const { unixStart, unixEnd, projectId } = log;
 
-  useEffect(() => {
-    if (typeof projectId === 'number') {
-      if (projectId !== 0) {
-        setProjectExists(true);
-      }
-    }
-
-    const logProject
-    = activeProjects.filter(project => project.id === projectId);
-
-    if (logProject.length === 1) {
-      setProjectName(logProject[0].title);
-    }
-  }, [activeProjects, projectId]);
+  const projectExists = typeof projectId === 'number' && projectId !== 0;
+  const projectName = activeProjects.find(project => project.id === projectId)?.title ?? '';
 
   const unixToTimeString = (unix: number): string => new Date(unix
     * 1000).toLocaleString('default', {

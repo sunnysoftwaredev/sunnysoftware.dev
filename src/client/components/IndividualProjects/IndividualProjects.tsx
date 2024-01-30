@@ -67,6 +67,8 @@ const IndividualProject: FunctionComponent<Project> = (props) => {
           title={title}
           description={description}
           active={active}
+          username={'TODO'}
+          email={'TODO'}
         />
       )}
     </div>

@@ -98,73 +98,36 @@ const ManageProjects: FunctionComponent = () => {
 
   // Pagination in useEffect
 
-  const [currentSlice, setCurrentSlice] = useState(sortedProjectList);
-  const [totalPages, setTotalPages] = useState(1);
+  let currentSlice: Project[] = [];
+  let totalPages = 0;
 
-  useEffect(() => {
-    let currentProjectList = [];
-    switch (selectedButton) {
-      case 'All': {
-        currentProjectList = sortedProjectList;
-        const temp
-        = currentProjectList.slice(activeFirstIndex, activeLastIndex);
-        setCurrentSlice(temp);
-
-        const pagesTemp = Math.ceil(currentProjectList.length / recordsPerPage);
-        setTotalPages(pagesTemp);
-        break;
-      }
-      case 'In progress': {
-        currentProjectList = inProgressProjectList;
-        const temp
-        = currentProjectList.slice(activeFirstIndex, activeLastIndex);
-        setCurrentSlice(temp);
-
-        const pagesTemp = Math.ceil(currentProjectList.length / recordsPerPage);
-        setTotalPages(pagesTemp);
-        break;
-      }
-      case 'Paused': {
-        currentProjectList = pausedProjectList;
-        const temp
-        = currentProjectList.slice(activeFirstIndex, activeLastIndex);
-        setCurrentSlice(temp);
-
-        const pagesTemp = Math.ceil(currentProjectList.length / recordsPerPage);
-        setTotalPages(pagesTemp);
-        break;
-      }
-      case 'Cancelled': {
-        currentProjectList = cancelledProjectList;
-        const temp
-        = currentProjectList.slice(activeFirstIndex, activeLastIndex);
-        setCurrentSlice(temp);
-
-        const pagesTemp = Math.ceil(currentProjectList.length / recordsPerPage);
-        setTotalPages(pagesTemp);
-        break;
-      }
-      case 'Completed': {
-        currentProjectList = completedProjectList;
-        const temp
-        = currentProjectList.slice(activeFirstIndex, activeLastIndex);
-        setCurrentSlice(temp);
-
-        const pagesTemp = Math.ceil(currentProjectList.length / recordsPerPage);
-        setTotalPages(pagesTemp);
-        break;
-      }
+  switch (selectedButton) {
+    case 'All': {
+      currentSlice = sortedProjectList.slice(activeFirstIndex, activeLastIndex);
+      totalPages = Math.ceil(sortedProjectList.length / recordsPerPage);
+      break;
     }
-  }, [currentPage,
-    selectedButton,
-    activeFirstIndex,
-    activeLastIndex,
-    inProgressProjectList,
-    recordsPerPage,
-    sortedProjectList,
-    pausedProjectList,
-    cancelledProjectList,
-    completedProjectList]);
+    case 'In progress': {
+      currentSlice = inProgressProjectList.slice(activeFirstIndex, activeLastIndex);
+      totalPages = Math.ceil(inProgressProjectList.length / recordsPerPage);
+      break;
+    }
+    case 'In progress': {
+      currentSlice = pausedProjectList.slice(activeFirstIndex, activeLastIndex);
+      totalPages = Math.ceil(pausedProjectList.length / recordsPerPage);
+      break;
+    }
+    case 'Cancelled': {
+      currentSlice = cancelledProjectList.slice(activeFirstIndex, activeLastIndex);
+      totalPages = Math.ceil(cancelledProjectList.length / recordsPerPage);
+      break;
+    }
+    case 'Completed': {
+      currentSlice = completedProjectList.slice(activeFirstIndex, activeLastIndex);
+      totalPages = Math.ceil(completedProjectList.length / recordsPerPage);
+      break;
+    }
+  }
 
   const getUserList = useCallback(async() => {
     try {

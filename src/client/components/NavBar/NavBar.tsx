@@ -112,7 +112,7 @@ const Navbar: FunctionComponent = () => {
         )}
         {isAdmin && (
           <li>
-            <a className={styles.navItem} href="/admin-portal-employee">
+            <a className={styles.navItem} href="/admin-portal-employees">
               Admin Portal
             </a>
           </li>

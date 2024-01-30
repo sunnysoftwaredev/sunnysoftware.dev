@@ -16,7 +16,7 @@ const ShowNavBar
       || locationPath.pathname === '/login/reset-password'
       || locationPath.pathname === '/portal'
       || locationPath.pathname === '/employee-portal'
-      || locationPath.pathname === '/admin-portal-employee') {
+      || locationPath.pathname === '/admin-portal-employees') {
       setShowNavBar(false);
     } else {
       setShowNavBar(true);

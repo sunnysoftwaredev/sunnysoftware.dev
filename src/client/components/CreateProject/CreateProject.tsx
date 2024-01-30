@@ -54,7 +54,7 @@ const CreateProject: FunctionComponent<CreateProjectProps> = (props) => {
   const handleClientChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       setClient(e.target.value);
-      setSubmitted(false);
+      setShowErrorPopup(false);
     },
     [setClient],
   );

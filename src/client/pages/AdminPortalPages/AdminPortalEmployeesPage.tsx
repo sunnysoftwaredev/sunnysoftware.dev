@@ -9,7 +9,7 @@ const AdminPortalEmployeesPage: FunctionComponent = () => (
     <Helmet>
       <meta charSet="utf-8" />
       <title>Admin Portal-Sunny Software</title>
-      <link rel="canonical" href="https://sunnysoftware.dev/admin-portal-employee" />
+      <link rel="canonical" href="https://sunnysoftware.dev/admin-portal-employees" />
       <meta
         name="description"
         content="Hours of all employees of Sunny Software LLC"

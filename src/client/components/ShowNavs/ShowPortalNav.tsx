@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface IProps {
@@ -7,18 +7,12 @@ interface IProps {
 
 const ShowPortalNav
 = ({ children }: IProps): React.JSX.Element => {
-  const [showPortalNav, setShowPortalNav] = useState(false);
   const locationPath = useLocation();
-
-  useEffect(() => {
-    if (locationPath.pathname === '/portal'
-      || locationPath.pathname === '/admin-portal'
-      || locationPath.pathname === '/employee-portal') {
-      setShowPortalNav(true);
-    } else {
-      setShowPortalNav(false);
-    }
-  }, [locationPath]);
+  const showPortalNav = [
+    '/portal',
+    '/admin-portal',
+    '/employee-portal'
+  ].includes(locationPath.pathname);
   return (
     <div>{showPortalNav && children}</div>
   );
