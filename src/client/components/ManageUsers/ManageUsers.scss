@@ -58,14 +58,14 @@
   padding: 1rem;
   }
 
-  .mobileColumnNames {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    color: main.$neutral-color-80;
-    font-size: 1rem;
-    line-height: 1rem;
-    padding: 1rem;
-  }
+.mobileColumnNames {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  color: main.$neutral-color-80;
+  font-size: 1rem;
+  line-height: 1rem;
+  padding: 1rem;
+}
 
 
   .empty {

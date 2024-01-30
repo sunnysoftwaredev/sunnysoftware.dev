@@ -16,6 +16,12 @@ export const getListOfUsers = createSelector(
   adminPortal => adminPortal.userList,
 );
 
+export const getListOfClients = createSelector(
+  getAdminPortal,
+  getListOfUsers,
+  (adminPortal, userList) => userList.filter(user => user.role === 'client')
+);
+
 export const getProjectsWithId = createSelector(
   getAdminPortal,
   adminPortal => adminPortal.projectsWithId,
@@ -24,4 +30,9 @@ export const getProjectsWithId = createSelector(
 export const getAllProjects = createSelector(
   getAdminPortal,
   adminPortal => adminPortal.projects,
+);
+
+export const getEmployeeOrProjectsPage = createSelector(
+  getAdminPortal,
+  adminPortal => adminPortal.employeesOrProjectsPage,
 );

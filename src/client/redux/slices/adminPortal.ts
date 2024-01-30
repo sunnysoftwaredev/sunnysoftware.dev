@@ -8,6 +8,7 @@ export type AdminPortalState = {
   userList: UserIdNameEmailRoleActivePhone[];
   projectsWithId: ProjectWithEmployeeId[];
   projects: Project[];
+  employeesOrProjectsPage: boolean;
 };
 
 const initialState: AdminPortalState = {
@@ -15,6 +16,7 @@ const initialState: AdminPortalState = {
   userList: [],
   projectsWithId: [],
   projects: [],
+  employeesOrProjectsPage: true,
 };
 
 type UserListAction = PayloadAction<{
@@ -27,6 +29,10 @@ type ProjectListAction = PayloadAction<{
 
 type ProjectsAction = PayloadAction<{
   fullProjectList: Project[];
+}>;
+
+type EmployeeOrProjectsAction = PayloadAction<{
+  employeeOrProjectsPage: boolean;
 }>;
 
 const adminPortalSlice = createSlice({
@@ -44,6 +50,9 @@ const adminPortalSlice = createSlice({
     },
     populateProjectsArray: (state, action: ProjectsAction) => {
       state.projects = action.payload.fullProjectList;
+    },
+    setEmployeeOrProjectsPage: (state, action: EmployeeOrProjectsAction) => {
+      state.employeesOrProjectsPage = action.payload.employeeOrProjectsPage;
     },
   },
 });

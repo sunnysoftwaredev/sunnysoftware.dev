@@ -4,7 +4,6 @@ import { Helmet } from 'react-helmet';
 import WorkCalendar from '../../components/WorkCalendar/WorkCalendar';
 import EmployeeWorkCalendars from '../../components/EmployeeWorkCalendars/EmployeeWorkCalendars';
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
-import ManageUsers from '../../components/ManageUsers/ManageUsers';
 import ResetPassword from '../../components/ResetPassword/ResetPassword';
 import ManageProjects from '../../components/MangageProjects/ManageProjects';
 import PortalNavBar from '../../components/AdminPortalNavBar/AdminPortalNavBar';
@@ -14,7 +13,7 @@ const AdminPortalProjectsPage: FunctionComponent = () => (
     <Helmet>
       <meta charSet="utf-8" />
       <title>Admin Portal-Sunny Software</title>
-      <link rel="canonical" href="https://sunnysoftware.dev/admin-portal-employee" />
+      <link rel="canonical" href="https://sunnysoftware.dev/admin-portal-projects" />
       <meta
         name="description"
         content="Hours of all employees of Sunny Software LLC"
@@ -22,11 +21,10 @@ const AdminPortalProjectsPage: FunctionComponent = () => (
     </Helmet>
     <PortalNavBar />
     <ManageProjects />
-    <ResetPassword />
+    {/* <ResetPassword />
     <WorkCalendar />
     <EmployeeWorkCalendars />
-    <RegistrationForm />
-    <ManageUsers />
+    <RegistrationForm /> */}
   </div>
 );
 

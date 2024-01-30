@@ -9,6 +9,16 @@ const mutex = new Mutex();
 
 router.get('/', (req, res) => {
   (async(): Promise<void> => {
+    if (!isObjectRecord(req.body)) {
+      throw new Error('api/projects: req.body is not object');
+    }
+    if (!isObjectRecord(req.cookies)) {
+      throw new Error('api/projects: req.cookies is not object');
+    }
+    const { authenticationToken } = req.cookies;
+    if (typeof authenticationToken !== 'string') {
+      throw new Error('api/projects: userToken not type string');
+    }
     const release = await mutex.acquire();
     try {
       const projects = await getAllProjects();
@@ -31,6 +41,7 @@ router.get('/', (req, res) => {
   });
 });
 
+// TODO: update file for new project columns
 router.post('/', (req, res) => {
   (async(): Promise<void> => {
     if (!isObjectRecord(req.body)) {
@@ -82,7 +93,7 @@ router.post('/', (req, res) => {
     });
   });
 });
-
+// TODO: update file for new project columns
 router.put('/', (req, res) => {
   (async(): Promise<void> => {
     if (!isObjectRecord(req.body)) {

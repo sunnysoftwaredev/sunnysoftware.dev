@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import type { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Logo from '../../static/images/Logo.png';
 import useIsMobileWidth from '../../hooks/useIsMobileWidth';
 import ProfileIcon from '../../static/svgs/ProfileIcon';
@@ -11,13 +11,16 @@ import Button, { ButtonSize, ButtonVariant } from '../Button/Button';
 import { getLoggedIn } from '../../redux/selectors/account';
 import ChevronUpIcon from '../../static/svgs/ChevronUpIcon';
 import ChevronDownIcon from '../../static/svgs/ChevronDownIcon';
+import { getEmployeeOrProjectsPage } from '../../redux/selectors/adminPortal';
+import { AdminPortalActions } from '../../redux/slices/adminPortal';
 import styles from './AdminPortalNavBar.scss';
 
 const AdminPortalNavBar: FunctionComponent = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const loggedIn = useSelector(getLoggedIn);
+  const employeeOrProjectsPage = useSelector(getEmployeeOrProjectsPage);
   const isMobileWidth = useIsMobileWidth();
-  const [topButtonSelection, setTopButtonSelection] = useState(true);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
@@ -28,13 +31,17 @@ const AdminPortalNavBar: FunctionComponent = () => {
       setMenuOpen(false);
       setHamburgerOpen(false);
     }
+
     const currentUrl = window.location.pathname;
-    if (currentUrl === '/admin-portal-employee') {
-      setTopButtonSelection(true);
+    if (currentUrl === '/admin-portal-employees') {
+      // separated out to satisfy eslint line rule
+      const val = { employeeOrProjectsPage: true };
+      dispatch(AdminPortalActions.setEmployeeOrProjectsPage(val));
     } else {
-      setTopButtonSelection(false);
+      const val = { employeeOrProjectsPage: false };
+      dispatch(AdminPortalActions.setEmployeeOrProjectsPage(val));
     }
-  }, [isMobileWidth]);
+  }, [isMobileWidth, dispatch]);
 
   const toggleMenu = useCallback(() => {
     setMenuOpen(!menuOpen);
@@ -68,10 +75,10 @@ const AdminPortalNavBar: FunctionComponent = () => {
           <img className={styles.logo} src={Logo} alt="Sunny Software Logo" />
         </a>
         <div className={styles.tabMenu}>
-          {topButtonSelection
+          {employeeOrProjectsPage
             ? (
               <Button
-                to="./admin-portal-employees"
+                to="/admin-portal-employees"
                 size={ButtonSize.Medium}
                 variant={ButtonVariant.Primary}
               >
@@ -80,17 +87,17 @@ const AdminPortalNavBar: FunctionComponent = () => {
             )
             : (
               <Button
-                to="./admin-portal-employees"
+                to="/admin-portal-employees"
                 size={ButtonSize.Medium}
                 variant={ButtonVariant.Outlined}
               >
                 Employees
               </Button>
             )}
-          {topButtonSelection
+          {employeeOrProjectsPage
             ? (
               <Button
-                to="./admin-portal-projects"
+                to="/admin-portal-projects"
                 size={ButtonSize.Medium}
                 variant={ButtonVariant.Outlined}
               >
@@ -99,7 +106,7 @@ const AdminPortalNavBar: FunctionComponent = () => {
             )
             : (
               <Button
-                to="./admin-portal-projects"
+                to="/admin-portal-projects"
                 size={ButtonSize.Medium}
                 variant={ButtonVariant.Primary}
               >

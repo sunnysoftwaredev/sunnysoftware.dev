@@ -28,6 +28,7 @@ import ShowNavBar from './components/ShowNavs/ShowNavBar';
 import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 import store from './redux/store';
+import AdminPortalProjectsPage from './pages/AdminPortalPages/AdminPortalProjectsPage';
 
 const App: FunctionComponent = () => (
   <Provider store={store}>
@@ -49,9 +50,16 @@ const App: FunctionComponent = () => (
         )}
       />
       <Route
-        path="admin-portal-employee" element={(
+        path="admin-portal-employees" element={(
           <AdminPrivateRoute>
             <AdminPortalEmployeesPage />
+          </AdminPrivateRoute>
+        )}
+      />
+      <Route
+        path="admin-portal-projects" element={(
+          <AdminPrivateRoute>
+            <AdminPortalProjectsPage />
           </AdminPrivateRoute>
         )}
       />

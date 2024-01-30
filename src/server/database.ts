@@ -556,7 +556,8 @@ export type ClientProject = {
 export const getAllProjects = async():
 Promise<Project[]> => {
   const result: QueryResult<Project> = await client.query(`
-  SELECT id, client_id AS "clientId", title, description, active
+  SELECT id, client_id AS "clientId", title, description, active,
+  start_date AS "startDate", status
   FROM client_projects`);
 
   const { rows } = result;

@@ -65,6 +65,8 @@ export type Project = {
   title: string;
   description: string;
   active: boolean;
+  startDate: number;
+  status: string;
 };
 
 const isProject
