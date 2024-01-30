@@ -11,12 +11,13 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
 
   const [editing, setEditing] = useState(false);
   const [deactivated, setDeactivated] = useState(false);
+  const [deactivationConfirmationMessage, setDeactivationConfirmationMessage] = useState('');
 
   const handleEdit = useCallback(() => {
     setEditing(!editing);
   }, [editing]);
 
-  const handleDeactivate = useCallback(async() => {
+  const handleDeactivate = useCallback(async () => {
     try {
       const response = await fetch('api/users/deactivate', {
         method: 'POST',
@@ -37,21 +38,20 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
       }
       if (result.success) {
         setDeactivated(true);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+        setDeactivationConfirmationMessage('User has been successfully deactivated.');
       } else {
-        logger.info('unsuccessful database update in IndividualUser.tsx');
+        logger.info('Unsuccessful database update in IndividualUser.tsx');
+        setDeactivationConfirmationMessage('User deactivation failed. Please try again.');
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        logger.error(err.message);
+        logger.error(`Deactivation error: ${err.message}`);
+        setDeactivationConfirmationMessage('An error occurred during deactivation. Please try again.');
       }
     }
   }, [id]);
 
   return (
-
     <div
       key={`user-${id}`}
       className={styles.user}
@@ -80,7 +80,7 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRole> = (props) => {
           id={id}
         />
       )}
-      {deactivated && <h3>User Deactivated!</h3>}
+      {deactivationConfirmationMessage && <h3>{deactivationConfirmationMessage}</h3>}
     </div>
   );
 };
