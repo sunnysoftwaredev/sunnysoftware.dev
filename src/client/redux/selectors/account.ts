@@ -6,37 +6,26 @@ const getAccount = (state: State): AccountState => (
   state.account
 );
 
-export const getUserId = createSelector(
-  getAccount,
-  account => account.userId,
-);
+const selectUserId = (account: AccountState) => account.userId;
+const selectUsername = (account: AccountState) => account.username;
+const selectRole = (account: AccountState) => account.role;
 
-export const getUsername = createSelector(
-  getAccount,
-  account => account.username,
-);
+export const getUserId = createSelector(getAccount, selectUserId);
 
-export const getRole = createSelector(
-  getAccount,
-  account => account.role,
-);
+export const getUsername = createSelector(getAccount, selectUsername);
+
+export const getRole = createSelector(getAccount, selectRole);
 
 export const getLoggedIn = createSelector(
-  getUserId,
-  userId => userId !== undefined,
+  [getUserId],
+  (userId): boolean => userId !== undefined,
 );
 
-export const getIsClient = createSelector(
-  getRole,
-  role => role === 'client',
+const isRole = (role: string) => createSelector(
+  [getRole],
+  (accountRole): boolean => accountRole === role,
 );
 
-export const getIsEmployee = createSelector(
-  getRole,
-  role => role === 'employee',
-);
-
-export const getIsAdmin = createSelector(
-  getRole,
-  role => role === 'admin',
-);
+export const getIsClient = isRole('client');
+export const getIsEmployee = isRole('employee');
+export const getIsAdmin = isRole('admin');
