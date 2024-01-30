@@ -26,17 +26,7 @@ export const getLoggedIn = createSelector(
   userId => userId !== undefined,
 );
 
-export const getIsClient = createSelector(
+export const getUserRole = createSelector(
   getRole,
-  role => role === 'client',
-);
-
-export const getIsEmployee = createSelector(
-  getRole,
-  role => role === 'employee',
-);
-
-export const getIsAdmin = createSelector(
-  getRole,
-  role => role === 'admin',
+  (role, props: { role: string }) => role === props.role,
 );
