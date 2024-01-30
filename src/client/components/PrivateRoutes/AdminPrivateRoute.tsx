@@ -7,7 +7,7 @@ interface IProps {
   children: React.JSX.Element;
 }
 
-const AdminPrivateRoute = ({ children }: IProps): React.JSX.Element => {
+const AdminPrivateRouteBase = ({ children }: IProps): React.JSX.Element => {
   const isAdmin = useSelector(getIsAdmin);
   if (!isAdmin) {
     return <Navigate to="/login" />;
@@ -15,5 +15,7 @@ const AdminPrivateRoute = ({ children }: IProps): React.JSX.Element => {
 
   return children;
 };
+
+const AdminPrivateRoute = React.memo(AdminPrivateRouteBase);
 
 export default AdminPrivateRoute;
