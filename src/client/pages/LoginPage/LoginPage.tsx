@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import type { FunctionComponent } from 'react';
@@ -12,9 +12,12 @@ import styles from './LoginPage.scss';
 const LoginPage: FunctionComponent = () => {
   const navigate = useNavigate();
   const loggedIn = useSelector(getLoggedIn);
-  if (loggedIn) {
-    navigate('/');
-  }
+
+  useEffect(() => {
+    if (loggedIn) {
+      navigate('/');
+    }
+  }, [loggedIn, navigate]);
 
   return (
     <div className={styles.pageContainer}>
