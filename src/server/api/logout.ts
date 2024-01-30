@@ -9,11 +9,11 @@ router.post('/', (req, res) => {
     if (!isObjectRecord(req.cookies)) {
       throw new Error('api/login: req.body is not object');
     }
-    const { authenticationToken } = req.cookies;
-    if (typeof authenticationToken !== 'string') {
+    const { authenticationToken: userToken } = req.cookies;
+    if (typeof userToken !== 'string') {
       throw new Error('api/logout: userToken not type string');
     }
-    const result = await markTokenInactive(authenticationToken);
+    const result = await markTokenInactive(userToken);
 
     res.clearCookie('authenticationToken', { sameSite: 'lax' });
 
