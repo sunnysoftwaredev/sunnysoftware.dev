@@ -1,10 +1,10 @@
 import React from 'react';
-import type { FunctionComponent } from 'react';
+import type { FC } from 'react';
 import { Helmet } from 'react-helmet';
 import ResourcesBanner from '../../components/ResourcesPage/ResourcesBanner/ResourcesBanner';
 import ResourcesPanels from '../../components/ResourcesPage/ResourcesPanels/ResourcesPanels';
 
-const ResourcesPage: FunctionComponent = () => (
+const ResourcesPage: FC = () => (
   <div>
     <Helmet>
       <meta charSet="utf-8" />
