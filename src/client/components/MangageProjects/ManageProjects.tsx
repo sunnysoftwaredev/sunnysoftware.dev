@@ -27,19 +27,15 @@ const ManageProjects: FunctionComponent = () => {
       const result: unknown = await response.json();
 
       if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: ManageProjects.tsx');
+        throw new Error(`Unexpected body type: expected 'ObjectRecord', received '${typeof result}' in ManageProjects.tsx`);
       }
 
       const { projectList } = result;
       if (isClientProjectArray(projectList)) {
-        const activeProjectList
-         = projectList.filter(project => project.active);
+        const activeProjectList = projectList.filter(project => project.active);
         const sortedActive = activeProjectList.sort(compareProjects);
-
-        const inactiveProjectList
-         = projectList.filter(project => !project.active);
+        const inactiveProjectList = projectList.filter(project => !project.active);
         const sortedInactive = inactiveProjectList.sort(compareProjects);
-
         setActiveProjects(sortedActive);
         setInactiveProjects(sortedInactive);
       }
@@ -56,25 +52,17 @@ const ManageProjects: FunctionComponent = () => {
     });
   }, [getProjects]);
 
-  const displayProjects = (listOfProjects: ClientProject[]):
-  React.ReactElement[] => {
+  const displayProjects = (listOfProjects: ClientProject[]): React.ReactElement[] => {
     if (typeof listOfProjects === 'undefined') {
       return [<div key={0} />];
     }
     const projectElements: React.ReactElement[] = [];
-
+    
     for (const project of listOfProjects) {
-      const { id } = project;
-      const { title } = project;
-      const { description } = project;
-      const { active } = project;
-      const { username } = project;
-      const { email } = project;
-
+      const { id, title, description, active, username, email } = project;
+      
       projectElements.push((
-        <div
-          key={`project-${id}`}
-        >
+        <div key={`project-${id}`}>
           <IndividualProject
             id={id}
             title={title} description={description}
@@ -85,6 +73,7 @@ const ManageProjects: FunctionComponent = () => {
     }
     return projectElements;
   };
+  
   return (
     <div className={styles.ManageProjectsContainer}>
       <h1>List of Projects</h1>
