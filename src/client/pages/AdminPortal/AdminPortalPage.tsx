@@ -6,7 +6,7 @@ import EmployeeWorkCalendars from '../../components/EmployeeWorkCalendars/Employ
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
 import ManageUsers from '../../components/ManageUsers/ManageUsers';
 import ResetPassword from '../../components/ResetPassword/ResetPassword';
-import ManageProjects from '../../components/MangageProjects/ManageProjects';
+import ManageProjects from '../../components/ManageProjects/ManageProjects';
 
 const AdminPortalPage: FunctionComponent = () => (
   <div>
