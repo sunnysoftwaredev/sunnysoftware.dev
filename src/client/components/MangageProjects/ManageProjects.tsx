@@ -56,35 +56,21 @@ const ManageProjects: FunctionComponent = () => {
     });
   }, [getProjects]);
 
-  const displayProjects = (listOfProjects: ClientProject[]):
-  React.ReactElement[] => {
-    if (typeof listOfProjects === 'undefined') {
-      return [<div key={0} />];
-    }
-    const projectElements: React.ReactElement[] = [];
-
-    for (const project of listOfProjects) {
-      const { id } = project;
-      const { title } = project;
-      const { description } = project;
-      const { active } = project;
-      const { username } = project;
-      const { email } = project;
-
-      projectElements.push((
-        <div
-          key={`project-${id}`}
-        >
-          <IndividualProject
-            id={id}
-            title={title} description={description}
-            active={active}
-            username={username} email={email}
-          />
-        </div>));
-    }
-    return projectElements;
+  const displayProjects = (listOfProjects: ClientProject[]): React.ReactElement[] => {
+    return listOfProjects?.map(project => (
+      <div key={`project-${project.id}`}>
+        <IndividualProject
+          id={project.id}
+          title={project.title}
+          description={project.description}
+          active={project.active}
+          username={project.username}
+          email={project.email}
+        />
+      </div>
+    )) ?? [<div key={0} />];
   };
+
   return (
     <div className={styles.ManageProjectsContainer}>
       <h1>List of Projects</h1>
@@ -97,7 +83,6 @@ const ManageProjects: FunctionComponent = () => {
         {displayProjects(inactiveProjects)}
       </div>
     </div>
-
   );
 };
 
