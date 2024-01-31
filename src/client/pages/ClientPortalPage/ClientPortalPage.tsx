@@ -3,7 +3,7 @@ import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import ResetPassword from '../../components/ResetPassword/ResetPassword';
 
-const ClientPortalPage: FunctionComponent = () => (
+const ClientPortal: FunctionComponent = () => (
   <div>
     <Helmet>
       <meta charSet="utf-8" />
@@ -17,4 +17,4 @@ const ClientPortalPage: FunctionComponent = () => (
   </div>
 );
 
-export default ClientPortalPage;
+export default ClientPortal;
