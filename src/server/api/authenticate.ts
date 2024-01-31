@@ -4,20 +4,30 @@ import { checkActiveToken, getUser } from '../database';
 
 const router = createRouter();
 
-router.post('/', (req, res) => {
-  (async(): Promise<void> => {
+// Send a structured JSON response for errors
+const sendErrorResponse = (res, message: string) => {
+  res.json({
+    success: false,
+    error: message,
+  });
+};
+
+router.post('/', async (req, res) => {
+  try {
     if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/authenticate: req.cookies is not object');
+      sendErrorResponse(res, 'api/authenticate: req.cookies is not object');
+      return;
     }
     const { authenticationToken } = req.cookies;
     if (typeof authenticationToken !== 'string') {
-      throw new Error('api/authenticate: userToken not type string');
+      sendErrorResponse(res, 'api/authenticate: authenticationToken not type string');
+      return;
     }
 
     const tokenActive = await checkActiveToken(authenticationToken);
-
     if (!tokenActive) {
-      throw new Error('User authentication has failed');
+      sendErrorResponse(res, 'User authentication has failed');
+      return;
     }
 
     const { username, role } = await getUser(authenticationToken);
@@ -26,14 +36,11 @@ router.post('/', (req, res) => {
       username,
       role,
       active: tokenActive,
+      success: true,
     });
-  })().catch((e: Error) => {
-    res.json({
-      success: false,
-      error: e.message,
-    });
-  });
+  } catch (e) {
+    sendErrorResponse(res, e instanceof Error ? e.message : 'An unexpected error occurred');
+  }
 });
 
 export default router;
-
