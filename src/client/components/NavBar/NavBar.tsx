@@ -26,7 +26,7 @@ const Navbar: FunctionComponent = () => {
     if (!isMobileWidth) {
       setHamburgerOpen(false);
     }
-  }, [hamburgerOpen, isMobileWidth]);
+  }, [isMobileWidth]);
 
   const handleSubmit = useCallback(async(): Promise<void> => {
     if (loggedIn) {
