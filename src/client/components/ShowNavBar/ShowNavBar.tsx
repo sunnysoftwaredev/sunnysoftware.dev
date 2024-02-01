@@ -12,12 +12,8 @@ const noNavBarRoutes = new Set([
 ]);
 
 const ShowNavBar = ({ children }: IProps): React.JSX.Element => {
-  const [showNavBar, setShowNavBar] = useState(true);
   const locationPath = useLocation();
-
-  useEffect(() => {
-    setShowNavBar(!noNavBarRoutes.has(locationPath.pathname));
-  }, [locationPath]);
+  const showNavBar = !noNavBarRoutes.has(locationPath.pathname);
 
   return (
     <div>{showNavBar && children}</div>
