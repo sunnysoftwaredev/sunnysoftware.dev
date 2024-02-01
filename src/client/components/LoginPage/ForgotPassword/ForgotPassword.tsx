@@ -25,6 +25,7 @@ const ForgotPassword: FunctionComponent = () => {
 
   const navigate = useNavigate();
   const loggedIn = useSelector(getLoggedIn);
+  
   if (loggedIn) {
     navigate('/');
   }
@@ -36,7 +37,7 @@ const ForgotPassword: FunctionComponent = () => {
     [setEmail],
   );
 
-  const handleSubmit = useCallback(async(e: FormEvent<HTMLFormElement>) => {
+  const handleForgotPassword = useCallback(async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await fetch('/api/forgotPassword', {
@@ -92,7 +93,7 @@ const ForgotPassword: FunctionComponent = () => {
       )}
       <form
         className={styles.forgotPassword}
-        onClick={handleSubmit}
+        onSubmit={handleForgotPassword}
       >
         <div>
           <label className={styles.boxAndLabel}>
@@ -120,4 +121,5 @@ const ForgotPassword: FunctionComponent = () => {
     </div>
   );
 };
+
 export default ForgotPassword;
