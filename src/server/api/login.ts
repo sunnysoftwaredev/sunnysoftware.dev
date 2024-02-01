@@ -7,64 +7,86 @@ import { generateSalt, saltAndHash } from '../common/utilities/crypto';
 const router = createRouter();
 
 router.post('/', (req, res) => {
-  (async(): Promise<void> => {
+  (async (): Promise<void> => {
+    let errorMessage = '';
+    
     if (!isObjectRecord(req.body)) {
-      throw new Error('api/login: req.body is not object');
+      errorMessage = 'api/login: req.body is not an object';
+      res.status(400).json({
+        success: false,
+        error: errorMessage,
+      });
+      return;
     }
+
     const { email, password } = req.body;
-
+    
     if (typeof email !== 'string') {
-      throw new Error('api/login: email not type string');
+      errorMessage = 'api/login: email not type string';
+    } else if (typeof password !== 'string') {
+      errorMessage = 'api/login: password not type string';
     }
-    if (typeof password !== 'string') {
-      throw new Error('api/login: password not type string');
-    }
-
-    const userObject = await getUserByEmail(email);
-
-    const {
-      id: userID,
-      username,
-      role,
-      password: passwordDB,
-      salt: saltDB,
-    } = userObject;
-
-    const saltedAndHashedLoginPassword: Buffer = saltAndHash(
-      password,
-      Buffer.from(saltDB, 'hex')
-    );
-    const checkPassword = saltedAndHashedLoginPassword.toString('hex');
-
-    if (checkPassword !== passwordDB) {
-      throw new Error('Unable to authenticate with the provided email and password');
+    
+    if (errorMessage) {
+      res.status(400).json({
+        success: false,
+        error: errorMessage,
+      });
+      return;
     }
 
-    // create expiration date 10 days from creation
-    const expiration = new Date();
-    expiration.setDate(expiration.getDate() + 10);
-    // create and send cookie to browser
-    const token = (await generateSalt()).toString('hex');
-    const tokenToDatabase = insertToken(userID, token, expiration);
-    res.cookie('authenticationToken', token, {
-      expires: expiration,
-      sameSite: 'lax',
-    });
+    try {
+      const userObject = await getUserByEmail(email);
+      const {
+        id: userID,
+        username,
+        role,
+        password: passwordDB,
+        salt: saltDB,
+      } = userObject;
 
-    res.json({
-      success: true,
-      token: tokenToDatabase,
-      userId: userID,
-      username,
-      role,
-    });
-    logger.info('res.json success in login.ts');
-  })().catch((e: Error) => {
-    res.json({
-      success: false,
-      error: e.message,
-    });
-  });
+      if (!userObject) {
+        throw new Error('User not found');
+      }
+
+      const saltedAndHashedLoginPassword: Buffer = saltAndHash(
+        password,
+        Buffer.from(saltDB, 'hex')
+      );
+      const checkPassword = saltedAndHashedLoginPassword.toString('hex');
+
+      if (checkPassword !== passwordDB) {
+        throw new Error('Unable to authenticate with the provided email and password');
+      }
+
+      // Create expiration date 10 days from creation
+      const expiration = new Date();
+      expiration.setDate(expiration.getDate() + 10);
+
+      // Create and send cookie to browser
+      const token = (await generateSalt()).toString('hex');
+      await insertToken(userID, token, expiration);
+      
+      res.cookie('authenticationToken', token, {
+        expires: expiration,
+        sameSite: 'lax'
+      });
+
+      res.json({
+        success: true,
+        token,
+        userId: userID,
+        username,
+        role,
+      });
+      logger.info('User logged in successfully');
+    } catch (error) {
+      res.status(401).json({
+        success: false,
+        error: error.message || 'Authentication failed',
+      });
+    }
+  })();
 });
 
 export default router;
