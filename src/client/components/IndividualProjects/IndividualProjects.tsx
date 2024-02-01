@@ -7,6 +7,7 @@ import { getListOfClients } from '../../redux/selectors/adminPortal';
 import styles from './IndividualProjects.scss';
 
 const IndividualProject: FunctionComponent<Project> = (props) => {
+  // eslint-disable-next-line no-shadow
   const { id, clientId, title, description, active, startDate, status } = props;
 
   const clientList = useSelector(getListOfClients);
@@ -53,22 +54,23 @@ const IndividualProject: FunctionComponent<Project> = (props) => {
         </p>
 
         <div className={styles.buttons}>
-          <button type="button" onClick={toggleAssigning}>Assign employee</button>
+          <button type="button" onClick={toggleAssigning}>Details</button>
         </div>
         <div className={styles.buttons}>
           <button type="button" onClick={toggleEditing}>Edit</button>
         </div>
 
       </div>
-      {/* TODO: refactor editProject  */}
       {editing && (
         <EditProject
           id={id}
+          clientId={clientId}
           title={title}
           description={description}
           active={active}
-          username={'TODO'}
-          email={'TODO'}
+          startDate={startDate}
+          status={status}
+          toggleEditing={toggleEditing}
         />
       )}
     </div>

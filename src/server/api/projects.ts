@@ -41,13 +41,12 @@ router.get('/', (req, res) => {
   });
 });
 
-// TODO: update file for new project columns
 router.post('/', (req, res) => {
   (async(): Promise<void> => {
     if (!isObjectRecord(req.body)) {
       throw new Error('api/projects: req.body is not object');
     }
-    const { client, title, description } = req.body;
+    const { title, client, description, projectStatus } = req.body;
 
     if (!isObjectRecord(req.cookies)) {
       throw new Error('api/projects: req.cookies is not object');
@@ -58,8 +57,8 @@ router.post('/', (req, res) => {
       throw new Error('api/projects: userToken not type string');
     }
 
-    if (typeof client !== 'string') {
-      throw new Error('api/projects.post: client is not string');
+    if (typeof client !== 'number') {
+      throw new Error('api/projects.post: client is not number');
     }
     if (typeof title !== 'string') {
       throw new Error('api/projects.post: title is not string');
@@ -67,16 +66,19 @@ router.post('/', (req, res) => {
     if (typeof description !== 'string') {
       throw new Error('api/projects.post: description is not string');
     }
+    if (typeof projectStatus !== 'string') {
+      throw new Error('api/projects.post: projectStatus is not string');
+    }
 
     const release = await mutex.acquire();
     try {
+      // Leave in for security?
       const idResult = getIDWithToken(authenticationToken);
       if (typeof idResult !== 'object') {
         throw new Error('api/projects: no idResult found');
       }
 
-      const id = Number(client);
-      await createClientProject(id, title, description);
+      await createClientProject(client, title, description, projectStatus);
 
       res.json({
         success: true,
@@ -93,13 +95,14 @@ router.post('/', (req, res) => {
     });
   });
 });
-// TODO: update file for new project columns
+
 router.put('/', (req, res) => {
   (async(): Promise<void> => {
     if (!isObjectRecord(req.body)) {
       throw new Error('api/projects: req.body is not object');
     }
-    const { id, newTitle, newDescription, newActive } = req.body;
+    const { id, newClientID, newTitle, newDescription,
+      newActive, newStartDate, newProjectStatus } = req.body;
 
     if (!isObjectRecord(req.cookies)) {
       throw new Error('api/projects: req.cookies is not object');
@@ -113,24 +116,34 @@ router.put('/', (req, res) => {
     if (typeof id !== 'number') {
       throw new Error('api/projects.put: id is not number');
     }
+    if (typeof newClientID !== 'number') {
+      throw new Error('api/projects.put: newClientId is not number');
+    }
     if (typeof newTitle !== 'string') {
       throw new Error('api/projects.put: title is not string');
     }
     if (typeof newDescription !== 'string') {
-      throw new Error('api/projects.put: description is not string');
+      throw new Error('api/projects.put: newDescription is not string');
     }
     if (typeof newActive !== 'boolean') {
       throw new Error('api/projects.put: active is not boolean');
     }
+    if (typeof newStartDate !== 'number') {
+      throw new Error('api/projects.put: newStartDate is not number');
+    }
+    if (typeof newProjectStatus !== 'string') {
+      throw new Error('api/projects.put: newProjectStatus is not string');
+    }
 
     const release = await mutex.acquire();
     try {
+      // Same as above
       const idResult = getIDWithToken(authenticationToken);
       if (typeof idResult !== 'object') {
         throw new Error('api/projects: no idResult found');
       }
-
-      await updateClientProject(id, newTitle, newDescription, newActive);
+      // eslint-disable-next-line max-len
+      await updateClientProject(id, newClientID, newTitle, newDescription, newActive, newStartDate, newProjectStatus);
 
       res.json({
         success: true,

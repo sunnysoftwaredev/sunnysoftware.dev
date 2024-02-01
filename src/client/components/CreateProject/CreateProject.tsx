@@ -1,37 +1,36 @@
 import type { ChangeEvent, FunctionComponent, SyntheticEvent } from 'react';
-import React, { useState, useCallback, useEffect } from 'react';
-import classNames from 'classnames';
+import React, { useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
-import type { UserIdNameEmailRoleActivePhone } from '../../../server/database';
 import PopupMessage, { PopupType } from '../PopupMessage/PopupMessage';
 import Button, { ButtonSize, ButtonType } from '../Button/Button';
 import Input, { InputSize } from '../Input/Input';
-import useNumberChangeHandler from '../../hooks/useNumberChangeHandler';
 import { getListOfClients } from '../../redux/selectors/adminPortal';
 import styles from './CreateProject.scss';
 
 type CreateProjectProps = {
-  // userList: UserIdNameEmailRoleActivePhone[];
   toggleCreateProjectForm: () => void;
 };
 
-// TODO: add unix start time for start date AND add initial status
-// REMEMBER: the javascript method returns miliseconds, not seconds
-
 const CreateProject: FunctionComponent<CreateProjectProps> = (props) => {
-  const [client, setClient] = useState('');
+  const [client, setClient] = useState(0);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [selectClient, setSelectClient] = useState(0);
-
-  const handleRecordsPerPageChange = useNumberChangeHandler(setSelectClient);
+  const [projectStatus, setProjectStatus] = useState('Not started');
 
   const clientList = useSelector(getListOfClients);
 
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+
+  const statusOptions = [
+    { label: 'Not started', value: 'Not started' },
+    { label: 'In progress', value: 'In progress' },
+    { label: 'Paused', value: 'Paused' },
+    { label: 'Cancelled', value: 'Cancelled' },
+    { label: 'Completed', value: 'Completed' },
+  ];
 
   const closeSuccessPopup = useCallback(() => {
     setShowSuccessPopup(!showSuccessPopup);
@@ -42,18 +41,11 @@ const CreateProject: FunctionComponent<CreateProjectProps> = (props) => {
   }, [showErrorPopup]);
 
   const { toggleCreateProjectForm } = props;
-  // const { userList } = props;
-  // const clientList = userList.filter(user => user.role === 'client');
-
-  // useEffect(() => {
-  //   if (typeof clientList[0] !== 'undefined') {
-  //     setClient(clientList[0].id.toString());
-  //   }
-  // }, [clientList]);
 
   const handleClientChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
-      setClient(e.target.value);
+      const temp = Number(e.target.value);
+      setClient(temp);
       setShowErrorPopup(false);
     },
     [setClient],
@@ -70,11 +62,20 @@ const CreateProject: FunctionComponent<CreateProjectProps> = (props) => {
     setShowErrorPopup(false);
   }, [setDescription]);
 
+  const handleStatusChange
+  = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
+    setProjectStatus(e.target.value);
+    setShowErrorPopup(false);
+  }, [setProjectStatus]);
+
   // TODO: update backend to account for changed rows
+  // TODO: add unix start time for start date AND add initial status
+  // REMEMBER: the javascript method returns miliseconds, not seconds
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
-      if (client === '' || title === '' || description === '') {
+      if (title === '' || client === 0
+       || description === '' || projectStatus === '') {
         setShowErrorPopup(true);
         return;
       }
@@ -85,9 +86,10 @@ const CreateProject: FunctionComponent<CreateProjectProps> = (props) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          client,
           title,
+          client,
           description,
+          projectStatus,
         }),
       });
 
@@ -101,13 +103,16 @@ const CreateProject: FunctionComponent<CreateProjectProps> = (props) => {
       }
       if (result.success) {
         setShowSuccessPopup(true);
+        setTimeout(() => {
+          toggleCreateProjectForm();
+        }, 1500);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
       }
     }
-  }, [client, title, description]);
+  }, [title, client, description, projectStatus, toggleCreateProjectForm]);
 
   return (
     <div className={styles.container}>
@@ -143,8 +148,8 @@ const CreateProject: FunctionComponent<CreateProjectProps> = (props) => {
           <h1>Create Project</h1>
           <button type="button" onClick={toggleCreateProjectForm}>X</button>
         </div>
-        <label>
-          Title
+        <div className={styles.title}>
+          <label>Title</label>
           <Input
             size={InputSize.Large}
             value={title}
@@ -153,11 +158,17 @@ const CreateProject: FunctionComponent<CreateProjectProps> = (props) => {
             placeholderText="Video game project"
             type="text"
           />
-        </label>
+        </div>
 
-        <div className={styles.clientsDropdown}>
+        <div className={styles.dropdown}>
           <label >Clients:</label>
-          <select value={selectClient} onChange={handleRecordsPerPageChange}>
+          <select value={client} onChange={handleClientChange}>
+            <option
+              key={0}
+              value={0}
+            >
+              ---
+            </option>
             {clientList.map(option => (
               <option
                 key={option.id}
@@ -168,19 +179,30 @@ const CreateProject: FunctionComponent<CreateProjectProps> = (props) => {
             ))}
           </select>
         </div>
-        {/* BOX HERE  */}
-        <label>Description </label>
-        <textarea
-          onChange={handleDescriptionChange}
-          value={description}
-          placeholder="Client project description..."
-          className={styles.textArea}
-        />
+        <div className={styles.description}>
+          <label>Description </label>
+          <textarea
+            onChange={handleDescriptionChange}
+            value={description}
+            placeholder="Client project description..."
+            className={styles.textArea}
+          />
+        </div>
         {' '}
-        <p>{selectClient}</p>
 
-        {/* ADD STATUS DROPDOWN  */}
-
+        <div className={styles.dropdown}>
+          <label >Status:</label>
+          <select value={projectStatus} onChange={handleStatusChange}>
+            {statusOptions.map(option => (
+              <option
+                key={option.value}
+                value={option.value}
+              >
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
         <Button type={ButtonType.Submit} size={ButtonSize.Large}>Submit</Button>
       </form>
     </div>
@@ -190,13 +212,3 @@ const CreateProject: FunctionComponent<CreateProjectProps> = (props) => {
 
 export default CreateProject;
 
-{ /* <select value={client} onChange={handleClientChange}>
-              {clientList.map(option => (
-                <option
-                  key={option.id}
-                  value={option.id}
-                >
-                  {option.username}
-                </option>
-              ))}
-            </select> */ }

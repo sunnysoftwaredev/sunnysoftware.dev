@@ -1,48 +1,113 @@
 import type { ChangeEvent, FunctionComponent, SyntheticEvent } from 'react';
 import React, { useCallback, useState } from 'react';
-import classNames from 'classnames';
+import { useSelector } from 'react-redux';
+import type { Project } from '../../../common/utilities/types';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
-import type { ClientProject } from '../../../server/database';
+import PopupMessage, { PopupType } from '../PopupMessage/PopupMessage';
+import Button, { ButtonSize, ButtonType } from '../Button/Button';
+import XIcon from '../../static/svgs/XIcon';
+import Input, { InputSize } from '../Input/Input';
+import { getListOfClients } from '../../redux/selectors/adminPortal';
 import styles from './EditProject.scss';
 
-const EditProject: FunctionComponent<ClientProject> = (props) => {
-  const { id, title, description, active, username, email } = props;
+type EditProjectProps = Project & {
+  toggleEditing: () => void;
+};
 
+const EditProject: FunctionComponent<EditProjectProps> = (props) => {
+  const { id, clientId, title, description, active,
+    startDate, status, toggleEditing } = props;
+
+  const [newClientID, setNewClientID] = useState(clientId);
   const [newTitle, setNewTitle] = useState(title);
   const [newDescription, setNewDescription] = useState(description);
-  const [newActive, setNewActive] = useState(active);
+  const [newActive] = useState(active); // Active column needed?
+  const [newStartDate] = useState(startDate); // Necessary to update?
+  const [newProjectStatus, setNewProjectStatus] = useState(status);
 
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
 
-  const handleTitleChange = useCallback(
+  const clientList = useSelector(getListOfClients);
+
+  const statusOptions = [
+    { label: 'Not started', value: 'Not started' },
+    { label: 'In progress', value: 'In progress' },
+    { label: 'Paused', value: 'Paused' },
+    { label: 'Cancelled', value: 'Cancelled' },
+    { label: 'Completed', value: 'Completed' },
+  ];
+
+  const handleNewClientIdChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      const temp = Number(e.target.value);
+      setNewClientID(temp);
+      setShowErrorPopup(false);
+    },
+    [setNewClientID],
+  );
+
+  const handleNewTitleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setNewTitle(e.target.value);
-      setSubmitted(false);
+      setShowErrorPopup(false);
     },
     [setNewTitle],
   );
 
-  const handleDescriptionChange
+  const handleNewDescriptionChange
    = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
      setNewDescription(e.target.value);
-     setSubmitted(false);
+     setShowErrorPopup(false);
    }, [setNewDescription],);
 
-  const handleActiveChange = useCallback((): void => {
-    setNewActive(!active);
-  }, [active],);
+  // const handleActiveChange = useCallback((): void => {
+  //   setNewActive(!active);
+  // }, [active],);
+
+  // const handleStartDateChange = useCallback(
+  //   (e: ChangeEvent<HTMLInputElement>) => {
+  //     const temp = Number(e.target.value);
+  //     setNewStartDate(temp);
+  //     setShowErrorPopup(false);
+  //   },
+  //   [setNewStartDate],
+  // );
+
+  const handleNewStatusChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      setNewProjectStatus(e.target.value);
+      setShowErrorPopup(false);
+    },
+    [setNewProjectStatus],
+  );
+
+  const toggleEditingForm = useCallback(
+    () => {
+      toggleEditing();
+    },
+    [toggleEditing]
+  );
+
+  const closeSuccessPopup = useCallback(() => {
+    setShowSuccessPopup(!showSuccessPopup);
+  }, [showSuccessPopup]);
+
+  const closeErrorPopup = useCallback(() => {
+    setShowErrorPopup(!showErrorPopup);
+  }, [showErrorPopup]);
 
   // Update Project information
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
-      if (newTitle === '' || newDescription === '') {
-        setError(true);
+      if (newClientID === 0 || newTitle === '' || newDescription === ''
+      || typeof newActive !== 'boolean' || newStartDate === 0 || newProjectStatus === '') {
+        setShowErrorPopup(true);
         return;
       }
-      setError(false);
+      setShowErrorPopup(false);
       const response = await fetch('api/projects', {
         method: 'PUT',
         headers: {
@@ -50,9 +115,12 @@ const EditProject: FunctionComponent<ClientProject> = (props) => {
         },
         body: JSON.stringify({
           id,
+          newClientID,
           newTitle,
           newDescription,
           newActive,
+          newStartDate,
+          newProjectStatus,
         }),
       });
 
@@ -65,7 +133,7 @@ const EditProject: FunctionComponent<ClientProject> = (props) => {
         throw new Error('success variable not type boolean: EditProject.tsx');
       }
       if (result.success) {
-        setSubmitted(true);
+        setShowSuccessPopup(true);
         setTimeout(() => {
           window.location.reload();
         }, 1500);
@@ -75,103 +143,100 @@ const EditProject: FunctionComponent<ClientProject> = (props) => {
         logger.error(err.message);
       }
     }
-  }, [id, newTitle, newDescription, newActive]);
-
-  const successMessage = (): React.JSX.Element => (
-    <div
-      className={classNames(styles.success, {
-        [styles.hidden]: !submitted,
-      })}
-    >
-      <h3>Project info updated</h3>
-    </div>
-  );
-
-  const errorMessage = (): React.JSX.Element => (
-    <div
-      className={classNames({ [styles.hidden]: !error })}
-    >
-      <h1>Please enter all the fields</h1>
-    </div>
-  );
+  }, [id,
+    newClientID,
+    newTitle,
+    newDescription,
+    newActive,
+    newStartDate,
+    newProjectStatus]);
 
   return (
-    <div className={styles.editProjectContainer} >
-      <div>
-        {errorMessage()}
-        {successMessage()}
-      </div>
-
-      <div>
-        <h3>Client Details: </h3>
-        <p>
-          Username:
-          {' '}
-          {username}
-        </p>
-        <p>
-          Email:
-          {' '}
-          {email}
-        </p>
-      </div>
-      <div>
-        <h3>Project Description: </h3>
-        <p>
-          Description:
-          {' '}
-          {description}
-        </p>
-
-      </div>
-
-      <h3>Edit details:</h3>
-      <form className={styles.formContainer}>
-        <div>
-
+    <div className={styles.container} >
+      <div
+        className={styles.backgroundButton}
+        onClick={toggleEditingForm}
+      />
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.top}>
+          <p />
           <div>
-            <label className={styles.projectTitle}>Title</label>
-            <input
-              onChange={handleTitleChange} className="input"
-              value={newTitle} type="text"
-            />
+            <h1>Edit Project</h1>
           </div>
-
+          <button type="button" onClick={toggleEditingForm}><XIcon /></button>
         </div>
-
-        <textarea
-          onChange={handleDescriptionChange}
-          value={newDescription}
-          placeholder={description}
-          className={styles.textArea}
-        />
-        {/* WORK here */}
         <div>
-          <label htmlFor="activeRadio">Active</label>
-          <input
-            type="radio" name="activeRadioGroup" id="activeRadio"
-            value="true" onChange={handleActiveChange}
-            checked={newActive}
+          {showSuccessPopup
+        && (
+          <PopupMessage
+            type={PopupType.Success}
+            message="User successfully updated"
+            onClick={closeSuccessPopup}
           />
-
-          <label htmlFor="inactiveRadio">Deactive</label>
-          <input
-            type="radio" name="activeRadioGroup" id="inactiveRadio"
-            value="false" onChange={handleActiveChange}
-            checked={!newActive}
-
+        )}
+          {showErrorPopup
+        && (
+          <PopupMessage
+            type={PopupType.Failure}
+            message="Failed to update database"
+            onClick={closeErrorPopup}
           />
-
+        )}
         </div>
 
-        <button
-          onClick={handleSubmit}
-          type="submit"
-        >
-          Update Project
-        </button>
+        <div className={styles.title}>
+          <label>Title</label>
+          <Input
+            size={InputSize.Large}
+            value={newTitle}
+            setValue={setNewTitle}
+            onChange={handleNewTitleChange}
+            placeholderText={newTitle}
+            type="text"
+          />
+        </div>
+
+        <div className={styles.dropdown}>
+          <label >Clients:</label>
+          <select value={newClientID} onChange={handleNewClientIdChange}>
+            {clientList.map(option => (
+              <option
+                key={option.id}
+                value={option.id}
+              >
+                {option.username}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className={styles.description}>
+          <label>Description </label>
+          <textarea
+            onChange={handleNewDescriptionChange}
+            value={newDescription}
+            placeholder={description}
+            className={styles.textArea}
+          />
+        </div>
+        {' '}
+
+        <div className={styles.dropdown}>
+          <label >Status:</label>
+          <select value={newProjectStatus} onChange={handleNewStatusChange}>
+            {statusOptions.map(option => (
+              <option
+                key={option.value}
+                value={option.value}
+              >
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <Button type={ButtonType.Submit} size={ButtonSize.Large}>Submit</Button>
       </form>
     </div>
+
   );
 };
 

@@ -520,12 +520,18 @@ Promise<void> => {
 };
 
 export const createClientProject
- = async(id: number, title: string, description: string):
+ = async(
+   clientId: number, title: string,
+   description: string, projectStatus: string
+ ):
  Promise<void> => {
+   const currentUnixSeconds = Math.floor(Date.now() / 1000);
    await client.query(`
-   INSERT INTO client_projects (client_id, title, description, active)
-    VALUES ($1, $2, $3, true)
-    `, [id, title, description]);
+   INSERT INTO client_projects (
+    client_id, title, description,
+     active, start_date, status)
+    VALUES ($1, $2, $3, true, $4, $5)
+    `, [clientId, title, description, currentUnixSeconds, projectStatus]);
  };
 
 export type ClientProject = {
@@ -585,16 +591,23 @@ INNER JOIN
 };
 
 export const updateClientProject = async(
-  id: number,
-  title: string,
-  description: string, active: boolean,
+  id: number, newClientId: number,
+  newTitle: string, newDescription: string,
+  newActive: boolean, newStartDate: number,
+  newProjectStatus: string,
 ):
 Promise<void> => {
   await client.query(
     `UPDATE client_projects
-  SET title=$2, description=$3, active=$4
+  SET client_id =$2, title=$3, description=$4, active=$5, start_date=$6, status=$7
   WHERE id=$1`,
-    [id, title, description, active]
+    [id,
+      newClientId,
+      newTitle,
+      newDescription,
+      newActive,
+      newStartDate,
+      newProjectStatus]
   );
 };
 

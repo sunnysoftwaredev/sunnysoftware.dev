@@ -108,22 +108,27 @@ const ManageProjects: FunctionComponent = () => {
       break;
     }
     case 'In progress': {
-      currentSlice = inProgressProjectList.slice(activeFirstIndex, activeLastIndex);
+      currentSlice
+       = inProgressProjectList.slice(activeFirstIndex, activeLastIndex);
       totalPages = Math.ceil(inProgressProjectList.length / recordsPerPage);
       break;
     }
-    case 'In progress': {
-      currentSlice = pausedProjectList.slice(activeFirstIndex, activeLastIndex);
-      totalPages = Math.ceil(pausedProjectList.length / recordsPerPage);
+    case 'Paused': {
+      currentSlice
+      = pausedProjectList.slice(activeFirstIndex, activeLastIndex);
+      totalPages
+      = Math.ceil(pausedProjectList.length / recordsPerPage);
       break;
     }
     case 'Cancelled': {
-      currentSlice = cancelledProjectList.slice(activeFirstIndex, activeLastIndex);
+      currentSlice
+       = cancelledProjectList.slice(activeFirstIndex, activeLastIndex);
       totalPages = Math.ceil(cancelledProjectList.length / recordsPerPage);
       break;
     }
     case 'Completed': {
-      currentSlice = completedProjectList.slice(activeFirstIndex, activeLastIndex);
+      currentSlice
+       = completedProjectList.slice(activeFirstIndex, activeLastIndex);
       totalPages = Math.ceil(completedProjectList.length / recordsPerPage);
       break;
     }
