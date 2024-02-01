@@ -1,30 +1,30 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useState } from 'react';
-import styles from './AccordianPanel.scss';
+import styles from './AccordionPanel.scss';
 
-type AccordianPanelProps = {
+type AccordionPanelProps = {
   question: string;
   answer: string;
 };
 
-const AccordianPanel: FunctionComponent<AccordianPanelProps>
+const AccordionPanel: FunctionComponent<AccordionPanelProps>
  = ({ question, answer }) => {
    const [isOpen, setIsOpen] = useState(false);
    const togglePanel = useCallback(() => {
      setIsOpen(!isOpen);
    }, [isOpen]);
    return (
-     <div className={styles.accordianPanelContainer}>
-       <div className={styles.accordianQuestion} onClick={togglePanel}>
+     <div className={styles.accordionPanelContainer}>
+       <div className={styles.accordionQuestion} onClick={togglePanel}>
          <h3>{question}</h3>
          <div className={styles.panelArrow}>
            {'>'}
          </div>
        </div>
-       <div className={styles.accordianDivider} />
-       {isOpen && <p className={styles.accordianAnswer}>{answer}</p>}
+       <div className={styles.accordionDivider} />
+       {isOpen && <p className={styles.accordionAnswer}>{answer}</p>}
      </div>
    );
  };
 
-export default AccordianPanel;
+export default AccordionPanel;
