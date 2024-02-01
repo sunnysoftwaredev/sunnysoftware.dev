@@ -1,19 +1,18 @@
 import type { FunctionComponent } from 'react';
-import React, { useCallback, useState } from 'react';
-// import { isObjectRecord } from '../../../common/utilities/types';
-// import logger from '../../../server/logger';
+import React, { useState } from 'react';
 import type { ClientProject } from '../../../server/database';
 import EditProject from '../EditProject/EditProject';
 import styles from './IndividualProjects.scss';
 
-const IndividualProject: FunctionComponent<ClientProject> = (props) => {
-  const { id, title, description, active, username, email } = props;
-
+const IndividualProject: FunctionComponent<ClientProject> = ({
+  id,
+  title,
+  description,
+  active,
+  username,
+  email,
+}) => {
   const [editing, setEditing] = useState(false);
-
-  const toggleEditState = useCallback(() => {
-    setEditing(!editing);
-  }, [editing]);
 
   return (
     <div
@@ -21,16 +20,15 @@ const IndividualProject: FunctionComponent<ClientProject> = (props) => {
       className={styles.project}
     >
       <div>
-        <h2>
-          {`Title: ${title}`}
-        </h2>
-        <h4>
-          {'Active: '}
-          {' '}
-          {active ? 'true' : 'false'}
-        </h4>
+        <h2>{`Title: ${title}`}</h2>
+        <h4>{`Active: ${active ? 'true' : 'false'}`}</h4>
       </div>
-      <button type="button" onClick={toggleEditState}>More...</button>
+      <button
+        type="button"
+        onClick={() => setEditing(editState => !editState)}
+      >
+        More...
+      </button>
       {editing && (
         <EditProject
           id={id}
