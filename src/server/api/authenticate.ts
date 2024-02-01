@@ -1,39 +1,53 @@
-import { Router as createRouter } from 'express';
+import { Router as createRouter, Request, Response, NextFunction } from 'express';
 import { isObjectRecord } from '../../common/utilities/types';
 import { checkActiveToken, getUser } from '../database';
 
 const router = createRouter();
 
-router.post('/', (req, res) => {
-  (async(): Promise<void> => {
-    if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/authenticate: req.cookies is not object');
-    }
-    const { authenticationToken } = req.cookies;
-    if (typeof authenticationToken !== 'string') {
-      throw new Error('api/authenticate: userToken not type string');
-    }
+const authenticate = async (req: Request, res: Response, next: NextFunction) => {
+  if (!isObjectRecord(req.cookies)) {
+    return res.status(400).json({
+      success: false,
+      error: 'api/authenticate: req.cookies is not object',
+    });
+  }
 
+  const { authenticationToken } = req.cookies;
+  if (typeof authenticationToken !== 'string') {
+    return res.status(400).json({
+      success: false,
+      error: 'api/authenticate: authenticationToken not type string',
+    });
+  }
+
+  try {
     const tokenActive = await checkActiveToken(authenticationToken);
 
     if (!tokenActive) {
-      throw new Error('User authentication has failed');
+      return res.status(401).json({
+        success: false,
+        error: 'User authentication has failed',
+      });
     }
 
-    const { username, role } = await getUser(authenticationToken);
-
-    res.json({
-      username,
-      role,
-      active: tokenActive,
-    });
-  })().catch((e: Error) => {
-    res.json({
+    const user = await getUser(authenticationToken);
+    res.locals.user = user;
+    next();
+  } catch (e) {
+    res.status(500).json({
       success: false,
-      error: e.message,
+      error: e instanceof Error ? e.message : 'Unknown error',
     });
+  }
+};
+
+router.post('/', authenticate, (req, res) => {
+  const { username, role } = res.locals.user;
+  res.json({
+    username,
+    role,
+    active: true,
   });
 });
 
 export default router;
-
