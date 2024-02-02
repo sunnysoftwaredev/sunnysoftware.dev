@@ -28,23 +28,24 @@ const createHtml = (state: string): string => (
 );
 
 export default (req: ExpressRequest, res: ExpressResponse): void => {
-  const store = configureStore({
-    reducer,
-  });
-  (async(): Promise<void> => {
-    if (!isObjectRecord(req.cookies)) {
-      throw new Error('html: req.cookies is not object');
-    }
+  const store = configureStore({ reducer });
 
+  (async (): Promise<void> => {
     try {
+      if (!isObjectRecord(req.cookies)) {
+        throw new Error('html: req.cookies is not object');
+      }
+
       const { authenticationToken } = req.cookies;
       if (typeof authenticationToken !== 'string') {
         throw new Error('Expected authenticationToken to be a string');
       }
+
       const tokenActive = await checkActiveToken(authenticationToken);
       if (!tokenActive) {
         throw new Error('User authentication has failed');
       }
+
       const { userId, username, role } = await getUser(authenticationToken);
       store.dispatch(AccountActions.logIn({
         userId,
@@ -52,10 +53,9 @@ export default (req: ExpressRequest, res: ExpressResponse): void => {
         role,
       }));
     } catch (e: unknown) {
-      // User not authenticated
+      // User not authenticated or other errors
+    } finally {
+      res.send(createHtml(JSON.stringify(store.getState())));
     }
-    res.send(createHtml(JSON.stringify(store.getState())));
-  })().catch(() => {
-    res.send(createHtml(JSON.stringify(store.getState())));
-  });
+  })();
 };
