@@ -6,12 +6,12 @@ export type State = ReturnType<typeof reducer>;
 declare global {
   interface Window {
     // eslint-disable-next-line id-match
-    __INITIAL_STATE__: State;
+    initialReduxState: State;
   }
 }
 
-// eslint-disable-next-line no-underscore-dangle
-const preloadedState = window.__INITIAL_STATE__;
+// Let's adhere to standard JS practices by avoiding variable names with double underscores
+const preloadedState = window.initialReduxState;
 
 const store = configureStore({
   reducer,
