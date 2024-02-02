@@ -6,12 +6,10 @@ import logger from './logger';
 import api from './api';
 import html from './html';
 
-export const initializeServer = async(): Promise<void> => (
-  new Promise((resolve) => {
+export const initializeServer = async (): Promise<void> => {
+  try {
     const PORT = 3000;
-
     const app = express();
-
     const clientDirectory = path.join(__dirname, './client');
 
     app.use(express.static(clientDirectory));
@@ -32,9 +30,13 @@ export const initializeServer = async(): Promise<void> => (
 
     app.get('*', html);
 
-    app.listen(PORT, () => {
-      logger.info(`Server is listening on port ${PORT}`);
-      resolve();
+    await new Promise<void>((resolve, reject) => {
+      app.listen(PORT, () => {
+        logger.info(`Server is listening on port ${PORT}`);
+        resolve();
+      }).on('error', reject);
     });
-  })
-);
+  } catch (error) {
+    logger.error('Failed to initialize the server:', error);
+  }
+};
