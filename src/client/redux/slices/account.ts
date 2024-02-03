@@ -1,37 +1,41 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-export type AccountState = {
-  userId?: number;
-  username?: string;
-  role?: string;
+// Before a user is logged in, all fields are potentially undefined
+export type LoggedOutAccountState = {
+  userId: undefined;
+  username: undefined;
+  role: undefined;
 };
 
-const initialState: AccountState = {
+// Once a user is logged in, their account state must have all fields defined
+export type LoggedInAccountState = {
+  userId: number;
+  username: string;
+  role: string;
+};
+
+// The AccountState can either be in the logged out state or the logged in state
+export type AccountState = LoggedOutAccountState | LoggedInAccountState;
+
+const initialState: LoggedOutAccountState = {
   userId: undefined,
   username: undefined,
   role: undefined,
 };
 
-type LogInAction = PayloadAction<{
-  userId: number;
-  username: string;
-  role: string;
-}>;
+type LogInAction = PayloadAction<LoggedInAccountState>;
 
 const accountSlice = createSlice({
   name: 'account',
   initialState,
   reducers: {
     logIn: (state, action: LogInAction) => {
-      state.userId = action.payload.userId;
-      state.username = action.payload.username;
-      state.role = action.payload.role;
+      const { userId, username, role } = action.payload;
+      return { userId, username, role }; // return new state instead of mutating
     },
-    logOut: (state) => {
-      state.userId = undefined;
-      state.username = undefined;
-      state.role = undefined;
+    logOut: () => {
+      return initialState; // return the initialState directly
     },
   },
 });
