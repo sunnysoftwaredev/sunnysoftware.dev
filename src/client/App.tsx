@@ -16,7 +16,7 @@ import AboutUsPage from './pages/AboutUsPage/AboutUsPage';
 import ServicesPage from './pages/ServicesPage/ServicesPage';
 import PortfolioPage from './pages/PortfolioPage/PortfolioPage';
 import TeamPage from './pages/TeamPage/TeamPage';
-import NavBar from './components/NavBar/NavBar';
+import Navigation from './components/NavBar/NavBar'; // Renamed from NavBar to Navigation
 import Footer from './components/Footer/Footer';
 import './App.scss';
 import MethodologyPage from './pages/MethodologyPage/MethodologyPage';
@@ -24,7 +24,7 @@ import FAQPage from './pages/FAQPage/FAQPage';
 import TestimonialsPage from './pages/TestimonialsPage/TestimonialsPage';
 import CareersPage from './pages/CareersPage/CareersPage';
 import ResourcesPage from './pages/ResourcesPage/ResourcesPage';
-import ShowNavBar from './components/ShowNavBar/ShowNavBar';
+import ShowNavBar from './components/ShowNavBar/ShowNavBar'; // Consider changing the name of ShowNavBar in future as well
 import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 import store from './redux/store';
@@ -32,7 +32,7 @@ import store from './redux/store';
 const App: FunctionComponent = () => (
   <Provider store={store}>
     <ShowNavBar>
-      <NavBar />
+      <Navigation />
     </ShowNavBar>
     <Routes>
       <Route path="/" element={<LandingPage />} />
@@ -58,7 +58,6 @@ const App: FunctionComponent = () => (
       <Route
         path="work-portal" element={(
           <EmployeePrivateRoute>
-
             <WorkPortalPage />
           </EmployeePrivateRoute>
         )}
