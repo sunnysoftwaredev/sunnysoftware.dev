@@ -1,3 +1,4 @@
+```typescript
 import type {
   Request as ExpressRequest,
   Response as ExpressResponse,
@@ -31,19 +32,29 @@ export default (req: ExpressRequest, res: ExpressResponse): void => {
   const store = configureStore({
     reducer,
   });
-  (async(): Promise<void> => {
-    if (!isObjectRecord(req.cookies)) {
-      throw new Error('html: req.cookies is not object');
-    }
 
+  if (!isObjectRecord(req.cookies)) {
+    res.status(400).send('Bad Request: Cookies must be an object.');
+    return;
+  }
+
+  const { authenticationToken } = req.cookies;
+
+  if (!authenticationToken) {
+    res.status(401).send('Unauthorized: Missing authentication token.');
+    return;
+  }
+
+  if (typeof authenticationToken !== 'string') {
+    res.status(400).send('Bad Request: Authentication token must be a string.');
+    return;
+  }
+  
+  (async (): Promise<void> => {
     try {
-      const { authenticationToken } = req.cookies;
-      if (typeof authenticationToken !== 'string') {
-        throw new Error('Expected authenticationToken to be a string');
-      }
       const tokenActive = await checkActiveToken(authenticationToken);
       if (!tokenActive) {
-        throw new Error('User authentication has failed');
+        throw new Error('Invalid or expired authentication token.');
       }
       const { userId, username, role } = await getUser(authenticationToken);
       store.dispatch(AccountActions.logIn({
@@ -51,11 +62,11 @@ export default (req: ExpressRequest, res: ExpressResponse): void => {
         username,
         role,
       }));
-    } catch (e: unknown) {
-      // User not authenticated
+    } catch (e) {
+      res.status(401).send('Unauthorized: ' + e.message); // Or log the error internally, send a generic message to the client if appropriate
+      return;
     }
     res.send(createHtml(JSON.stringify(store.getState())));
-  })().catch(() => {
-    res.send(createHtml(JSON.stringify(store.getState())));
-  });
+  })();
 };
+```
