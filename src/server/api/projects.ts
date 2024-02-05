@@ -1,14 +1,54 @@
 import { Router as createRouter } from 'express';
 import { Mutex } from 'async-mutex';
 import { isObjectRecord } from '../../common/utilities/types';
-import { createClientProject, getAllClientProjects, getIDWithToken, updateClientProject } from '../database';
+import {
+  createClientProject,
+  getAllClientProjects,
+  getIDWithToken,
+  updateClientProject,
+} from '../database';
 import logger from '../logger';
+
+// Utility function to ensure the presence of an authentication token as a string
+function assertAuthenticationToken(cookies: any): asserts cookies is { authenticationToken: string } {
+  if (!isObjectRecord(cookies) || typeof cookies.authenticationToken !== 'string') {
+    throw new Error('api/projects: authenticationToken is missing or not a string');
+  }
+}
+
+// Utility function to ensure the object shape with string properties
+function assertObjectWithStringProperties(
+  object: any,
+  properties: string[]
+): asserts object is Record<string, string> {
+  if (!isObjectRecord(object)) {
+    throw new Error('api/projects: object is not an object');
+  }
+  for (const property of properties) {
+    if (typeof object[property] !== 'string') {
+      throw new Error(`api/projects: ${property} is not a string`);
+    }
+  }
+}
+
+function assertIsNumber(value: any, name: string): asserts value is number {
+  if (typeof value !== 'number') {
+    throw new Error(`api/projects: ${name} is not a number`);
+  }
+}
+
+function assertIsBoolean(value: any, name: string): asserts value is boolean {
+  if (typeof value !== 'boolean') {
+    throw new Error(`api/projects: ${name} is not a boolean`);
+  }
+}
+
 
 const router = createRouter();
 const mutex = new Mutex();
 
 router.get('/', (req, res) => {
-  (async(): Promise<void> => {
+  (async (): Promise<void> => {
     const release = await mutex.acquire();
     try {
       const projects = await getAllClientProjects();
@@ -32,34 +72,17 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/projects: req.body is not object');
-    }
+  (async (): Promise<void> => {
+    assertObjectWithStringProperties(req.body, ['client', 'title', 'description']);
+    assertAuthenticationToken(req.cookies);
+
     const { client, title, description } = req.body;
-
-    if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/projects: req.cookies is not object');
-    }
-
     const { authenticationToken } = req.cookies;
-    if (typeof authenticationToken !== 'string') {
-      throw new Error('api/projects: userToken not type string');
-    }
-
-    if (typeof client !== 'string') {
-      throw new Error('api/projects.post: client is not string');
-    }
-    if (typeof title !== 'string') {
-      throw new Error('api/projects.post: title is not string');
-    }
-    if (typeof description !== 'string') {
-      throw new Error('api/projects.post: description is not string');
-    }
 
     const release = await mutex.acquire();
     try {
       const idResult = getIDWithToken(authenticationToken);
+
       if (typeof idResult !== 'object') {
         throw new Error('api/projects: no idResult found');
       }
@@ -84,37 +107,19 @@ router.post('/', (req, res) => {
 });
 
 router.put('/', (req, res) => {
-  (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/projects: req.body is not object');
-    }
+  (async (): Promise<void> => {
+    assertObjectWithStringProperties(req.body, ['newTitle', 'newDescription']);
+    assertAuthenticationToken(req.cookies);
+    assertIsNumber(req.body.id, 'id');
+    assertIsBoolean(req.body.newActive, 'newActive');
+
     const { id, newTitle, newDescription, newActive } = req.body;
-
-    if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/projects: req.cookies is not object');
-    }
-
     const { authenticationToken } = req.cookies;
-    if (typeof authenticationToken !== 'string') {
-      throw new Error('api/projects: userToken not type string');
-    }
-
-    if (typeof id !== 'number') {
-      throw new Error('api/projects.put: id is not number');
-    }
-    if (typeof newTitle !== 'string') {
-      throw new Error('api/projects.put: title is not string');
-    }
-    if (typeof newDescription !== 'string') {
-      throw new Error('api/projects.put: description is not string');
-    }
-    if (typeof newActive !== 'boolean') {
-      throw new Error('api/projects.put: active is not boolean');
-    }
 
     const release = await mutex.acquire();
     try {
       const idResult = getIDWithToken(authenticationToken);
+
       if (typeof idResult !== 'object') {
         throw new Error('api/projects: no idResult found');
       }
