@@ -10,7 +10,8 @@ interface IProps {
 const EmployeePrivateRoute = ({ children }: IProps): React.JSX.Element => {
   const isEmployee = useSelector(getIsEmployee);
   if (!isEmployee) {
-    return <Navigate to="/login" />;
+    // The 'replace' prop is set to true to replace the current entry in the history stack
+    return <Navigate to="/login" replace />;
   }
 
   return children;
