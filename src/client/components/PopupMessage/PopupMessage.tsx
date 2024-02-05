@@ -17,19 +17,16 @@ type PopupProps = PropsWithChildren<{
   onClick: MouseEventHandler<HTMLButtonElement>;
 }>;
 
-const PopupMessage: FunctionComponent<PopupProps> = (props) => {
-  const { type = PopupType.Success, message, onClick } = props;
-  const success = type === PopupType.Success;
-  const failure = type === PopupType.Failure;
+const PopupMessage: FunctionComponent<PopupProps> = ({ type = PopupType.Success, message, onClick }) => {
   return (
     <div className={classNames(styles.container, {
-      [styles.success]: success,
-      [styles.failure]: failure,
+      [styles.success]: type === PopupType.Success,
+      [styles.failure]: type === PopupType.Failure,
     })}
     >
       <div className={styles.leftIcon}>
-        {success && <CheckmarkIcon />}
-        {failure && <WarningIcon />}
+        {type === PopupType.Success && <CheckmarkIcon />}
+        {type === PopupType.Failure && <WarningIcon />}
       </div>
       <p>{message}</p>
       <div className={styles.rightIcon}>
