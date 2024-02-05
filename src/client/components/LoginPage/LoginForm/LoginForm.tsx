@@ -67,10 +67,6 @@ const LoginForm: FunctionComponent = () => {
       if (typeof result.success !== 'boolean') {
         throw new Error('success variable not type boolean: LoginForm.tsx');
       }
-
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: LoginForm.tsx');
-      }
       if (typeof result.userId !== 'number') {
         throw new Error('userId variable not type number: LoginForm.tsx');
       }
@@ -80,6 +76,7 @@ const LoginForm: FunctionComponent = () => {
       if (typeof result.role !== 'string') {
         throw new Error('role variable not type string: LoginForm.tsx');
       }
+      
       if (result.success) {
         setShowSuccessPopup(true);
         dispatch(AccountActions.logIn({
