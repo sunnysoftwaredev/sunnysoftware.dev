@@ -27,10 +27,14 @@ const createHtml = (state: string): string => (
 </html>`
 );
 
-export default (req: ExpressRequest, res: ExpressResponse): void => {
-  const store = configureStore({
+const configureServerStore = () => {
+  return configureStore({
     reducer,
   });
+};
+
+export default (req: ExpressRequest, res: ExpressResponse): void => {
+  const store = configureServerStore();
   (async(): Promise<void> => {
     if (!isObjectRecord(req.cookies)) {
       throw new Error('html: req.cookies is not object');
