@@ -1,5 +1,9 @@
-import logger, { LogLevel } from 'eleventh';
+import logger from 'eleventh';
 
-logger.setLogLevel(LogLevel.debug);
+// Assuming LogLevel.debug is a constant and not a TypeScript enum after compilation,
+// we can import the specific value directly for potential tree-shaking benefits.
+const LogLevelDebug = "debug";
+
+logger.setLogLevel(LogLevelDebug);
 
 export default logger;
