@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import React from 'react';
+import React, { memo } from 'react';
 import styles from './StatisticsBar.scss';
 
 interface Statistic {
@@ -14,7 +14,7 @@ const statistics: Statistic[] = [
   { value: '95%', description: 'Positive reviews' },
 ];
 
-const StatisticsBar: FunctionComponent = () => (
+const StatisticsBar: FunctionComponent = memo(() => (
   <div className={styles.barContainer}>
     {statistics.map(stat => (
       <div key={stat.description} className={styles.statistic}>
@@ -23,6 +23,6 @@ const StatisticsBar: FunctionComponent = () => (
       </div>
     ))}
   </div>
-);
+));
 
 export default StatisticsBar;
