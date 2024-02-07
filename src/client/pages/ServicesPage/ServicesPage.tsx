@@ -5,17 +5,22 @@ import ServicesPageBanner from '../../components/ServicesPage/ServicesPageBanner
 import FullServicesList from '../../components/ServicesPage/FullServicesList/FullServicesList';
 import ServicesNeedHelp from '../../components/ServicesPage/ServicesNeedHelp/ServicesNeedHelp';
 
+// Encapsulate Helmet rendering logic
+const renderHelmet = () => (
+  <Helmet>
+    <meta charSet="utf-8" />
+    <title>Services-Sunny Software</title>
+    <link rel="canonical" href="https://sunnysoftware.dev/services" />
+    <meta
+      name="description"
+      content="Information on services offered by Sunny Software LLC"
+    />
+  </Helmet>
+);
+
 const ServicesPage: FunctionComponent = () => (
   <div>
-    <Helmet>
-      <meta charSet="utf-8" />
-      <title>Services-Sunny Software</title>
-      <link rel="canonical" href="https://sunnysoftware.dev/services" />
-      <meta
-        name="description"
-        content="Information on services offered by Sunny Software LLC"
-      />
-    </Helmet>
+    {renderHelmet()}
     <ServicesPageBanner />
     <FullServicesList />
     <ServicesNeedHelp />
