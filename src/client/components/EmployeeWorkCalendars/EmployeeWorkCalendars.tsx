@@ -10,11 +10,13 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
   const [timesheetList, setTimesheetList] = useState<EmployeeTimesheet[]>([]);
 
   const getDaysInWeek = useCallback((): Date[] => {
+    const startOfWeek = new Date(currentDate);
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+
     const days: Date[] = [];
     for (let i = 0; i < 7; i++) {
-      const first = currentDate.getDate() - currentDate.getDay() + i;
-      const day
-      = new Date(currentDate.setDate(first));
+      let day = new Date(startOfWeek);
+      day.setDate(day.getDate() + i);
       days.push(day);
     }
     return days;
@@ -23,27 +25,21 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
   const daysInWeek = useMemo(() => getDaysInWeek(), [getDaysInWeek]);
 
   const getUnixDayStart = (date: Date): number => {
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-
-    return Math.floor(date.getTime() / 1000);
+    const dayStart = new Date(date);
+    dayStart.setHours(0, 0, 0, 0);
+    return Math.floor(dayStart.getTime() / 1000);
   };
 
   const getUnixDayEnd = (date: Date): number => {
-    date.setHours(23);
-    date.setMinutes(59);
-    date.setSeconds(59);
-    date.setMilliseconds(999);
-
-    return Math.floor(date.getTime() / 1000);
+    const dayEnd = new Date(date);
+    dayEnd.setHours(23, 59, 59, 999);
+    return Math.floor(dayEnd.getTime() / 1000);
   };
 
   const fetchAllWeekLogs = useCallback(async() => {
     try {
       const unixWeekStart = getUnixDayStart(daysInWeek[0]);
-      const unixWeekEnd = getUnixDayEnd(daysInWeek[6]);
+      const unixWeekEnd = getUnixDayEnd(daysInWeek[daysInWeek.length - 1]);
       const response = await fetch('api/timesheets', {
         method: 'POST',
         headers: {
@@ -83,19 +79,13 @@ const EmployeeWorkCalendars: FunctionComponent = () => {
 
   const changeToPreviousWeek = useCallback((): void => {
     setCurrentDate((currDate: Date): Date => {
-      const Year = currDate.getFullYear();
-      const Month = currDate.getMonth();
-      const Day = currDate.getDate();
-      return new Date(Year, Month, Day - 7);
+      return new Date(currDate.getFullYear(), currDate.getMonth(), currDate.getDate() - 7);
     });
   }, []);
 
   const changeToNextWeek = useCallback((): void => {
     setCurrentDate((currDate: Date): Date => {
-      const Year = currDate.getFullYear();
-      const Month = currDate.getMonth();
-      const Day = currDate.getDate();
-      return new Date(Year, Month, Day + 7);
+      return new Date(currDate.getFullYear(), currDate.getMonth(), currDate.getDate() + 7);
     });
   }, []);
 
