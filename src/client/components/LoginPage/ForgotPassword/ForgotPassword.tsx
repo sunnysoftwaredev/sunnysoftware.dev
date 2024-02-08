@@ -36,7 +36,7 @@ const ForgotPassword: FunctionComponent = () => {
     [setEmail],
   );
 
-  const handleSubmit = useCallback(async(e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await fetch('/api/forgotPassword', {
@@ -44,9 +44,7 @@ const ForgotPassword: FunctionComponent = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email,
-        }),
+        body: JSON.stringify({ email }),
       });
 
       const result: unknown = await response.json();
@@ -57,15 +55,15 @@ const ForgotPassword: FunctionComponent = () => {
       if (typeof result.success !== 'boolean') {
         throw new Error('Expected "success" to be a boolean.');
       }
-
-      if (result.success) {
-        setShowSuccessPopup(true);
-      } else {
-        setShowErrorPopup(true);
+      if (!result.success) {
+        throw new Error('Reset password process failed.');
       }
+
+      setShowSuccessPopup(true);
     } catch (err: unknown) {
       if (err instanceof Error) {
         logger.error(err.message);
+        setShowErrorPopup(true);
       }
     }
   }, [email]);
