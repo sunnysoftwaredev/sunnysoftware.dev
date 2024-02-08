@@ -7,6 +7,17 @@ interface Statistic {
   description: string;
 }
 
+interface StatisticItemProps {
+  stat: Statistic;
+}
+
+const StatisticItem: FunctionComponent<StatisticItemProps> = ({ stat }) => (
+  <div key={stat.description} className={styles.statistic}>
+    <h2>{stat.value}</h2>
+    <p>{stat.description}</p>
+  </div>
+);
+
 const statistics: Statistic[] = [
   { value: '15+', description: 'Years of experience' },
   { value: '1K+', description: 'Happy Customers' },
@@ -16,11 +27,8 @@ const statistics: Statistic[] = [
 
 const StatisticsBar: FunctionComponent = () => (
   <div className={styles.barContainer}>
-    {statistics.map(stat => (
-      <div key={stat.description} className={styles.statistic}>
-        <h2>{stat.value}</h2>
-        <p>{stat.description}</p>
-      </div>
+    {statistics.map((stat) => (
+      <StatisticItem key={stat.description} stat={stat} />
     ))}
   </div>
 );
