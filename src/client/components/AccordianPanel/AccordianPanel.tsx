@@ -7,12 +7,14 @@ type AccordianPanelProps = {
   answer: string;
 };
 
-const AccordianPanel: FunctionComponent<AccordianPanelProps>
- = ({ question, answer }) => {
+const AccordianPanel: FunctionComponent<AccordianPanelProps> = ({ question, answer }) => {
    const [isOpen, setIsOpen] = useState(false);
+
+   // Toggle the visibility of the answer panel
    const togglePanel = useCallback(() => {
-     setIsOpen(!isOpen);
-   }, [isOpen]);
+     setIsOpen(isOpen => !isOpen);
+   }, []); // Removed dependency array
+
    return (
      <div className={styles.accordianPanelContainer}>
        <div className={styles.accordianQuestion} onClick={togglePanel}>
@@ -25,6 +27,6 @@ const AccordianPanel: FunctionComponent<AccordianPanelProps>
        {isOpen && <p className={styles.accordianAnswer}>{answer}</p>}
      </div>
    );
- };
+};
 
 export default AccordianPanel;
