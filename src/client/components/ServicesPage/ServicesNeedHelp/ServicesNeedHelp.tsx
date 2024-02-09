@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
 import Button, { ButtonSize, ButtonVariant } from '../../Button/Button';
-import styles from './ServicesNeedHelp.scss';
+import styles from './ServicesNeedHelp.module.scss';
 
 const ServicesNeedHelp: FunctionComponent = () => (
   <div className={styles.container}>
