@@ -1,15 +1,17 @@
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
-import Hero from '../../components/Hero/Hero';
-import Services from '../../components/Services/Services';
-import CallToAction from '../../components/CallToAction/CallToAction';
-import Methodology from '../../components/Methodology/Methodology';
-import PortfolioCarousel from '../../components/PortfolioCarousel/PortfolioCarousel';
-import OurTeamAndOpenings from '../../components/OurTeamAndOpenings/OurTeamAndOpenings';
-import EmployeeCardStack from '../../components/TestimonialsCardStack/TestimonialsCardStack';
-import FrequentlyAskedQuestions from '../../components/FrequentlyAskedQuestions/FrequentlyAskedQuestions';
-import ResourcesPanel from '../../components/ResourcesPanel/ResourcesPanel';
+import {
+  Hero,
+  Services,
+  CallToAction,
+  Methodology,
+  PortfolioCarousel,
+  OurTeamAndOpenings,
+  EmployeeCardStack,
+  FrequentlyAskedQuestions,
+  ResourcesPanel,
+} from '../../components';
 
 const LandingPage: FunctionComponent = () => (
   <div>
