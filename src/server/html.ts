@@ -27,35 +27,41 @@ const createHtml = (state: string): string => (
 </html>`
 );
 
+async function authenticateUser(authenticationToken: string, store: ReturnType<typeof configureStore>) {
+  if (!authenticationToken) {
+    return; // No authentication possible without a token
+  }
+
+  const tokenActive = await checkActiveToken(authenticationToken);
+  if (!tokenActive) {
+    throw new Error('User authentication has failed');
+  }
+
+  const { userId, username, role } = await getUser(authenticationToken);
+  store.dispatch(AccountActions.logIn({
+    userId,
+    username,
+    role,
+  }));
+}
+
 export default (req: ExpressRequest, res: ExpressResponse): void => {
-  const store = configureStore({
-    reducer,
-  });
+  const store = configureStore({ reducer, });
+  
   (async(): Promise<void> => {
     if (!isObjectRecord(req.cookies)) {
-      throw new Error('html: req.cookies is not object');
+      res.status(400).send('Invalid cookie format');
+      return;
     }
 
+    const { authenticationToken = null } = req.cookies;
     try {
-      const { authenticationToken } = req.cookies;
-      if (typeof authenticationToken !== 'string') {
-        throw new Error('Expected authenticationToken to be a string');
-      }
-      const tokenActive = await checkActiveToken(authenticationToken);
-      if (!tokenActive) {
-        throw new Error('User authentication has failed');
-      }
-      const { userId, username, role } = await getUser(authenticationToken);
-      store.dispatch(AccountActions.logIn({
-        userId,
-        username,
-        role,
-      }));
+      await authenticateUser(authenticationToken as string, store);
     } catch (e: unknown) {
-      // User not authenticated
+      // User not authenticated, continue with default state
     }
     res.send(createHtml(JSON.stringify(store.getState())));
-  })().catch(() => {
-    res.send(createHtml(JSON.stringify(store.getState())));
+  })().catch((error) => {
+    res.status(500).send('An error occurred while preparing the application state');
   });
 };
