@@ -1,5 +1,4 @@
-import { Router as createRouter } from 'express';
-// import logger from '../logger';
+import { Router as createRouter, Request, Response } from 'express';
 import { Mutex } from 'async-mutex';
 import { isObjectRecord } from '../../common/utilities/types';
 import { getIDWithToken, getWeeklyWorkLogs } from '../database';
@@ -9,58 +8,60 @@ import logger from '../logger';
 const router = createRouter();
 const mutex = new Mutex();
 
-router.post('/', (req, res) => {
-  (async(): Promise<void> => {
-    if (!isObjectRecord(req.body)) {
-      throw new Error('api/weeklyLogs: req.body is not object');
+// Extracted async handler function
+async function handleWeeklyLogsPost(req: Request, res: Response): Promise<void> {
+  if (!isObjectRecord(req.body)) {
+    throw new Error('api/weeklyLogs: req.body is not object');
+  }
+  if (!isObjectRecord(req.cookies)) {
+    throw new Error('api/weeklyLogs: req.cookies is not object');
+  }
+
+  const { authenticationToken } = req.cookies;
+  if (typeof authenticationToken !== 'string') {
+    throw new Error('api/weeklyLogs: userToken not type string');
+  }
+
+  const release = await mutex.acquire();
+  try {
+    const userId = await getIDWithToken(authenticationToken);
+
+    const { unixWeekStart, unixWeekEnd } = req.body;
+
+    if (typeof unixWeekStart !== 'number') {
+      throw new Error('api/weeklyLogs.post: unixStart is not number');
     }
-    if (!isObjectRecord(req.cookies)) {
-      throw new Error('api/weeklyLogs: req.cookies is not object');
+    if (typeof unixWeekEnd !== 'number') {
+      throw new Error('api/weeklyLogs.post: unixEnd is not number');
     }
 
-    const { authenticationToken } = req.cookies;
-    if (typeof authenticationToken !== 'string') {
-      throw new Error('api/weeklyLogs: userToken not type string');
-    }
-
-    const release = await mutex.acquire();
-    try {
-      const idResult = getIDWithToken(authenticationToken);
-      const userId = await idResult;
-
-      const { unixWeekStart } = req.body;
-      const { unixWeekEnd } = req.body;
-
-      if (typeof unixWeekStart !== 'number') {
-        throw new Error('api/weeklyLogs.post: unixStart is not number');
+    await createTimesheet(userId, unixWeekStart, unixWeekEnd).catch((err) => {
+      if (err instanceof Error) {
+        logger.error(err.message);
       }
-      if (typeof unixWeekEnd !== 'number') {
-        throw new Error('api/weeklyLogs.post: unixEnd is not number');
-      }
+    });
 
-      await createTimesheet(userId, unixWeekStart, unixWeekEnd).catch((err) => {
-        if (err instanceof Error) {
-          logger.error(err.message);
-        }
-      });
-
-      const result = await getWeeklyWorkLogs(
-        userId,
-        unixWeekStart,
-        unixWeekEnd,
-      );
-      res.json({
-        success: true,
-        listResult: result,
-      });
-    } finally {
-      release();
-    }
-    // logger.info('res.json success in weeklyLogs.ts post');
-  })().catch((e: Error) => {
+    const result = await getWeeklyWorkLogs(userId, unixWeekStart, unixWeekEnd);
+    res.json({
+      success: true,
+      listResult: result,
+    });
+  } catch (error) {
     res.json({
       success: false,
-      error: e.message,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  } finally {
+    release();
+  }
+}
+
+// Refactored route definition to use the extracted handler function
+router.post('/', (req, res) => {
+  handleWeeklyLogsPost(req, res).catch((error) => {
+    res.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   });
 });
