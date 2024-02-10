@@ -2,41 +2,18 @@ import { createSelector } from '@reduxjs/toolkit';
 import type { AccountState } from '../slices/account';
 import type { State } from '../store';
 
-const getAccount = (state: State): AccountState => (
-  state.account
-);
+const getAccount = (state: State): AccountState => state.account;
 
-export const getUserId = createSelector(
-  getAccount,
-  account => account.userId,
-);
+export const getUserId = (state: State) => getAccount(state).userId;
 
-export const getUsername = createSelector(
-  getAccount,
-  account => account.username,
-);
+export const getUsername = (state: State) => getAccount(state).username;
 
-export const getRole = createSelector(
-  getAccount,
-  account => account.role,
-);
+export const getRole = (state: State) => getAccount(state).role;
 
-export const getLoggedIn = createSelector(
-  getUserId,
-  userId => userId !== undefined,
-);
+export const getLoggedIn = (state: State) => getUserId(state) !== undefined;
 
-export const getIsClient = createSelector(
-  getRole,
-  role => role === 'client',
-);
+export const getIsClient = (state: State) => getRole(state) === 'client';
 
-export const getIsEmployee = createSelector(
-  getRole,
-  role => role === 'employee',
-);
+export const getIsEmployee = (state: State) => getRole(state) === 'employee';
 
-export const getIsAdmin = createSelector(
-  getRole,
-  role => role === 'admin',
-);
+export const getIsAdmin = (state: State) => getRole(state) === 'admin';
