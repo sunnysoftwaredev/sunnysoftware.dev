@@ -1,3 +1,4 @@
+```typescript
 import type { FunctionComponent } from 'react';
 import React from 'react';
 import Button, { ButtonSize, ButtonVariant } from '../../Button/Button';
@@ -13,10 +14,15 @@ const ServicesNeedHelp: FunctionComponent = () => (
         while costing you less than a single full-time designer.
       </p>
     </div>
-    <Button size={ButtonSize.Large} variant={ButtonVariant.Outlined} to="./contact-us">
+    <Button 
+      size={ButtonSize.Large} 
+      variant={ButtonVariant.Outlined} 
+      to="./contact-us"
+    >
       Get a Quote
     </Button>
   </div>
 );
 
 export default ServicesNeedHelp;
+```
