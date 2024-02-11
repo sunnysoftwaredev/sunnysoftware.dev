@@ -45,6 +45,19 @@ const LoginForm: FunctionComponent = () => {
     [setShowPassword, showPassword],
   );
 
+  const validateResult = (result: unknown): result is { success: boolean; userId: number; username: string; role: string } => {
+    if (!isObjectRecord(result)) {
+      throw new Error('Unexpected body type: LoginForm.tsx');
+    }
+    if (typeof result.success !== 'boolean' ||
+        typeof result.userId !== 'number' ||
+        typeof result.username !== 'string' ||
+        typeof result.role !== 'string') {
+      throw new Error('Invalid structure of response data: LoginForm.tsx');
+    }
+    return true;
+  };
+
   const handleSubmit = useCallback(async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -61,26 +74,7 @@ const LoginForm: FunctionComponent = () => {
 
       const result: unknown = await response.json();
 
-      if (!isObjectRecord(result)) {
-        throw new Error('Unexpected body type: LoginForm.tsx');
-      }
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: LoginForm.tsx');
-      }
-
-      if (typeof result.success !== 'boolean') {
-        throw new Error('success variable not type boolean: LoginForm.tsx');
-      }
-      if (typeof result.userId !== 'number') {
-        throw new Error('userId variable not type number: LoginForm.tsx');
-      }
-      if (typeof result.username !== 'string') {
-        throw new Error('username variable not type string: LoginForm.tsx');
-      }
-      if (typeof result.role !== 'string') {
-        throw new Error('role variable not type string: LoginForm.tsx');
-      }
-      if (result.success) {
+      if (validateResult(result) && result.success) {
         setShowSuccessPopup(true);
         dispatch(AccountActions.logIn({
           userId: result.userId,
