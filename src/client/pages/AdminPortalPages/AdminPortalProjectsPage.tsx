@@ -1,10 +1,6 @@
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
-import WorkCalendar from '../../components/WorkCalendar/WorkCalendar';
-import EmployeeWorkCalendars from '../../components/EmployeeWorkCalendars/EmployeeWorkCalendars';
-import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
-import ResetPassword from '../../components/ResetPassword/ResetPassword';
 import ManageProjects from '../../components/MangageProjects/ManageProjects';
 import PortalNavBar from '../../components/AdminPortalNavBar/AdminPortalNavBar';
 
@@ -16,7 +12,7 @@ const AdminPortalProjectsPage: FunctionComponent = () => (
       <link rel="canonical" href="https://sunnysoftware.dev/admin-portal-projects" />
       <meta
         name="description"
-        content="Hours of all employees of Sunny Software LLC"
+        content="Projects of Sunny Software LLC"
       />
     </Helmet>
     <PortalNavBar />

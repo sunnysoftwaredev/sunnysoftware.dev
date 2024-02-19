@@ -12,7 +12,7 @@ const AdminPortalEmployeesPage: FunctionComponent = () => (
       <link rel="canonical" href="https://sunnysoftware.dev/admin-portal-employees" />
       <meta
         name="description"
-        content="Hours of all employees of Sunny Software LLC"
+        content="Info on employees of Sunny Software LLC"
       />
     </Helmet>
     <PortalNavBar />

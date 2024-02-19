@@ -1,0 +1,177 @@
+@use '../../SCSS/main';
+
+.container {
+  margin: 7rem 2rem 2rem 2rem;
+  padding: 1rem;
+  background-color: main.$neutral-color-20;
+  border-radius: 10px;
+}
+
+.navigationBar {
+  display: flex;
+  justify-content: space-between;
+  display: flex;
+  padding: 8px;
+  align-items: flex-start;
+  align-self: stretch;
+  background-color: #FFF;
+  border-radius: 10px;
+  margin: 1rem 0;
+  // @include main.mobile{
+  //   flex-direction: column;
+  //   align-items: flex-start;
+  //   gap: 3rem;
+  //   & button {
+  //     align-self: baseline;
+  //   }
+  // }
+}
+
+.leftSide {
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.returnButton {
+  & Link {
+    display: flex;
+    all: unset;
+  }
+  & p {
+    color: main.$primary-color-60;
+  }
+  & a {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.tabMenu {
+  display: flex;
+  gap: 1rem;
+  height: 100%;
+  border-radius: 50px;
+  border: 1px solid main.$primary-color-20;
+  background: main.$neutral-color-10;
+  justify-content: center;
+  align-items: center;
+  padding: .3rem;
+}
+
+.projectWeekInfo {
+  display: flex;
+  padding: 8px 16px;
+  align-items: center;
+  gap: 24px;
+  align-self: stretch;
+  border-radius: 10px;
+  background: #FFF;
+}
+
+.weekDisplay {
+  display: flex;
+  width: 400px;
+  padding: 8px 16px;
+  align-items: center;
+  gap: 24px;
+  justify-content: space-between;
+  align-self: stretch;
+  border-radius: 10px;
+  background: #FFF;
+  border-radius: 38px;
+  border: 1px solid #E5E5E5;
+  & p {
+    border-radius: 36px;
+    background: main.$primary-color-60;
+    display: flex;
+    padding: 7px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    color: white;
+  }
+}
+
+.invoiceContainer {
+  width: 250px;
+}
+.invoiceInput {
+  display: flex;
+  max-width: 300px;
+  padding: 8px 8px 8px 16px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex: 1 0 0;
+  align-self: stretch;
+  border-radius: 100px;
+  border: 1px solid main.$neutral-color-40;
+}
+
+.dropdownContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  & select {
+    display: flex;
+    align-items: center;
+    width: 175px;
+    gap: 1rem;
+    align-self: stretch;
+    border-radius: 100px;
+    background-color: #FFF;
+    font-size: 1rem;
+    padding: .25rem;
+  }
+}
+// COPIED FROM USERS BELOW
+
+.recordsPerPageDropdown {
+  display: flex;
+  border-radius: 20px;
+  gap: 1rem;
+  margin: 2rem;
+  & select {
+    border-radius: 20px;
+    background-color: #fff;
+    padding: 0.25rem;
+    width: 50px;
+    padding-left: 10px;
+    @include main.mobile{
+      width: 100px;
+    }
+  }
+}
+
+.columnNames {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) .5fr 1fr;
+  color: main.$neutral-color-80;
+  font-size: 1rem;
+  line-height: 1rem;
+  padding: 1rem;
+  }
+
+.mobileColumnNames {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  color: main.$neutral-color-80;
+  font-size: 1rem;
+  line-height: 1rem;
+  padding: 1rem;
+}
+
+
+  .empty {
+    color: #fff;
+  }
+
+  .actionsTitle {
+    justify-self: end;
+  }
+
+

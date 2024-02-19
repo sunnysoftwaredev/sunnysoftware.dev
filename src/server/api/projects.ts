@@ -102,7 +102,7 @@ router.put('/', (req, res) => {
       throw new Error('api/projects: req.body is not object');
     }
     const { id, newClientID, newTitle, newDescription,
-      newActive, newStartDate, newProjectStatus } = req.body;
+      newStartDate, newProjectStatus } = req.body;
 
     if (!isObjectRecord(req.cookies)) {
       throw new Error('api/projects: req.cookies is not object');
@@ -125,9 +125,6 @@ router.put('/', (req, res) => {
     if (typeof newDescription !== 'string') {
       throw new Error('api/projects.put: newDescription is not string');
     }
-    if (typeof newActive !== 'boolean') {
-      throw new Error('api/projects.put: active is not boolean');
-    }
     if (typeof newStartDate !== 'number') {
       throw new Error('api/projects.put: newStartDate is not number');
     }
@@ -137,13 +134,19 @@ router.put('/', (req, res) => {
 
     const release = await mutex.acquire();
     try {
-      // Same as above
       const idResult = getIDWithToken(authenticationToken);
       if (typeof idResult !== 'object') {
         throw new Error('api/projects: no idResult found');
       }
-      // eslint-disable-next-line max-len
-      await updateClientProject(id, newClientID, newTitle, newDescription, newActive, newStartDate, newProjectStatus);
+
+      await updateClientProject(
+        id,
+        newClientID,
+        newTitle,
+        newDescription,
+        newStartDate,
+        newProjectStatus
+      );
 
       res.json({
         success: true,

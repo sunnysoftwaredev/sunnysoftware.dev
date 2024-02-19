@@ -9,6 +9,9 @@ import WorkLog from '../WorkLog/WorkLog';
 import { getUsername } from '../../redux/selectors/account';
 import styles from './WorkCalendar.scss';
 
+// WorkCalendar is using old ClientProject type, needs to be new type and
+// get list from redux and pass down to WorkLog and TimeDropdown
+
 const WorkCalendar: FunctionComponent = () => {
   const username = useSelector(getUsername);
   const [currentDate, setCurrentDate] = useState(new Date());

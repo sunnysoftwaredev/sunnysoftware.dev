@@ -1,7 +1,7 @@
 import type { ChangeEvent, FunctionComponent, SyntheticEvent } from 'react';
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import type { Project } from '../../../common/utilities/types';
+import type { ProjectAndBilling } from '../../../common/utilities/types';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import PopupMessage, { PopupType } from '../PopupMessage/PopupMessage';
@@ -11,20 +11,19 @@ import Input, { InputSize } from '../Input/Input';
 import { getListOfClients } from '../../redux/selectors/adminPortal';
 import styles from './EditProject.scss';
 
-type EditProjectProps = Project & {
+type EditProjectProps = ProjectAndBilling & {
   toggleEditing: () => void;
 };
 
 const EditProject: FunctionComponent<EditProjectProps> = (props) => {
-  const { id, clientId, title, description, active,
-    startDate, status, toggleEditing } = props;
+  const { id, clientId, title, description,
+    startDate, status: projectStatus, toggleEditing } = props;
 
   const [newClientID, setNewClientID] = useState(clientId);
   const [newTitle, setNewTitle] = useState(title);
   const [newDescription, setNewDescription] = useState(description);
-  const [newActive] = useState(active); // Active column needed?
-  const [newStartDate] = useState(startDate); // Necessary to update?
-  const [newProjectStatus, setNewProjectStatus] = useState(status);
+  const [newStartDate] = useState(startDate);
+  const [newProjectStatus, setNewProjectStatus] = useState(projectStatus);
 
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
@@ -62,19 +61,6 @@ const EditProject: FunctionComponent<EditProjectProps> = (props) => {
      setShowErrorPopup(false);
    }, [setNewDescription],);
 
-  // const handleActiveChange = useCallback((): void => {
-  //   setNewActive(!active);
-  // }, [active],);
-
-  // const handleStartDateChange = useCallback(
-  //   (e: ChangeEvent<HTMLInputElement>) => {
-  //     const temp = Number(e.target.value);
-  //     setNewStartDate(temp);
-  //     setShowErrorPopup(false);
-  //   },
-  //   [setNewStartDate],
-  // );
-
   const handleNewStatusChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       setNewProjectStatus(e.target.value);
@@ -98,12 +84,11 @@ const EditProject: FunctionComponent<EditProjectProps> = (props) => {
     setShowErrorPopup(!showErrorPopup);
   }, [showErrorPopup]);
 
-  // Update Project information
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
       if (newClientID === 0 || newTitle === '' || newDescription === ''
-      || typeof newActive !== 'boolean' || newStartDate === 0 || newProjectStatus === '') {
+       || newStartDate === 0 || newProjectStatus === '') {
         setShowErrorPopup(true);
         return;
       }
@@ -118,7 +103,6 @@ const EditProject: FunctionComponent<EditProjectProps> = (props) => {
           newClientID,
           newTitle,
           newDescription,
-          newActive,
           newStartDate,
           newProjectStatus,
         }),
@@ -147,7 +131,6 @@ const EditProject: FunctionComponent<EditProjectProps> = (props) => {
     newClientID,
     newTitle,
     newDescription,
-    newActive,
     newStartDate,
     newProjectStatus]);
 

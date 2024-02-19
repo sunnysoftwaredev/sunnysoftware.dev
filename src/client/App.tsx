@@ -29,6 +29,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 import store from './redux/store';
 import AdminPortalProjectsPage from './pages/AdminPortalPages/AdminPortalProjectsPage';
+import AdminProjectDetailsPage from './pages/AdminPortalPages/AdminProjectDetailsPage';
 
 const App: FunctionComponent = () => (
   <Provider store={store}>
@@ -60,6 +61,13 @@ const App: FunctionComponent = () => (
         path="admin-portal-projects" element={(
           <AdminPrivateRoute>
             <AdminPortalProjectsPage />
+          </AdminPrivateRoute>
+        )}
+      />
+      <Route
+        path="/admin-portal/project/:projectId" element={(
+          <AdminPrivateRoute>
+            <AdminProjectDetailsPage />
           </AdminPrivateRoute>
         )}
       />

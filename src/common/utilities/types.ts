@@ -1,4 +1,4 @@
-import type { EmployeeTimesheet, IdObject, UserIdNameEmailRoleActivePhone, ClientProject, TimeObjectWithProject } from '../../server/database';
+import type { EmployeeTimesheet, IdObject, UserIdNameEmailRoleActivePhone, TimeObjectWithProject, ProjectWeek } from '../../server/database';
 
 export const isObjectRecord
 = (value: unknown): value is Record<string, unknown> => (
@@ -59,30 +59,117 @@ export const isUsersArray
     && 'phone' in value[0]
  );
 
-export type Project = {
+export type ProjectAndBilling = {
   id: number;
   clientId: number;
   title: string;
   description: string;
-  active: boolean;
   startDate: number;
   status: string;
+  totalBilling: number;
 };
 
-const isProject
+const isProjectAndBilling
  = (currentValue: Record<string, unknown>): boolean => (
    isObjectRecord(currentValue)
   && 'id' in currentValue
   && 'clientId' in currentValue
   && 'title' in currentValue
   && 'description' in currentValue
-  && 'active' in currentValue
+  && 'startDate' in currentValue
+  && 'status' in currentValue
+  && 'totalBilling' in currentValue
  );
 
 export const isProjectArray
- = (value: unknown): value is Project[] => (
+ = (value: unknown): value is ProjectAndBilling[] => (
    Array.isArray(value)
-  && value.every(isProject)
+  && value.every(isProjectAndBilling)
+ );
+
+export const isProjectWeek
+ = (currentValue: Record<string, unknown>): boolean => (
+   isObjectRecord(currentValue)
+  && 'id' in currentValue
+  && 'projectId' in currentValue
+  && 'weekStart' in currentValue
+  && 'weekEnd' in currentValue
+  && 'invoiced' in currentValue
+  && 'invoiceLink' in currentValue
+  && 'billingStatus' in currentValue
+ );
+
+export const isProjectWeekArray
+ = (value: unknown): value is ProjectWeek[] => (
+   Array.isArray(value)
+  && value.every(isProjectWeek)
+ );
+
+export type WorkLogsWithEmployee = {
+  id: number;
+  unixStart: number;
+  unixEnd: number;
+  hourlyRate: number;
+  userId: number;
+  username: string;
+  email: string;
+  role: string;
+  active: boolean;
+  phone: string;
+  userHourlyRate: number;
+};
+
+export const isWorkLogWithEmployee
+ = (currentValue: Record<string, unknown>): boolean => (
+   isObjectRecord(currentValue)
+  && 'id' in currentValue
+  && 'unixStart' in currentValue
+  && 'unixEnd' in currentValue
+  && 'hourlyRate' in currentValue
+  && 'userId' in currentValue
+  && 'username' in currentValue
+  && 'email' in currentValue
+  && 'role' in currentValue
+  && 'active' in currentValue
+  && 'phone' in currentValue
+  && 'userHourlyRate' in currentValue
+ );
+
+export const isWorkLogWithEmployeeArray
+ = (value: unknown): value is WorkLogsWithEmployee[] => (
+   Array.isArray(value)
+  && value.every(isWorkLogWithEmployee)
+ );
+
+export type EmployeesForProject = {
+  id: number;
+  username: string;
+  email: string;
+  phone: string;
+  role: string;
+  active: boolean;
+  hourlyRate: number;
+  totalHours: number;
+
+};
+
+export const isEmployeesForProject
+ = (currentValue: Record<string, unknown>): boolean => (
+   isObjectRecord(currentValue)
+  && 'id' in currentValue
+  && 'username' in currentValue
+  && 'email' in currentValue
+  && 'phone' in currentValue
+  && 'role' in currentValue
+  && 'active' in currentValue
+  && 'hourlyRate' in currentValue
+  && 'totalHours' in currentValue
+ );
+
+export const isEmployeesForProjectArray
+ = (value: unknown): value is EmployeesForProject[] => (
+   Array.isArray(value)
+  && value.every(isEmployeesForProject)
  );
 
 // below is currently used in ManageProjects.tsx and
@@ -93,10 +180,24 @@ const isClientProject
   && 'id' in currentValue
   && 'title' in currentValue
   && 'description' in currentValue
-  && 'active' in currentValue
+  && 'start' in currentValue
   && 'username' in currentValue
   && 'email' in currentValue
  );
+
+// TEMP to stop errors
+export type ClientProject = {
+  id: number;
+  clientId: number;
+  title: string;
+  description: string;
+  startDate: number;
+  status: string;
+  userId: number;
+  active: boolean;
+  username: string;
+  email: string;
+};
 
 // see above
 export const isClientProjectArray
@@ -110,7 +211,8 @@ export type ProjectWithEmployeeId = {
   clientId: number;
   title: string;
   description: string;
-  active: boolean;
+  startDate: number;
+  status: string;
   userId: number;
 };
 
@@ -121,7 +223,8 @@ const isProjectWithEmployeeId
   && 'clientId' in currentValue
   && 'title' in currentValue
   && 'description' in currentValue
-  && 'active' in currentValue
+  && 'startDate' in currentValue
+  && 'status' in currentValue
   && 'userId' in currentValue
  );
 

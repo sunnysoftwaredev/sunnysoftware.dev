@@ -1,6 +1,6 @@
 import { Router as createRouter } from 'express';
 import { Mutex } from 'async-mutex';
-import { activateUser, deactivateUser, getAllUsers, getIDWithToken, updateUser, updateUserPassword } from '../database';
+import { activateUser, deactivateUser, getAllUsers, getIDWithToken, getProjectUsersWithTotalHours, updateEmployeesAssignedToProject, updateUser, updateUserPassword } from '../database';
 import { isObjectRecord } from '../../common/utilities/types';
 import { generateSalt, saltAndHash } from '../common/utilities/crypto';
 
@@ -113,6 +113,7 @@ router.post('/activate', (req, res) => {
     });
   });
 });
+
 router.post('/deactivate', (req, res) => {
   (async(): Promise<void> => {
     if (!isObjectRecord(req.body)) {
@@ -189,6 +190,80 @@ router.post('/password', (req, res) => {
     } finally {
       release();
     }
+  })().catch((e: Error) => {
+    res.json({
+      success: false,
+      error: e.message,
+    });
+  });
+});
+
+router.post('/forProject', (req, res) => {
+  (async(): Promise<void> => {
+    if (!isObjectRecord(req.body)) {
+      throw new Error('api/users/activate: req.body is not object');
+    }
+    if (!isObjectRecord(req.cookies)) {
+      throw new Error('api/users/activate: req.cookies is not object');
+    }
+    const release = await mutex.acquire();
+    try {
+      const { numberId } = req.body;
+
+      if (typeof numberId !== 'number') {
+        throw new Error('api/workLogs/withEmployee: projectId is not number');
+      }
+
+      const result = await getProjectUsersWithTotalHours(numberId);
+      res.json({
+        success: true,
+        listResult: result,
+      });
+    } finally {
+      release();
+    }
+  })().catch((e: Error) => {
+    res.json({
+      success: false,
+      error: e.message,
+    });
+  });
+});
+
+router.post('/junction', (req, res) => {
+  (async(): Promise<void> => {
+    if (!isObjectRecord(req.body)) {
+      throw new Error('api/users/junction: req.body is not object');
+    }
+
+    if (!isObjectRecord(req.cookies)) {
+      throw new Error('api/users/junction: req.cookies is not object');
+    }
+
+    const { authenticationToken } = req.cookies;
+    if (typeof authenticationToken !== 'string') {
+      throw new Error('api/users/junction: authenticationToken not type string');
+    }
+    const { numberId, employeeIds } = req.body;
+
+    if (typeof numberId !== 'number') {
+      throw new Error('api/users/junction.post: numberId is not number');
+    }
+    if (!Array.isArray(employeeIds)) {
+      throw new Error('api/users/junction.post: assignedProjectIds is not array');
+    }
+
+    const release = await mutex.acquire();
+    try {
+      await updateEmployeesAssignedToProject(numberId, employeeIds);
+      res.json({
+        success: true,
+      });
+    } finally {
+      release();
+    }
+
+    // logger.debug('res.json success in api/projects/junction.post');
   })().catch((e: Error) => {
     res.json({
       success: false,

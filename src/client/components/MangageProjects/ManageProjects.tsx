@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import logger from '../../../server/logger';
-import type { Project } from '../../../common/utilities/types';
+import type { ProjectAndBilling } from '../../../common/utilities/types';
 import { isObjectRecord, isProjectArray, isUsersArray } from '../../../common/utilities/types';
 import { getAllProjects } from '../../redux/selectors/adminPortal';
 import { AdminPortalActions } from '../../redux/slices/adminPortal';
@@ -22,7 +22,10 @@ const ManageProjects: FunctionComponent = () => {
   const [selectedButton, setSelectedButton] = useState('All');
   const [creatingProject, setCreatingProject] = useState(false);
 
-  const compareProjects = (a: Project, b: Project): number => {
+  const compareProjects = (
+    a: ProjectAndBilling,
+    b: ProjectAndBilling
+  ): number => {
     const projectA = a.title;
     const projectB = b.title;
 
@@ -98,7 +101,7 @@ const ManageProjects: FunctionComponent = () => {
 
   // Pagination in useEffect
 
-  let currentSlice: Project[] = [];
+  let currentSlice: ProjectAndBilling[] = [];
   let totalPages = 0;
 
   switch (selectedButton) {
@@ -329,7 +332,7 @@ const ManageProjects: FunctionComponent = () => {
         ? (
           <div className={styles.mobileColumnNames}>
             <p>Name</p>
-            <p>Email</p>
+            <p>Client</p>
           </div>
         )
         : (

@@ -1,7 +1,7 @@
 import { Router as createRouter } from 'express';
 import { Mutex } from 'async-mutex';
 import { isObjectRecord } from '../../common/utilities/types';
-import { deleteWorkLog, getIDWithToken, postWorkLog, updateWorkLog } from '../database';
+import { deleteWorkLog, getIDWithToken, getWorkLogsForProjectWeek, postWorkLog, updateWorkLog } from '../database';
 import logger from '../logger';
 
 const router = createRouter();
@@ -160,4 +160,58 @@ router.delete('/', (req, res) => {
     });
   });
 });
+
+router.post('/withEmployee', (req, res) => {
+  (async(): Promise<void> => {
+    if (!isObjectRecord(req.body)) {
+      throw new Error('api/workLogs: req.body is not object');
+    }
+    if (!isObjectRecord(req.cookies)) {
+      throw new Error('api/workLogs: req.cookies is not object');
+    }
+
+    const { authenticationToken } = req.cookies;
+    if (typeof authenticationToken !== 'string') {
+      throw new Error('api/workLogs: userToken not type string');
+    }
+
+    const release = await mutex.acquire();
+    try {
+      const { numberId, unixWeekStart, unixWeekEnd } = req.body;
+
+      if (typeof numberId !== 'number') {
+        throw new Error('api/workLogs/withEmployee: projectId is not number');
+      }
+      if (typeof unixWeekStart !== 'number') {
+        throw new Error('api/workLogs/withEmployee: unixWeekStart is not number');
+      }
+      if (typeof unixWeekEnd !== 'number') {
+        throw new Error('api/workLogs/withEmployee: unixWeekEnd is not number');
+      }
+
+      console.log('unixWeekStart: ', unixWeekStart);
+      console.log('unixWeekEnnd: ', unixWeekEnd);
+
+      const result = await getWorkLogsForProjectWeek(
+        numberId,
+        unixWeekStart,
+        unixWeekEnd,
+      );
+      res.json({
+        success: true,
+        listResult: result,
+      });
+    } finally {
+      release();
+    }
+    logger.debug('res.json success in workLogs/withEmployees');
+  })().catch((e: Error) => {
+    res.json({
+      success: false,
+      error: e.message,
+    });
+  });
+});
+
 export default router;
+

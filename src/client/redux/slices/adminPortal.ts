@@ -1,13 +1,13 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { UserIdNameEmailRoleActivePhone } from '../../../server/database';
-import type { Project, ProjectWithEmployeeId } from '../../../common/utilities/types';
+import type { ProjectAndBilling, ProjectWithEmployeeId } from '../../../common/utilities/types';
 
 export type AdminPortalState = {
   showRegistrationForm: boolean;
   userList: UserIdNameEmailRoleActivePhone[];
   projectsWithId: ProjectWithEmployeeId[];
-  projects: Project[];
+  projects: ProjectAndBilling[];
   employeesOrProjectsPage: boolean;
 };
 
@@ -28,7 +28,7 @@ type ProjectListAction = PayloadAction<{
 }>;
 
 type ProjectsAction = PayloadAction<{
-  fullProjectList: Project[];
+  fullProjectList: ProjectAndBilling[];
 }>;
 
 type EmployeeOrProjectsAction = PayloadAction<{

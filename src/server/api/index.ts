@@ -10,6 +10,7 @@ import timesheets from './timesheets';
 import users from './users';
 import projects from './projects';
 import forgotPassword from './forgotPassword';
+import projectWeek from './projectWeek';
 
 const router = createRouter();
 
@@ -24,5 +25,6 @@ router.use('/timesheets', timesheets);
 router.use('/users', users);
 router.use('/projects', projects);
 router.use('/forgotPassword', forgotPassword);
+router.use('/projectWeek', projectWeek);
 
 export default router;

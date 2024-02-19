@@ -1,6 +1,6 @@
 import type { QueryResult } from 'pg';
 import { Client } from 'pg';
-import type { Project, ProjectWithEmployeeId } from '../common/utilities/types';
+import type { ProjectAndBilling, ProjectWithEmployeeId } from '../common/utilities/types';
 import { isIdArray, isObjectRecord } from '../common/utilities/types';
 import config from './config';
 import logger from './logger';
@@ -339,6 +339,132 @@ Promise<TimeObjectWithProject[]> => {
   return rows;
 };
 
+export type ProjectWeek = {
+  projectId: number;
+  weekStart: number;
+  weekEnd: number;
+  invoiced: boolean;
+  invoiceLink: string;
+  billingStatus: boolean;
+};
+
+export const getProjectWeek = async(
+  projectId: number,
+  unixWeekStart: number, unixWeekEnd: number
+):
+Promise<ProjectWeek[]> => {
+  const result: QueryResult<ProjectWeek> = await client.query(
+    `SELECT
+      id,
+      project_id AS "projectId",
+      week_start AS "weekStart",
+      week_end AS "weekEnd",
+      invoiced,
+      invoice_link AS "invoiceLink",
+      billing_status AS "billingStatus"
+    FROM project_week
+    WHERE project_id=$1 and week_start=$2 and week_end=$3`,
+    [projectId, unixWeekStart, unixWeekEnd],
+  );
+
+  const { rows } = result;
+  return rows;
+};
+
+export type WorkLogsWithEmployee = {
+  id: number;
+  unixStart: number;
+  unixEnd: number;
+  hourlyRate: number;
+  userId: number;
+  username: string;
+  email: string;
+  role: string;
+  active: boolean;
+  phone: string;
+  userHourlyRate: number;
+};
+
+export const getWorkLogsForProjectWeek = async(
+  projectId: number,
+  unixWeekStart: number, unixWeekEnd: number
+):
+Promise<WorkLogsWithEmployee[]> => {
+  const result: QueryResult<WorkLogsWithEmployee> = await client.query(
+    `SELECT
+    wl.id,
+    wl.unix_start AS "unixStart",
+    wl.unix_end AS "unixEnd",
+    wl.hourly_rate AS "hourlyRate",
+    u.id AS "userId",
+    u.username,
+    u.email,
+    u.role,
+    u.active,
+    u.phone,
+    u.hourly_rate AS "userHourlyRate"
+    FROM
+        work_logs wl
+    JOIN
+        users u ON wl.user_id = u.id
+    WHERE
+    wl.project_id = $1
+    AND wl.unix_start >= $2
+    AND wl.unix_end <= $3;`,
+    [projectId, unixWeekStart, unixWeekEnd],
+  );
+
+  const { rows } = result;
+  return rows;
+};
+
+export type EmployeeWithTotalHours = {
+  userId: number;
+  username: string;
+  email: string;
+  phone: string;
+  role: string;
+  active: boolean;
+  hourlyRate: number;
+  totalHours: number;
+};
+
+export const getProjectUsersWithTotalHours = async(projectId: number):
+Promise<EmployeeWithTotalHours[]> => {
+  const result: QueryResult<EmployeeWithTotalHours> = await client.query(
+    `SELECT
+    u.id,
+    u.username,
+    u.email,
+    u.phone,
+    u.role,
+    u.active,
+    u.hourly_rate AS "hourlyRate",
+    SUM(duration_seconds)/ 3600 AS "totalHours"
+FROM (
+    SELECT
+        wl.id,
+        wl.unix_start AS "unixStart",
+        wl.unix_end,
+        wl.user_id,
+        wl.project_id,
+        (wl.unix_end - wl.unix_start ) AS duration_seconds
+    FROM
+        work_logs wl
+    WHERE
+        wl.project_id = $1
+) AS subquery
+JOIN
+    users u ON u.id = subquery.user_id
+GROUP BY
+    u.id, u.username, u.email, u.phone, u.role, u.active, u.hourly_rate;`,
+    [projectId],
+  );
+
+  const { rows } = result;
+  return rows;
+};
+
 export type Timesheet = {
   userId: number;
   weekStart: number;
@@ -489,6 +615,24 @@ export const checkTimesheet = async(
   return false;
 };
 
+export const checkProjectWeek = async(
+  projectId: number,
+  weekStart: number, weekEnd: number
+): Promise<boolean> => {
+  const result = await client.query(
+    `SELECT id
+  FROM project_week
+  WHERE project_id=$1 AND week_start=$2 AND week_end=$3`,
+    [projectId, weekStart, weekEnd]
+  );
+
+  const { rows } = result;
+  if (rows.length >= 1) {
+    return true;
+  }
+  return false;
+};
+
 export const insertTimesheet = async(
   userId: number,
   weekStart: number, weekEnd: number
@@ -503,6 +647,25 @@ export const insertTimesheet = async(
       false,
       false,
       false]
+  );
+};
+
+export const insertProjectWeek = async(
+  projectId: number,
+  weekStart: number, weekEnd: number
+): Promise<void> => {
+  await client.query(
+    `INSERT INTO project_week (project_id, week_start, week_end,
+      invoiced, invoice_link, billing_status)
+            VALUES ($1, $2, $3, $4, $5, $6)`,
+    [
+      projectId,
+      weekStart,
+      weekEnd,
+      false,
+      '',
+      false,
+    ]
   );
 };
 
@@ -560,11 +723,13 @@ export type ClientProject = {
 // };
 
 export const getAllProjects = async():
-Promise<Project[]> => {
-  const result: QueryResult<Project> = await client.query(`
-  SELECT id, client_id AS "clientId", title, description, active,
-  start_date AS "startDate", status
-  FROM client_projects`);
+Promise<ProjectAndBilling[]> => {
+  const result: QueryResult<ProjectAndBilling> = await client.query(`
+  SELECT cp.id, cp.client_id AS "clientId", cp.title, cp.description,
+  cp.start_date AS "startDate", cp.status, SUM(wl.hourly_rate) AS "totalBilling"
+  FROM client_projects cp
+  LEFT JOIN work_logs wl ON cp.id = wl.project_id
+  GROUP BY cp.id`);
 
   const { rows } = result;
   return rows;
@@ -578,7 +743,8 @@ Promise<ProjectWithEmployeeId[]> => {
     p.client_id "clientId",
     p.title,
     p.description,
-    p.active,
+    p.start_date "startDate",
+    p.status,
     u.id "userId"
 FROM client_projects p
 INNER JOIN
@@ -593,19 +759,17 @@ INNER JOIN
 export const updateClientProject = async(
   id: number, newClientId: number,
   newTitle: string, newDescription: string,
-  newActive: boolean, newStartDate: number,
-  newProjectStatus: string,
+  newStartDate: number, newProjectStatus: string,
 ):
 Promise<void> => {
   await client.query(
     `UPDATE client_projects
-  SET client_id =$2, title=$3, description=$4, active=$5, start_date=$6, status=$7
-  WHERE id=$1`,
+    SET client_id=$2, title=$3, description=$4, start_date=$5, status=$6
+    WHERE id=$1`,
     [id,
       newClientId,
       newTitle,
       newDescription,
-      newActive,
       newStartDate,
       newProjectStatus]
   );
@@ -709,6 +873,33 @@ export const updateProjectAssignments
     ${projectIds.map((value, index) => `($1, $${index + 2})`).join(', ')}
     ON CONFLICT (user_id, project_id) DO NOTHING
   `, [userId, ...projectIds]);
+   }
+ };
+
+export const updateEmployeesAssignedToProject
+ = async(projectId: number, employeeIds: number[]):
+ Promise<undefined> => {
+   if (employeeIds.length === 0) {
+     await client.query(`
+      DELETE FROM users_projects_junction
+      WHERE project_id = $1;
+    `, [projectId]);
+   } else {
+     await client.query(`
+    DELETE FROM users_projects_junction
+     WHERE project_id = $1
+     AND project_id NOT IN (${employeeIds.map((value, index) => `$${index + 2}`).join(', ')});
+     `, [projectId, ...employeeIds]);
+   }
+
+   if (employeeIds.length !== 0) {
+     await client.query(`
+    INSERT INTO users_projects_junction
+    (project_id, user_id)
+    VALUES
+    ${employeeIds.map((value, index) => `($1, $${index + 2})`).join(', ')}
+    ON CONFLICT (project_id, user_id) DO NOTHING
+  `, [projectId, ...employeeIds]);
    }
  };
 

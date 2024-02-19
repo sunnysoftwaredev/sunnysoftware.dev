@@ -22,6 +22,12 @@ export const getListOfClients = createSelector(
   (adminPortal, userList) => userList.filter(user => user.role === 'client')
 );
 
+export const getListOfEmployees = createSelector(
+  getAdminPortal,
+  getListOfUsers,
+  (adminPortal, userList) => userList.filter(user => user.role === 'employee')
+);
+
 export const getProjectsWithId = createSelector(
   getAdminPortal,
   adminPortal => adminPortal.projectsWithId,

@@ -2,32 +2,40 @@ import React, { useState, useCallback } from 'react';
 import type { FunctionComponent, SyntheticEvent } from 'react';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
-import type { ProjectAndBilling, ProjectWithEmployeeId } from '../../../common/utilities/types';
+import { useParams } from 'react-router-dom';
+import type { EmployeesForProject } from '../../../common/utilities/types';
 import { isObjectRecord } from '../../../common/utilities/types';
 import logger from '../../../server/logger';
 import Button, { ButtonSize, ButtonType } from '../Button/Button';
 import PopupMessage, { PopupType } from '../PopupMessage/PopupMessage';
-import { getAllProjects } from '../../redux/selectors/adminPortal';
+import { getListOfEmployees } from '../../redux/selectors/adminPortal';
 import XIcon from '../../static/svgs/XIcon';
 import ChevronUpIcon from '../../static/svgs/ChevronUpIcon';
 import ChevronDownIcon from '../../static/svgs/ChevronDownIcon';
 import CheckmarkIcon from '../../static/svgs/CheckmarkIcon';
-import styles from './AssignmentForm.scss';
+import type { UserIdNameEmailRoleActivePhone } from '../../../server/database';
+import styles from './AdminAssignEmployee.scss';
 
-type AssignmentFormProps = {
-  username: string;
-  id: number;
-  toggleAssigning: () => void;
-  userProjectList: ProjectWithEmployeeId[];
+type AdminAssignEmployeeFormProps = {
+  projectTitle: string;
+  employeesForProject: EmployeesForProject[];
+  toggleAssignEmployeeForm: () => void;
 };
 
-const AssignmentForm: FunctionComponent<AssignmentFormProps>
-= ({ username, id, toggleAssigning, userProjectList }) => {
-  const allProjects = useSelector(getAllProjects);
+const AdminAssignEmployee: FunctionComponent<AdminAssignEmployeeFormProps>
+= ({ projectTitle,
+  employeesForProject, toggleAssignEmployeeForm }) => {
+  const { projectId } = useParams();
+  const allEmployees = useSelector(getListOfEmployees);
 
-  const userProjectNumberList = userProjectList.map(project => project.id);
-  const [assignedProjectIds, setAssignedProjectIds]
-   = useState(userProjectNumberList);
+  // All users assigned to project, including admin
+  const justEmployees = employeesForProject.filter(user => user.role === 'employee');
+  const activeEmployees = justEmployees.filter(user => user.active);
+  const employeeIdList = activeEmployees.map(user => user.id);
+  const [employeeIds, setEmployeeIds]
+   = useState(employeeIdList);
+
+  console.log('employeeIds: ', employeeIds);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -48,35 +56,37 @@ const AssignmentForm: FunctionComponent<AssignmentFormProps>
 
   const toggleAssignmentForm = useCallback(
     () => {
-      toggleAssigning();
+      toggleAssignEmployeeForm();
     },
-    [toggleAssigning]
+    [toggleAssignEmployeeForm]
   );
 
-  const removeProject = (idToRemove: number): () => void => (): void => {
-    const temp = assignedProjectIds.filter(projectId => projectId
+  const removeEmployee = (idToRemove: number): () => void => (): void => {
+    const tempList = employeeIds.filter(employeeId => employeeId
       !== idToRemove);
-    setAssignedProjectIds(temp);
+    setEmployeeIds(tempList);
   };
 
-  const addProject = (idToAdd: number):
+  const addEmployee = (idToAdd: number):
   () => void => (): void => {
-    const tempList: number[] = assignedProjectIds.concat(idToAdd);
-    setAssignedProjectIds(tempList);
+    const tempList: number[] = employeeIds.concat(idToAdd);
+    setEmployeeIds(tempList);
   };
 
+  // TODO: refactor to add employee to project
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();
       setShowErrorPopup(false);
-      const response = await fetch('api/projects/junction', {
+      const numberId = Number(projectId);
+      const response = await fetch('/api/users/junction', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id,
-          assignedProjectIds,
+          numberId,
+          employeeIds,
         }),
       });
 
@@ -100,81 +110,84 @@ const AssignmentForm: FunctionComponent<AssignmentFormProps>
         logger.error(err.message);
       }
     }
-  }, [id, toggleAssignmentForm, assignedProjectIds]);
+  }, [projectId, employeeIds, toggleAssignmentForm]);
 
   const compareObjects = (
-    a: ProjectAndBilling,
-    b: ProjectAndBilling
+    a: UserIdNameEmailRoleActivePhone,
+    b: UserIdNameEmailRoleActivePhone
   ): number => {
-    const projectA = a.title;
-    const projectB = b.title;
+    const employeeA = a.username;
+    const employeeB = b.username;
 
     let comparison = 0;
-    if (projectA > projectB) {
+    if (employeeA > employeeB) {
       comparison = 1;
-    } else if (projectA < projectB) {
+    } else if (employeeA < employeeB) {
       comparison = -1;
     }
     return comparison;
   };
 
-  const displayProjectButtons = (projectIds: number[]):
+  //
+  const displayEmployeeButtons = (listOfIds: number[]):
   React.JSX.Element[] => {
-    if (typeof projectIds === 'undefined' || typeof allProjects === 'undefined') {
+    if (typeof listOfIds === 'undefined' || typeof allEmployees === 'undefined') {
       return [<div key={0} />];
     }
-    const resultArray: React.JSX.Element[] = allProjects.flatMap((project) => {
-      if (typeof project === 'undefined') {
-        return [<div key={0} />];
-      }
-      if (projectIds.includes(project.id)) {
-        return (
-          <div className={styles.projectButton} key={project.id}>
-            <div>
-              {project.title}
-            </div>
-            <div onClick={removeProject(project.id)}>
-              <XIcon />
-            </div>
-          </div>
-        );
-      }
-      return [<div key={project.id} />];
-    });
+    const resultArray: React.JSX.Element[]
+     = allEmployees.flatMap((employee) => {
+       if (typeof employee === 'undefined') {
+         return [<div key={0} />];
+       }
+       if (listOfIds.includes(employee.id)) {
+         return (
+           <div className={styles.employeeButton} key={employee.id}>
+             <div>
+               {employee.username}
+             </div>
+             <div onClick={removeEmployee(employee.id)}>
+               <XIcon />
+             </div>
+           </div>
+         );
+       }
+       return [<div key={employee.id} />];
+     });
     if (typeof resultArray === 'undefined') {
       return [<div key={0} />];
     }
     return resultArray;
   };
 
-  const displayProjectDropdownList = (everyProject: ProjectAndBilling[]):
+  const displayEmployeeDropdownList
+  = (everyEmployee: UserIdNameEmailRoleActivePhone[]):
   React.JSX.Element[] => {
-    if (typeof everyProject === 'undefined') {
+    if (typeof everyEmployee === 'undefined') {
       return [<div key={0} />];
     }
-    const activeProjectList
-    = everyProject.filter(project => project.status !== 'Cancelled');
-    const sortedFullProjectList = activeProjectList.sort(compareObjects);
-    const finalArray = sortedFullProjectList.map((project) => {
-      if (assignedProjectIds.includes(project.id)) {
+    const activeEmployeeList
+    = everyEmployee.filter(employee => employee.active);
+    const sortedFullEmployeeList = activeEmployeeList.sort(compareObjects);
+    const finalArray = sortedFullEmployeeList.map((employee) => {
+      if (employeeIdList.includes(employee.id)) {
         return (
           <div
-            className={styles.userProjectsInDropdown}
-            key={project.id}
-            onClick={removeProject(project.id)}
+            className={styles.checkedEmployeesInDropdown}
+            key={employee.id}
+            onClick={removeEmployee(employee.id)}
           >
-            {project.title}
+            {employee.username}
             <CheckmarkIcon />
           </div>
         );
       }
       return (
         <div
-          className={styles.projectsInDropdown}
-          key={project.id}
-          onClick={addProject(project.id)}
+          className={styles.employeesInDropdown}
+          key={employee.id}
+          onClick={addEmployee(employee.id)}
         >
-          {project.title}
+          {employee.username}
         </div>
       );
     });
@@ -196,7 +209,7 @@ const AssignmentForm: FunctionComponent<AssignmentFormProps>
         && (
           <PopupMessage
             type={PopupType.Success}
-            message="Projects updated"
+            message="Employees updated"
             onClick={closeSuccessPopup}
           />
         )}
@@ -212,34 +225,34 @@ const AssignmentForm: FunctionComponent<AssignmentFormProps>
         <div className={styles.top}>
           <p />
           <div>
-            <h1>Assign a project</h1>
+            <h1>Assign an employee</h1>
             <p>
-              Assign a project to
+              Assign employee to project:
               {' '}
-              {username}
+              {projectTitle}
             </p>
           </div>
           <button type="button" onClick={toggleAssignmentForm}><XIcon /></button>
         </div>
 
         <div className={styles.dropdown}>
-          <p>Project(s)</p>
+          <p>Employee(s)</p>
           <div
-            className={styles.projectsDisplay}
+            className={styles.employeesDisplay}
           >
-            {assignedProjectIds.length > 0
-              ? displayProjectButtons(assignedProjectIds)
-              : <p>Name of project</p>}
+            {employeeIdList.length > 0
+              ? displayEmployeeButtons(employeeIds)
+              : <p>Name of employee</p>}
 
             <div className={styles.inputChevron} onClick={toggleDropdown}>
               {menuOpen ? (<ChevronUpIcon />) : (<ChevronDownIcon />)}
             </div>
           </div>
-          <div className={classNames(styles.displayProjects, {
+          <div className={classNames(styles.displayEmployees, {
             [styles.hidden]: !menuOpen,
           })}
           >
-            {displayProjectDropdownList(allProjects)}
+            {displayEmployeeDropdownList(allEmployees)}
           </div>
 
         </div>
@@ -250,4 +263,5 @@ const AssignmentForm: FunctionComponent<AssignmentFormProps>
   );
 };
 
-export default AssignmentForm;
+export default AdminAssignEmployee;
+

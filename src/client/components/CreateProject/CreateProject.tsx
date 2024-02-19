@@ -68,9 +68,6 @@ const CreateProject: FunctionComponent<CreateProjectProps> = (props) => {
     setShowErrorPopup(false);
   }, [setProjectStatus]);
 
-  // TODO: update backend to account for changed rows
-  // TODO: add unix start time for start date AND add initial status
-  // REMEMBER: the javascript method returns miliseconds, not seconds
   const handleSubmit = useCallback(async(e: SyntheticEvent) => {
     try {
       e.preventDefault();

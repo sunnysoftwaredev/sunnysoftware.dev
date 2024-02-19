@@ -39,8 +39,10 @@ const IndividualUser: FunctionComponent<UserIdNameEmailRoleActivePhone>
   };
 
   const projectsWithUserId = useSelector(getProjectsWithId);
+
   const activeFilterList
-  = projectsWithUserId.filter(project => project.active);
+  = projectsWithUserId.filter(project => project.status !== 'Cancelled'
+  && project.status !== 'Completed');
   const unsorterUserList
   = activeFilterList.filter(project => project.userId === id);
   const userProjectList = unsorterUserList.sort(compareObjects);
