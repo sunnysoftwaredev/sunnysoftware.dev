@@ -3,7 +3,7 @@ import { Mutex } from 'async-mutex';
 import { isObjectRecord } from '../../common/utilities/types';
 import logger from '../logger';
 import { createProjectWeek } from '../common/utilities/createProjectWeek';
-import { getProjectWeek } from '../database';
+import { getProjectWeek, updateBillingStatus } from '../database';
 
 const router = createRouter();
 const mutex = new Mutex();
@@ -55,6 +55,49 @@ router.post('/', (req, res) => {
       res.json({
         success: true,
         listResult: result,
+      });
+    } finally {
+      release();
+    }
+  })().catch((e: Error) => {
+    res.json({
+      success: false,
+      error: e.message,
+    });
+  });
+});
+
+router.put('/', (req, res) => {
+  (async(): Promise<void> => {
+    if (!isObjectRecord(req.body)) {
+      throw new Error('api/projectWeek: req.body is not object');
+    }
+    if (!isObjectRecord(req.cookies)) {
+      throw new Error('api/projectWeek: req.cookies is not object');
+    }
+
+    const { authenticationToken } = req.cookies;
+    if (typeof authenticationToken !== 'string') {
+      throw new Error('api/projectWeek: userToken not type string');
+    }
+
+    const release = await mutex.acquire();
+    try {
+      const { numberId, boolValue } = req.body;
+
+      if (typeof numberId !== 'number') {
+        throw new Error('api/projectWeek.post: unixWeekStart is not number');
+      }
+      if (typeof boolValue !== 'boolean') {
+        throw new Error('api/projectWeek.put: boolValue is not boolean');
+      }
+
+      await updateBillingStatus(
+        numberId,
+        boolValue,
+      );
+      res.json({
+        success: true,
       });
     } finally {
       release();

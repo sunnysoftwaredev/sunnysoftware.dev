@@ -340,6 +340,7 @@ Promise<TimeObjectWithProject[]> => {
 };
 
 export type ProjectWeek = {
+  id: number;
   projectId: number;
   weekStart: number;
   weekEnd: number;
@@ -369,6 +370,18 @@ Promise<ProjectWeek[]> => {
 
   const { rows } = result;
   return rows;
+};
+
+export const updateBillingStatus = async(
+  projectWeekId: number,
+  billingStatus: boolean
+): Promise<void> => {
+  await client.query(
+    `UPDATE project_week
+      SET billing_status = $2
+      WHERE id=$1`,
+    [projectWeekId, billingStatus]
+  );
 };
 
 export type WorkLogsWithEmployee = {
@@ -433,31 +446,19 @@ export const getProjectUsersWithTotalHours = async(projectId: number):
 Promise<EmployeeWithTotalHours[]> => {
   const result: QueryResult<EmployeeWithTotalHours> = await client.query(
     `SELECT
-    u.id,
-    u.username,
-    u.email,
-    u.phone,
-    u.role,
-    u.active,
-    u.hourly_rate AS "hourlyRate",
-    SUM(duration_seconds)/ 3600 AS "totalHours"
-FROM (
-    SELECT
-        wl.id,
-        wl.unix_start AS "unixStart",
-        wl.unix_end,
-        wl.user_id,
-        wl.project_id,
-        (wl.unix_end - wl.unix_start ) AS duration_seconds
-    FROM
-        work_logs wl
-    WHERE
-        wl.project_id = $1
-) AS subquery
-JOIN
-    users u ON u.id = subquery.user_id
-GROUP BY
-    u.id, u.username, u.email, u.phone, u.role, u.active, u.hourly_rate;`,
+        u.id,
+        u.username,
+        u.email,
+        u.phone,
+        u.role,
+        u.active,
+        u.hourly_rate AS "hourlyRate",
+        COALESCE(SUM(wl.unix_end - wl.unix_start)/ 3600, 0) AS "totalHours"
+      FROM users u
+      JOIN users_projects_junction upj ON upj.user_id = u.id
+      LEFT JOIN work_logs wl ON upj.project_id = wl.project_id
+      WHERE upj.project_id = $1
+      GROUP BY u.id, u.username, u.email, u.phone, u.role, u.active;`,
     [projectId],
   );
 

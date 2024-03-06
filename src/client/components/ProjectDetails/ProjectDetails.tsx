@@ -44,7 +44,7 @@ const ProjectDetails: FunctionComponent
     = useState<EmployeesForProject[]>([]);
 
    //  console.log('logsForWeekWithEmployee: ', logsForWeekWithEmployee);
-   //  console.log('employeesForProject: ', employeesForProject);
+   console.log('employeesForProject: ', employeesForProject);
 
    const { projectId } = useParams();
 
@@ -55,8 +55,14 @@ const ProjectDetails: FunctionComponent
    = allProjects.filter(project => project.id === Number(projectId));
    const thisProject = thisProjectArray[0] ?? [];
 
+   // TODO: stuck here with setter not getting updated with eventual true value
+   const billingStatusBoolean = projectWeek?.billingStatus ?? false;
+
    const [billingStatusForDropdown, setBillingStatusForDropdown]
-   = useState(projectWeek?.billingStatus ?? false);
+   = useState(billingStatusBoolean);
+
+   console.log('projectWeek boolean value: ', projectWeek?.billingStatus);
+   console.log('billingStatusForDropdown: ', billingStatusForDropdown);
 
    let isCurrentWeek = true;
 
@@ -248,6 +254,7 @@ const ProjectDetails: FunctionComponent
 
        const { listResult } = result;
 
+       console.log('employeesforProject listResult: ', listResult);
        if (isEmployeesForProjectArray(listResult)) {
          setEmployeesForProject(listResult);
        }
@@ -257,6 +264,26 @@ const ProjectDetails: FunctionComponent
        }
      }
    }, [projectId]);
+
+   const updateBillingStatus = useCallback(async(boolValue: boolean) => {
+     try {
+       const numberId = projectWeek?.id;
+       console.log('values sent: ', numberId);
+       console.log('values sent: ', boolValue);
+       await fetch('/api/projectWeek', {
+         method: 'PUT',
+         headers: {
+           'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({ numberId, boolValue }),
+         credentials: 'same-origin',
+       });
+     } catch (err: unknown) {
+       if (err instanceof Error) {
+         logger.error(err.message);
+       }
+     }
+   }, [projectWeek?.id]);
 
    const changeToPrevWeek = useCallback((): void => {
      setCurrentDate((currDate: Date): Date => {
@@ -307,15 +334,19 @@ const ProjectDetails: FunctionComponent
      setShowInvoiceForm(!showInvoiceForm);
    }, [showInvoiceForm]);
 
+   // TODO: add fetch request here to change billing status
    const toggleBillingStatusForDropdown = useCallback(
-     (e: ChangeEvent<HTMLSelectElement>) => {
+     async(e: ChangeEvent<HTMLSelectElement>) => {
        if (e.target.value === 'Paid') {
+         console.log('reach here');
          setBillingStatusForDropdown(true);
+         await updateBillingStatus(true);
        } else if (e.target.value === 'Not paid') {
          setBillingStatusForDropdown(false);
+         await updateBillingStatus(false);
        }
      },
-     [],
+     [updateBillingStatus],
    );
 
    useEffect(() => {
@@ -456,7 +487,6 @@ const ProjectDetails: FunctionComponent
          <div className={styles.invoiceContainer}>
            <label>Invoice link</label>
            <div className={styles.invoiceInput}>
-             {/* TODO check if project_week has filled invoice string  */}
              <p>Create a link</p>
              <button type="button" onClick={toggleInvoiceLinkForm}>
                <EditIcon />
